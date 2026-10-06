@@ -10,5 +10,5 @@ export function createSupabaseBrowserClient() {
     throw new Error("Supabase browser environment variables are not configured.");
   }
 
-  return createBrowserClient(url, publishableKey);
+  return createBrowserClient<Database>(url, publishableKey);
 }
