@@ -38,63 +38,63 @@ create table if not exists public.audit_events (
   created_at timestamptz not null default now()
 );
 
+create or replace function public.is_org_member(target_org uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.memberships m
+    where m.organization_id = target_org
+      and m.user_id = auth.uid()
+  );
+$$;
+
+create or replace function public.has_org_role(target_org uuid, allowed_roles text[])
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.memberships m
+    where m.organization_id = target_org
+      and m.user_id = auth.uid()
+      and m.role = any(allowed_roles)
+  );
+$$;
+
+revoke all on function public.is_org_member(uuid) from public;
+revoke all on function public.has_org_role(uuid, text[]) from public;
+grant execute on function public.is_org_member(uuid) to authenticated;
+grant execute on function public.has_org_role(uuid, text[]) to authenticated;
+
 alter table public.organizations enable row level security;
 alter table public.memberships enable row level security;
 alter table public.imports enable row level security;
 alter table public.audit_events enable row level security;
 
 create policy "members can view organization"
-on public.organizations
-for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = organizations.id
-      and m.user_id = auth.uid()
-  )
-);
+on public.organizations for select
+using (public.is_org_member(id));
 
 create policy "members can view memberships"
-on public.memberships
-for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = memberships.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+on public.memberships for select
+using (public.is_org_member(organization_id));
 
 create policy "members can view imports"
-on public.imports
-for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = imports.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+on public.imports for select
+using (public.is_org_member(organization_id));
 
-create policy "admins can insert imports"
-on public.imports
-for insert
-with check (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = imports.organization_id
-      and m.user_id = auth.uid()
-      and m.role in ('owner','admin','member')
-  )
-);
+create policy "members can insert imports"
+on public.imports for insert
+with check (public.has_org_role(organization_id, array['owner','admin','member']));
 
 create policy "members can view audit events"
-on public.audit_events
-for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = audit_events.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+on public.audit_events for select
+using (public.is_org_member(organization_id));
