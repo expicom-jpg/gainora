@@ -9,27 +9,20 @@ create table if not exists public.financial_rows (
   created_at timestamptz not null default now()
 );
 
+create index if not exists financial_rows_org_id_idx on public.financial_rows(organization_id);
+create index if not exists financial_rows_import_id_idx on public.financial_rows(import_id);
+
 alter table public.financial_rows enable row level security;
+grant select, insert on public.financial_rows to authenticated;
 
 create policy "members can view financial rows"
 on public.financial_rows
 for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = financial_rows.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+to authenticated
+using ((select private.is_org_member(organization_id)));
 
 create policy "members can insert financial rows"
 on public.financial_rows
 for insert
-with check (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = financial_rows.organization_id
-      and m.user_id = auth.uid()
-      and m.role in ('owner','admin','member')
-  )
-);
+to authenticated
+with check ((select private.has_org_role(organization_id, array['owner','admin','member'])));

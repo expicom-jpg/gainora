@@ -6,14 +6,18 @@ create or replace function public.commit_financial_import(
 )
 returns uuid
 language plpgsql
-security definer
-set search_path = public
+security invoker
+set search_path = public, pg_temp
 as $$
 declare
   new_import_id uuid;
   item jsonb;
 begin
-  if not public.has_org_role(target_org, array['owner','admin','member']) then
+  if (select auth.uid()) is null then
+    raise exception 'unauthenticated';
+  end if;
+
+  if not (select private.has_org_role(target_org, array['owner','admin','member'])) then
     raise exception 'forbidden';
   end if;
 
@@ -29,7 +33,7 @@ begin
   )
   values (
     target_org,
-    auth.uid(),
+    (select auth.uid()),
     source_filename,
     'complete'
   )
@@ -65,7 +69,7 @@ begin
   )
   values (
     target_org,
-    auth.uid(),
+    (select auth.uid()),
     'financial_import_committed',
     'import',
     new_import_id,
