@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { parseImportFile } from "@/lib/imports/file-parser";
+import { suggestColumnMapping } from "@/lib/imports/column-mapping";
 
 export const runtime = "nodejs";
 
@@ -33,13 +34,16 @@ export async function POST(request: NextRequest) {
     }
 
     const rows = await parseImportFile(file);
+    const columns = rows[0] ? Object.keys(rows[0]) : [];
 
     return NextResponse.json({
       filename: file.name,
       size: file.size,
       rowCount: rows.length,
-      columns: rows[0] ? Object.keys(rows[0]) : [],
-      preview: rows.slice(0, 25)
+      columns,
+      mapping: suggestColumnMapping(columns),
+      preview: rows.slice(0, 25),
+      rows
     });
   } catch (error) {
     if (error instanceof Error) {
