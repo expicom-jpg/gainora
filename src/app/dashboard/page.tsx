@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listOrganizationsForCurrentUser } from "@/lib/organizations";
 
 export default async function DashboardPage() {
@@ -14,6 +15,10 @@ export default async function DashboardPage() {
           </li>
         ))}
       </ul>
+
+      <p>
+        <Link href="/dashboard/imports/new">Start a financial import</Link>
+      </p>
     </main>
   );
 }
