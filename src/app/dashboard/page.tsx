@@ -19,6 +19,9 @@ export default async function DashboardPage() {
       </ul>
 
       <p>
+        <Link href="/dashboard/organizations/new">Create organization</Link>
+      </p>
+      <p>
         <Link href="/dashboard/imports/new">Start a financial import</Link>
       </p>
     </main>
