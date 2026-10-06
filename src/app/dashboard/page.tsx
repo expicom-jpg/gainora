@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listOrganizationsForCurrentUser } from "@/lib/organizations";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const organizations = await listOrganizationsForCurrentUser();
 
