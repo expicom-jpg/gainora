@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -44,6 +45,7 @@ export default function LoginPage() {
         <button type="submit" disabled={busy}>{busy ? "Signing in..." : "Sign in"}</button>
         {error ? <p role="alert">{error}</p> : null}
       </form>
+      <p><Link href="/signup">Create account</Link></p>
     </main>
   );
 }
