@@ -24,47 +24,37 @@ create table if not exists public.results (
   created_at timestamptz not null default now()
 );
 
+create index if not exists audit_findings_org_id_idx on public.audit_findings(organization_id);
+create index if not exists results_org_id_idx on public.results(organization_id);
+
 alter table public.audit_findings enable row level security;
 alter table public.results enable row level security;
+
+grant select, insert, update, delete on public.audit_findings to authenticated;
+grant select, insert, update, delete on public.results to authenticated;
 
 create policy "members can view findings"
 on public.audit_findings
 for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = audit_findings.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+to authenticated
+using ((select private.is_org_member(organization_id)));
 
-create policy "admins can manage findings"
+create policy "members can manage findings"
 on public.audit_findings
 for all
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = audit_findings.organization_id
-      and m.user_id = auth.uid()
-      and m.role in ('owner','admin','member')
-  )
-)
-with check (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = audit_findings.organization_id
-      and m.user_id = auth.uid()
-      and m.role in ('owner','admin','member')
-  )
-);
+to authenticated
+using ((select private.has_org_role(organization_id, array['owner','admin','member'])))
+with check ((select private.has_org_role(organization_id, array['owner','admin','member'])));
 
 create policy "members can view results"
 on public.results
 for select
-using (
-  exists (
-    select 1 from public.memberships m
-    where m.organization_id = results.organization_id
-      and m.user_id = auth.uid()
-  )
-);
+to authenticated
+using ((select private.is_org_member(organization_id)));
+
+create policy "members can manage results"
+on public.results
+for all
+to authenticated
+using ((select private.has_org_role(organization_id, array['owner','admin','member'])))
+with check ((select private.has_org_role(organization_id, array['owner','admin','member'])));
