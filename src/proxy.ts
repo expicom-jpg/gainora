@@ -11,25 +11,27 @@ export async function proxy(request: NextRequest) {
   const response = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  if (!url || !anon) return response;
+  if (!url || !publishableKey) return response;
 
-  const supabase = createServerClient(url, anon, {
+  const supabase = createServerClient(url, publishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet: CookieToSet[]) {
+      setAll(cookiesToSet: CookieToSet[], headersToSet?: Headers) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
         );
+        headersToSet?.forEach((value, key) => response.headers.set(key, value));
       }
     }
   });
 
-  await supabase.auth.getUser();
+  await supabase.auth.getClaims();
+  response.headers.set("Cache-Control", "private, no-store");
   return response;
 }
 
