@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import type { Database } from "@/lib/database.types";
 
 type CookieToSet = {
   name: string;
@@ -15,17 +16,19 @@ export async function proxy(request: NextRequest) {
 
   if (!url || !publishableKey) return response;
 
-  const supabase = createServerClient(url, publishableKey, {
+  const supabase = createServerClient<Database>(url, publishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet: CookieToSet[], headersToSet?: Headers) {
+      setAll(cookiesToSet: CookieToSet[], headersToSet?: Record<string, string>) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
         );
-        headersToSet?.forEach((value, key) => response.headers.set(key, value));
+        if (headersToSet) {
+          Object.entries(headersToSet).forEach(([key, value]) => response.headers.set(key, value));
+        }
       }
     }
   });
