@@ -18,12 +18,13 @@ export default async function DashboardPage() {
         ))}
       </ul>
 
-      <p>
-        <Link href="/dashboard/organizations/new">Create organization</Link>
-      </p>
-      <p>
-        <Link href="/dashboard/imports/new">Start a financial import</Link>
-      </p>
+      <p><Link href="/dashboard/organizations/new">Create organization</Link></p>
+      <p><Link href="/dashboard/imports/new">Import financial data and run Profit Audit</Link></p>
+      <p><Link href="/dashboard/opportunities">Review Opportunities</Link></p>
+
+      <form action="/auth/signout" method="post">
+        <button type="submit">Sign out</button>
+      </form>
     </main>
   );
 }
