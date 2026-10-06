@@ -21,7 +21,7 @@ for select
 to authenticated
 using (
   bucket_id = 'financial-imports'
-  and public.is_org_member(((storage.foldername(name))[1])::uuid)
+  and (select private.is_org_member(((storage.foldername(name))[1])::uuid))
 );
 
 create policy "members can upload tenant import files"
@@ -30,10 +30,10 @@ for insert
 to authenticated
 with check (
   bucket_id = 'financial-imports'
-  and public.has_org_role(
+  and (select private.has_org_role(
     ((storage.foldername(name))[1])::uuid,
     array['owner','admin','member']
-  )
+  ))
 );
 
 create policy "members can delete tenant import files"
@@ -42,8 +42,8 @@ for delete
 to authenticated
 using (
   bucket_id = 'financial-imports'
-  and public.has_org_role(
+  and (select private.has_org_role(
     ((storage.foldername(name))[1])::uuid,
     array['owner','admin','member']
-  )
+  ))
 );
