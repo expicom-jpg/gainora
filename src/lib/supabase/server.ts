@@ -9,7 +9,7 @@ type CookieToSet = {
 };
 
 export async function createSupabaseServerClient() {
-  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
     throw new Error("Supabase environment variables are not configured.");
   }
 
@@ -17,7 +17,7 @@ export async function createSupabaseServerClient() {
 
   return createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -29,7 +29,7 @@ export async function createSupabaseServerClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Server Components may not be able to set cookies.
+            // Proxy handles cookie refresh for Server Components.
           }
         }
       }
