@@ -1,30 +1,3 @@
-import Link from "next/link";
-import { listOrganizationsForCurrentUser } from "@/lib/organizations";
-
-export const dynamic = "force-dynamic";
-
-export default async function DashboardPage() {
-  const organizations = await listOrganizationsForCurrentUser();
-
-  return (
-    <main>
-      <h1>Gainora Dashboard</h1>
-      <p>Organizations you can access:</p>
-      <ul>
-        {organizations.map((item: any) => (
-          <li key={item.organization?.id}>
-            {item.organization?.name} ({item.role})
-          </li>
-        ))}
-      </ul>
-
-      <p><Link href="/dashboard/organizations/new">Create organization</Link></p>
-      <p><Link href="/dashboard/imports/new">Import financial data and run Profit Audit</Link></p>
-      <p><Link href="/dashboard/opportunities">Review Opportunities</Link></p>
-
-      <form action="/auth/signout" method="post">
-        <button type="submit">Sign out</button>
-      </form>
-    </main>
-  );
-}
+import Link from "next/link";import {listOrganizationsForCurrentUser} from "@/lib/organizations";
+export const dynamic="force-dynamic";
+export default async function DashboardPage(){const organizations=await listOrganizationsForCurrentUser();return <main className="page"><div className="eyebrow">Overview</div><h1>Turn financial data into action.</h1><p className="lead">Import financial data, identify cost concentrations and turn approved opportunities into documented business value.</p><div className="grid"><section className="card"><div className="muted">Organizations</div><div className="metric">{organizations.length}</div><p className="muted">Workspaces you can access.</p></section><section className="card"><div className="muted">Data readiness</div><div className="metric">Pilot</div><p className="muted">Synthetic test data only.</p></section><section className="card"><div className="muted">Workflow</div><div className="metric">Audit</div><p className="muted">Import → findings → value.</p></section></div><section className="card" style={{marginTop:18}}><h2>Your organizations</h2>{organizations.length?<div className="table-wrap"><table className="table"><thead><tr><th>Organization</th><th>Role</th></tr></thead><tbody>{organizations.map((item:any)=><tr key={item.organization?.id}><td>{item.organization?.name}</td><td><span className="status">{item.role}</span></td></tr>)}</tbody></table></div>:<p className="muted">Create your first organization to begin.</p>}<div className="actions"><Link className="btn" href="/dashboard/imports/new">Run Profit Audit</Link><Link className="btn secondary" href="/dashboard/opportunities">Review opportunities</Link><Link className="btn secondary" href="/dashboard/organizations/new">New organization</Link></div></section><form action="/auth/signout" method="post" style={{marginTop:18}}><button className="secondary" type="submit">Sign out</button></form></main>}
