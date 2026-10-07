@@ -1,8 +1,2 @@
-export default function HomePage() {
-  return (
-    <main>
-      <h1>Gainora 2.0</h1>
-      <p>Controlled financial insight, profit opportunities and value attribution.</p>
-    </main>
-  );
-}
+import Link from "next/link";
+export default function HomePage(){return <main className="auth"><section className="auth-card" style={{maxWidth:760}}><div className="auth-brand">Gainora<span>.</span></div><div className="eyebrow" style={{marginTop:24}}>Profit intelligence</div><h1>Fra økonomiske data til konkrete handlinger.</h1><p className="lead">Gainora analyserer virksomhedens økonomi, finder forbedringsmuligheder og dokumenterer den værdi, der bliver skabt.</p><div className="grid" style={{marginTop:24}}><div className="card"><strong>Profit Audit</strong><p className="muted">Find omkostningskoncentrationer og økonomiske muligheder.</p></div><div className="card"><strong>Muligheder</strong><p className="muted">Vurder og godkend de indsatser, der er værd at arbejde videre med.</p></div><div className="card"><strong>Dokumenteret værdi</strong><p className="muted">Følg resultatet fra analyse til realiseret forretningsværdi.</p></div></div><div className="actions" style={{marginTop:24}}><Link className="btn" href="/login">Log ind</Link><Link className="btn secondary" href="/signup">Opret konto</Link></div><p className="muted" style={{marginTop:20}}>Pilotmiljø · Beskyttet · Kun syntetiske testdata</p></section></main>}
