@@ -1,9 +1,3 @@
-import type { ReactNode } from "react";
-import { requirePageUser } from "@/lib/auth-page";
-
-export const dynamic = "force-dynamic";
-
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  await requirePageUser();
-  return children;
-}
+import type {ReactNode} from "react";import Link from "next/link";import {requirePageUser} from "@/lib/auth-page";
+export const dynamic="force-dynamic";
+export default async function DashboardLayout({children}:{children:ReactNode}){await requirePageUser();return <div className="shell"><aside className="sidebar"><div><div className="brand">Gainora<span>.</span></div><div className="brand-sub">Profit intelligence</div></div><nav className="nav"><Link href="/dashboard">Overview</Link><Link href="/dashboard/imports/new">Financial import</Link><Link href="/dashboard/opportunities">Opportunities</Link><Link href="/dashboard/organizations/new">Organizations</Link></nav><div className="sidebar-foot">Controlled pilot environment<br/>Synthetic data only</div></aside><div className="content"><header className="topbar"><strong>Financial Intelligence Workspace</strong><span className="pill">Pilot · Protected</span></header>{children}</div></div>}
