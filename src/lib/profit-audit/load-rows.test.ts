@@ -73,7 +73,7 @@ describe("complete audit input", () => {
     async amount => {
       const { client, query } = fixture(1);
       query.range.mockResolvedValueOnce({
-        data: [{ account: "Salg", description: "Synthetic invalid input", amount: amount as number, transaction_date: "2026-10-01" }],
+        data: [{ account: "Salg", description: "Synthetic invalid input", amount: amount as unknown as number, transaction_date: "2026-10-01" }],
         count: 1,
         error: null
       });
