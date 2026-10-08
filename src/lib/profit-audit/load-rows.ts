@@ -42,7 +42,7 @@ export async function loadFinancialRows(
 
     const normalized = data.map(row => {
       const amount = Number(row.amount);
-      if (row.amount === null || row.amount === "" || !Number.isFinite(amount)) {
+      if (row.amount == null || !Number.isFinite(amount)) {
         throw new Error("audit_invalid_amount");
       }
       return {
