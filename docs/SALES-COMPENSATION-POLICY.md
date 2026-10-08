@@ -21,12 +21,14 @@ Illustration at 2,495 DKK per customer per month excluding VAT, with no discount
 - 20 customers: 3,992 DKK commission/month.
 - 50 customers: 10,479 DKK commission/month (20×8% + 20×10% + 10×12% of 2,495).
 - 100 customers: 27,445 DKK commission/month.
-Head of Sales earns portfolio commission on own assigned customers; any team override requires separate approval and a cap.
+Head of Sales earns portfolio commission on own assigned customers. **Additionally, Head of Sales earns a 2% organization override on actually collected net subscription revenue from customers assigned to direct-report sales staff in the Head of Sales organization, excluding the Head of Sales' own portfolio.** Do not compound across management layers or pay multiple organization overrides on the same customer without explicit approval. The 2% override is in addition to the individual seller's progressive commission and must be included in customer contribution-margin tests.
+
+Example: 100 paying customers in subordinate sellers' portfolios at 2,495 DKK/month yields 4,990 DKK/month organization override, before adjustments for refunds or discounts.
 
 ## Controls and definitions to approve
 1. Only collected, settled subscription revenue net of VAT, discounts, credits, refunds and chargebacks is commissionable.
 2. Customer attribution is auditable; define reassignment, shared ownership, sales vs servicing responsibility, and retention criteria.
-3. Avoid double-paying external referral partners and internal staff without explicit contribution-margin approval; model fully loaded acquisition cost and lifetime value.
+3. Internal seller commission plus the approved 2% Head of Sales organization override is intentional. Any additional external referral partner commissions or management layers require explicit contribution-margin approval; model fully loaded acquisition cost and lifetime value.
 4. Define monthly accrual, payment timing, clawback and disputes; no retroactive changes to earned commission.
 5. Set rules for leave, termination, post-termination earned commission and any ongoing rights after legal review of Danish employment law and applicable agreements.
 6. Supplier-network fees are excluded from this ladder unless separately agreed.
