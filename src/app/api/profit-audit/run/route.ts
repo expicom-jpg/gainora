@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { runProfitAudit } from "@/lib/profit-audit/engine";
 import { analyzeFinancialRows } from "@/lib/profit-audit/analysis";
+import { loadFinancialRows } from "@/lib/profit-audit/load-rows";
 
 const requestSchema = z.object({
   organizationId: z.string().uuid(),
@@ -22,20 +23,7 @@ export async function POST(request: NextRequest) {
     const { organizationId, importId } = parsed.data;
     const supabase = await createSupabaseServerClient();
 
-    const { data: rows, error: rowsError } = await supabase
-      .from("financial_rows")
-      .select("account,description,amount,transaction_date")
-      .eq("organization_id", organizationId)
-      .eq("import_id", importId);
-
-    if (rowsError) throw rowsError;
-
-    const financialRows = (rows ?? []).map((row) => ({
-        account: String(row.account),
-        description: String(row.description ?? ""),
-        amount: Number(row.amount),
-        transactionDate: row.transaction_date
-      }));
+    const financialRows = await loadFinancialRows(supabase, organizationId, importId);
     const findings = runProfitAudit(financialRows);
     const analysis = analyzeFinancialRows(financialRows);
 
@@ -66,6 +54,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ findings, analysis });
   } catch (error) {
+    if (error instanceof Error) {
+      const status = error.message === "no_rows" ? 404
+        : error.message === "import_too_large" ? 413
+        : ["audit_rows_incomplete", "audit_rows_changed"].includes(error.message) ? 409
+        : null;
+      if (status) return NextResponse.json({ error: error.message }, { status });
+    }
     if (error instanceof Error && error.message === "UNAUTHENTICATED") {
       return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
     }
