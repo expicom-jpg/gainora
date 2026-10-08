@@ -2,6 +2,7 @@ export type FinancialRow = {
   account: string;
   description: string;
   amount: number;
+  transactionDate?: string | null;
 };
 
 export type AuditFinding = {
