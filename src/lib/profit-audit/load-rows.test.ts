@@ -81,6 +81,7 @@ describe("complete audit input", () => {
     }
   );
 
+  // Zero is valid, but empty, missing and non-finite amounts must never be coerced into financial totals.
   it("accepts a valid zero amount", async () => {
     const { client, query } = fixture(1);
     query.range.mockResolvedValueOnce({
