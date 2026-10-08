@@ -13,9 +13,6 @@ export async function GET(request:NextRequest) {
   const supabase=await createSupabaseServerClient();
   const {organizationId,importId}=parsed.data;
   // RLS applies to both queries. Never use a service-role client for this endpoint.
-  const {data:importRecord,error:importError}=await supabase.from("financial_imports").select("id").eq("id",importId).eq("organization_id",organizationId).maybeSingle();
-  if(importError)throw importError;
-  if(!importRecord)return NextResponse.json({error:"import_not_found"},{status:404});
   const rows: {account:string;description:string;amount:number;transaction_date:string|null}[]=[];
   for(let offset=0;;offset+=1000){
    const {data,error}=await supabase.from("financial_rows").select("account,description,amount,transaction_date").eq("organization_id",organizationId).eq("import_id",importId).order("id").range(offset,offset+999);
@@ -24,6 +21,7 @@ export async function GET(request:NextRequest) {
    if(!data||data.length<1000)break;
    if(offset>=99000)return NextResponse.json({error:"import_too_large"},{status:413});
   }
+  if(rows.length===0)return NextResponse.json({error:"no_rows"},{status:404});
   return NextResponse.json({analysis:analyzeFinancialRows(rows.map(r=>({account:r.account,description:r.description,amount:r.amount,transactionDate:r.transaction_date})))});
  }catch(error){
   if(error instanceof Error&&error.message==="UNAUTHENTICATED")return NextResponse.json({error:"unauthenticated"},{status:401});
