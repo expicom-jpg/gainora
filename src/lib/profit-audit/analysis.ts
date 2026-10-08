@@ -20,7 +20,7 @@ export function analyzeFinancialRows(rows: FinancialRow[]): AuditDetail {
   const byMonth = new Map<string,{revenue:number;costs:number}>();
   for (const r of valid) {
     if (r.amount < 0) byAccount.set(r.account,(byAccount.get(r.account)??0)-r.amount);
-    if (r.transactionDate && /^\\d{4}-\\d{2}-\\d{2}$/.test(r.transactionDate)) {
+    if (r.transactionDate && /^\d{4}-\d{2}-\d{2}$/.test(r.transactionDate)) {
       const month=r.transactionDate.slice(0,7);
       const item=byMonth.get(month)??{revenue:0,costs:0};
       if(r.amount>0)item.revenue+=r.amount;else item.costs-=r.amount;
