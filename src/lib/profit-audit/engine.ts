@@ -4,6 +4,8 @@ function norm(value: string) {
   return value.toLocaleLowerCase("da-DK");
 }
 
+const money = (value: number) => new Intl.NumberFormat("da-DK", { style: "currency", currency: "DKK" }).format(value);
+
 function pct(value: number) {
   return (value * 100).toFixed(1);
 }
@@ -20,7 +22,7 @@ export function runProfitAudit(rows: FinancialRow[]): AuditFinding[] {
   findings.push({
     findingType: "financial_summary",
     title: "Økonomisk baseline",
-    description: `Perioden viser omsætning på ${revenue.toFixed(2)}, omkostninger på ${totalCosts.toFixed(2)} og resultat på ${net.toFixed(2)}. Resultatmargin: ${pct(margin)}%.`
+    description: `Omsætning: ${money(revenue)}. Omkostninger: ${money(totalCosts)}. Resultat: ${money(net)}. Resultatmargin: ${pct(margin)} %. Det er et regnskabsmæssigt udgangspunkt, ikke et dokumenteret forbedringspotentiale.`
   });
 
   if (revenue <= 0 || totalCosts <= 0) return findings;
@@ -36,7 +38,7 @@ export function runProfitAudit(rows: FinancialRow[]): AuditFinding[] {
     findings.push({
       findingType: "cost_concentration",
       title: `Undersøg omkostningskoncentration: ${item.account}`,
-      description: `${item.account} udgør ${pct(item.share)}% af alle omkostninger og ${pct(item.revenueShare)}% af omsætningen. Gainora har observeret koncentrationen; årsag og besparelsespotentiale skal dokumenteres før et mål sættes.`
+      description: `${item.account} udgør ${pct(item.share)}% af alle omkostninger og ${pct(item.revenueShare)}% af omsætningen. Samlet bogført beløb: ${money(item.cost)}. Et scenarie med 1 procentpoint lavere omkostning i forhold til omsætningen svarer til ${money(revenue * 0.01)} i den analyserede periode, forudsat uændret omsætning. Dette er en følsomhedsberegning, ikke en dokumenteret besparelse. Undersøg prisudvikling, mængder, leverandører og kontering, før der vælges indsats.`
     });
   }
 
@@ -46,7 +48,7 @@ export function runProfitAudit(rows: FinancialRow[]): AuditFinding[] {
     findings.push({
       findingType: "people_capacity",
       title: "Løn og kapacitet",
-      description: `Lønrelaterede konti udgør ${pct(share)}% af omsætningen. Sammenhold udviklingen med aktivitet, bemanding og produktivitet før der konkluderes på årsagen.`
+      description: `Lønrelaterede konti udgør ${pct(share)}% af omsætningen. Bogført lønbeløb: ${money(payroll)}. Sammenhold udviklingen med aktivitet, bemanding, overtid og produktivitet. Et fald på 1 procentpoint af omsætningen svarer matematisk til ${money(revenue * 0.01)} i perioden, men kan ikke forventes uden dokumenteret kapacitetsanalyse.`
     });
   }
 
@@ -56,7 +58,7 @@ export function runProfitAudit(rows: FinancialRow[]): AuditFinding[] {
     findings.push({
       findingType: "purchasing_margin",
       title: "Indkøb og bruttoavance",
-      description: `Vare-/indkøbsrelaterede konti svarer til ${pct(share)}% af omsætningen. Næste analyselag bør koble leverandør, prisudvikling, produktmix og bruttoavance for at forklare niveauet.`
+      description: `Vare-/indkøbsrelaterede konti svarer til ${pct(share)}% af omsætningen. Bogført indkøb: ${money(purchasing)}. Undersøg leverandørpriser, produktmix, svind og bruttoavance. En reduktion på 1 % af indkøbsbeløbet svarer til ${money(purchasing * 0.01)} i perioden; det er alene et regneeksempel og kræver dokumentation.`
     });
   }
 
@@ -66,7 +68,7 @@ export function runProfitAudit(rows: FinancialRow[]): AuditFinding[] {
     findings.push({
       findingType: "fixed_costs",
       title: "Faste og tilbagevendende omkostninger",
-      description: `Genkendelige faste/tilbagevendende konti udgør ${cost.toFixed(2)} i perioden. Kontroller prisstigninger, brug, overlap og kontraktvilkår; dette er et observationsfund og ikke en antaget besparelse.`
+      description: `Genkendelige faste/tilbagevendende konti udgør ${money(cost)} i perioden. Kontroller prisstigninger, brug, overlap og kontraktvilkår; dette er et observationsfund og ikke en antaget besparelse.`
     });
   }
 
