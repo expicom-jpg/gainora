@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { runProfitAudit } from "@/lib/profit-audit/engine";
+import { analyzeFinancialRows } from "@/lib/profit-audit/analysis";
 
 const requestSchema = z.object({
   organizationId: z.string().uuid(),
@@ -23,19 +24,20 @@ export async function POST(request: NextRequest) {
 
     const { data: rows, error: rowsError } = await supabase
       .from("financial_rows")
-      .select("account,description,amount")
+      .select("account,description,amount,transaction_date")
       .eq("organization_id", organizationId)
       .eq("import_id", importId);
 
     if (rowsError) throw rowsError;
 
-    const findings = runProfitAudit(
-      (rows ?? []).map((row) => ({
+    const financialRows = (rows ?? []).map((row) => ({
         account: String(row.account),
         description: String(row.description ?? ""),
-        amount: Number(row.amount)
-      }))
-    );
+        amount: Number(row.amount),
+        transactionDate: row.transaction_date
+      }));
+    const findings = runProfitAudit(financialRows);
+    const analysis = analyzeFinancialRows(financialRows);
 
     const { error: deleteError } = await supabase
       .from("audit_findings")
@@ -62,7 +64,7 @@ export async function POST(request: NextRequest) {
       if (insertError) throw insertError;
     }
 
-    return NextResponse.json({ findings });
+    return NextResponse.json({ findings, analysis });
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHENTICATED") {
       return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
