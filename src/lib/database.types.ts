@@ -310,6 +310,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      persist_profit_audit: {
+        Args: { target_org: string; target_import: string; proposed_findings: Json; input_row_count: number }
+        Returns: Database["public"]["Tables"]["audit_findings"]["Row"][]
+      }
       commit_financial_import: {
         Args: {
           is_synthetic?: boolean

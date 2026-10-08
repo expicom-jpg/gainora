@@ -42,13 +42,12 @@ export async function POST(request: NextRequest) {
       .select("id,title,baseline_value,result_value,attributed_value,created_at")
       .single();
 
-    if (error) throw error;
-
-    await supabase
-      .from("audit_findings")
-      .update({ status: "implemented" })
-      .eq("id", body.findingId)
-      .eq("organization_id", body.organizationId);
+    if (error) {
+      if (error.code === "23514") return NextResponse.json({ error: "finding_not_approved_or_invalid" }, { status: 409 });
+      if (error.code === "42501") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+      throw error;
+    }
+    // Database triggers commit the result, finding state and audit events atomically.
 
     return NextResponse.json({ result: data }, { status: 201 });
   } catch (error) {
