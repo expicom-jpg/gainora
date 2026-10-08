@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 const updateSchema = z.object({
   findingId: z.string().uuid(),
   organizationId: z.string().uuid(),
-  status: z.enum(["approved", "rejected", "implemented"])
+  status: z.enum(["approved", "rejected"])
 });
 
 export async function GET(request: NextRequest) {
@@ -45,7 +45,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const supabase = await createSupabaseServerClient();
-    const approved = parsed.data.status === "approved" || parsed.data.status === "implemented";
+    const approved = parsed.data.status === "approved";
 
     const { data, error } = await supabase
       .from("audit_findings")
@@ -59,7 +59,11 @@ export async function PATCH(request: NextRequest) {
       .select("id,status,approved_at")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.code === "23514") return NextResponse.json({ error: "invalid_finding_transition" }, { status: 409 });
+      if (error.code === "42501") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+      throw error;
+    }
     return NextResponse.json({ finding: data });
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHENTICATED") {

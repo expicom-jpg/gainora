@@ -27,32 +27,21 @@ export async function POST(request: NextRequest) {
     const findings = runProfitAudit(financialRows);
     const analysis = analyzeFinancialRows(financialRows);
 
-    const { error: deleteError } = await supabase
-      .from("audit_findings")
-      .delete()
-      .eq("organization_id", organizationId)
-      .eq("import_id", importId);
-
-    if (deleteError) throw deleteError;
-
-    if (findings.length > 0) {
-      const { error: insertError } = await supabase
-        .from("audit_findings")
-        .insert(
-          findings.map((finding) => ({
-            organization_id: organizationId,
-            import_id: importId,
-            finding_type: finding.findingType,
-            title: finding.title,
-            description: finding.description,
-            estimated_annual_value: finding.estimatedAnnualValue ?? null
-          }))
-        );
-
-      if (insertError) throw insertError;
+    const { data: saved, error } = await supabase.rpc("persist_profit_audit", {
+      target_org: organizationId,
+      target_import: importId,
+      proposed_findings: findings.map(f => ({ ...f })),
+      input_row_count: financialRows.length
+    });
+    if (error) {
+      if (error.message === "audit_rows_changed") return NextResponse.json({ error: error.message }, { status: 409 });
+      if (error.code === "42501") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+      throw error;
     }
-
-    return NextResponse.json({ findings, analysis });
+    return NextResponse.json({ findings: (saved ?? []).map(f => ({
+      id: f.id, findingType: f.finding_type, title: f.title, description: f.description,
+      status: f.status, estimatedAnnualValue: f.estimated_annual_value
+    })), analysis });
   } catch (error) {
     if (error instanceof Error) {
       const status = error.message === "no_rows" ? 404
