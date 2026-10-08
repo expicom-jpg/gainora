@@ -40,12 +40,21 @@ export async function loadFinancialRows(
       throw new Error("audit_rows_incomplete");
     }
 
-    rows.push(...data.map(row => ({
-      account: String(row.account),
-      description: String(row.description ?? ""),
-      amount: Number(row.amount),
-      transactionDate: row.transaction_date
-    })));
+    const normalized = data.map(row => {
+      const raw: unknown = row.amount;
+      const amount = Number(raw);
+      if ((typeof raw !== "number" && typeof raw !== "string") ||
+          (typeof raw === "string" && raw.trim() === "") || !Number.isFinite(amount)) {
+        throw new Error("audit_invalid_amount");
+      }
+      return {
+        account: String(row.account),
+        description: String(row.description ?? ""),
+        amount,
+        transactionDate: row.transaction_date
+      };
+    });
+    rows.push(...normalized);
     if (rows.length === expectedCount) return rows;
   }
 }

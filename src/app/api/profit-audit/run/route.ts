@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error) {
       const status = error.message === "no_rows" ? 404
         : error.message === "import_too_large" ? 413
+        : error.message === "audit_invalid_amount" ? 422
         : ["audit_rows_incomplete", "audit_rows_changed"].includes(error.message) ? 409
         : null;
       if (status) return NextResponse.json({ error: error.message }, { status });

@@ -68,4 +68,28 @@ describe("complete audit input", () => {
     await expect(loadFinancialRows(client, "tenant-a", "import-a")).rejects.toThrow("import_too_large");
     expect(query.range).toHaveBeenCalledTimes(1);
   });
+  it.each([null, "", "not-a-number", "Infinity", "1e9999"])(
+    "rejects invalid financial amount %s rather than producing misleading totals",
+    async amount => {
+      const { client, query } = fixture(1);
+      query.range.mockResolvedValueOnce({
+        data: [{ account: "Salg", description: "Synthetic invalid input", amount: amount as unknown as number, transaction_date: "2026-10-01" }],
+        count: 1,
+        error: null
+      });
+      await expect(loadFinancialRows(client, "tenant-a", "import-a")).rejects.toThrow("audit_invalid_amount");
+    }
+  );
+
+  it("accepts a valid zero amount", async () => {
+    const { client, query } = fixture(1);
+    query.range.mockResolvedValueOnce({
+      data: [{ account: "Salg", description: "Synthetic zero", amount: 0, transaction_date: "2026-10-01" }],
+      count: 1,
+      error: null
+    });
+    const rows = await loadFinancialRows(client, "tenant-a", "import-a");
+    expect(rows[0].amount).toBe(0);
+  });
+
 });

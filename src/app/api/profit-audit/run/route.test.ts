@@ -19,7 +19,7 @@ beforeEach(() => {
 
 describe("audit endpoint input failures", () => {
   it.each([
-    ["no_rows", 404], ["import_too_large", 413],
+    ["no_rows", 404], ["import_too_large", 413], ["audit_invalid_amount", 422],
     ["audit_rows_incomplete", 409], ["audit_rows_changed", 409],
     ["database_unavailable", 500]
   ])("both endpoints reject %s without mutating findings", async (message, status) => {

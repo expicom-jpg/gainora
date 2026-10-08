@@ -13,6 +13,17 @@ select set_config('test.finding', (select id::text from public.persist_profit_au
 
 do $$ begin
   begin
+    insert into public.audit_findings(organization_id,import_id,finding_type,title,status) values(
+      current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'test','Preapproved','approved');
+    raise exception 'TEST FAILED: direct preapproved finding accepted';
+  exception when check_violation then null; end;
+  begin
+    perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',2);
+    raise exception 'TEST FAILED: stale row count accepted';
+  exception when check_violation then
+    if sqlerrm <> 'audit_rows_changed' then raise; end if;
+  end;
+  begin
     insert into public.results(organization_id,finding_id,title) values(
       current_setting('test.org_a')::uuid,current_setting('test.finding')::uuid,'Too early');
     raise exception 'TEST FAILED: unapproved result accepted';
@@ -83,6 +94,36 @@ do $$ begin
   begin
     perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',1);
     raise exception 'TEST FAILED: outsider audit accepted';
+  exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+-- Viewer may read, but cannot approve or record results. No permanent users are created.
+insert into public.memberships(organization_id,user_id,role)
+values(current_setting('test.org_a')::uuid,auth.uid(),'viewer');
+set local role authenticated;
+do $$ declare changed integer; begin
+  if not exists(select 1 from public.audit_findings where id=current_setting('test.finding')::uuid) then
+    raise exception 'TEST FAILED: viewer cannot read';
+  end if;
+  update public.audit_findings set status='approved' where id=current_setting('test.finding')::uuid;
+  get diagnostics changed = row_count;
+  if changed <> 0 then raise exception 'TEST FAILED: viewer changed finding'; end if;
+  begin
+    insert into public.results(organization_id,finding_id,title) values(
+      current_setting('test.org_a')::uuid,current_setting('test.finding')::uuid,'Viewer result');
+    raise exception 'TEST FAILED: viewer inserted result';
+  exception when insufficient_privilege then null; end;
+  begin
+    perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',1);
+    raise exception 'TEST FAILED: viewer ran audit';
+  exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+set local role anon;
+do $$ begin
+  begin
+    perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',1);
+    raise exception 'TEST FAILED: anonymous audit accepted';
   exception when insufficient_privilege then null; end;
 end $$;
 reset role;
