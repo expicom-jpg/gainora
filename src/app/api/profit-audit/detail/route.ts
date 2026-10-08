@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { analyzeFinancialRows } from "@/lib/profit-audit/analysis";
+import { generateRecommendations } from "@/lib/profit-audit/recommendations";
 
 const params = z.object({ organizationId:z.string().uuid(), importId:z.string().uuid() });
 export async function GET(request:NextRequest) {
@@ -22,7 +23,8 @@ export async function GET(request:NextRequest) {
    if(offset>=99000)return NextResponse.json({error:"import_too_large"},{status:413});
   }
   if(rows.length===0)return NextResponse.json({error:"no_rows"},{status:404});
-  return NextResponse.json({analysis:analyzeFinancialRows(rows.map(r=>({account:r.account,description:r.description,amount:r.amount,transactionDate:r.transaction_date})))});
+  const analysis = analyzeFinancialRows(rows.map(r=>({account:r.account,description:r.description,amount:r.amount,transactionDate:r.transaction_date})));
+  return NextResponse.json({analysis,recommendations:generateRecommendations(analysis)});
  }catch(error){
   if(error instanceof Error&&error.message==="UNAUTHENTICATED")return NextResponse.json({error:"unauthenticated"},{status:401});
   return NextResponse.json({error:"audit_detail_failed"},{status:500});
