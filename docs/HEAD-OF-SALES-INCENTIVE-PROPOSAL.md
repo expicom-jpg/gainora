@@ -14,18 +14,30 @@ Morten may start part time, with a defined threshold of verified paying customer
 - Do not assume that an unpaid pre-trigger period is legally permissible. Determine contractor/employee classification, minimum contractual pay, pension, holiday and termination obligations with counsel before work starts.
 - Trigger must also satisfy a board-approved cash/runway test; 10 customers alone do not guarantee payroll affordability.
 
-## Exit incentive — proposal for negotiation
-- Illustrative **1% cash exit bonus** (not equity), subject to a legally defined qualifying change-of-control event and vesting.
-- Proposed vesting: 4 years with a 12-month cliff, subject to legal review and explicit treatment of a sale before the cliff, termination, good/bad leaver and acceleration.
-- Define payout base carefully: e.g., actual net cash proceeds to shareholders attributable to qualifying sale, after agreed debt, transaction fees, preferences and adjustments; specify earn-outs, escrows, staged sales, minority transactions, asset sales, rollover equity and multiple closings.
-- Specify whether the company or selling shareholders owe the bonus; funding and tax treatment materially differ. Avoid promising 1% of headline enterprise valuation.
-- Illustrative 1% of net proceeds: 25m DKK -> 250k DKK; 50m -> 500k; 75m -> 750k; 100m -> 1m, before applicable taxes and subject to vested percentage.
-- No entitlement is created until written, signed agreement. Avoid double counting founder equity, exit bonus and commissions.
+## Exit incentive — proposed 1–5% milestone ladder
+
+**Cash exit bonus, not shares or voting rights.** Maximum 5% of a legally defined qualifying net sale-proceeds base. Each row represents the **total cumulative vested percentage**, not an additional percentage. Both elapsed time and sales threshold must be met.
+
+| Cumulative vested exit bonus | Minimum elapsed time | Verified paying customer threshold |
+|---|---|---|
+| 1% | 12 months | 10 |
+| 2% | 18 months | 25 |
+| 3% | 24 months | 50 |
+| 4% | 36 months | 100 |
+| 5% | 48 months | 200 |
+
+- Eligible customers: actively paying, attributed to Morten's own sales or the sales organization he is responsible for, with at least three consecutive months of collected subscription payments. Define snapshot and treatment of churn and transferred customers before contract signature.
+- Time and performance are conjunctive: reaching a customer threshold early does not accelerate vesting, and tenure without threshold does not vest the next tier.
+- Vesting, sale-before-threshold, good/bad leaver, termination, disability, death, change of role, change of control and any acceleration need legal drafting.
+- Define payout base carefully: actual net cash proceeds to shareholders attributable to qualifying sale, after agreed debt, transaction fees, preferences and adjustments. Address earn-outs, escrows, staged sales, minority transactions, asset sales, rollover equity and multiple closings.
+- Define whether company or selling shareholders pay the bonus and who bears tax/withholding; ensure funding is viable. A 5% payout is material and should be stress-tested against founder and investor proceeds.
+- Illustrative **fully vested** 5% on 100m DKK qualifying net proceeds = 5m DKK before taxes; actual proceeds and earned tier may differ.
+- No entitlement until signed written agreement and legal/tax review.
 
 ## Decision checklist
 - [ ] Agree Morten's status: employee, contractor, founder or shareholder.
 - [ ] Confirm customer trigger and attribution, cash and retention requirements.
 - [ ] Approve minimum runway and payroll cost.
-- [ ] Decide bonus percentage, vesting, acceleration, payer and proceeds definition.
+- [ ] Approve 1–5% tier ladder, customer attribution and retention requirements, vesting, acceleration, payer and proceeds definition.
 - [ ] Danish employment, tax and corporate counsel review.
 - [ ] Sign contracts before any employment/commission/bonus rights are promised.
