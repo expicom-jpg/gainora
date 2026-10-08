@@ -73,7 +73,11 @@ Den optjente procent anvendes på et **præcist defineret kvalificerende nettopr
 - 8 % arbejdsgiverbetalt pension oven i den aftalte bruttoløn; præcis pensionsgivende løn (fast/variabel) skal defineres.
 - Fem ugers ferie efter ferieloven samt fem ekstra betalte fridage, med aftalte deltidsvilkår.
 - Fleksibel/hybrid arbejdsform og relevant arbejdsudstyr.
-- Foreslået årligt kompetencebudget op til 10.000 kr. ved fuldtid, proportionalt ved deltid og efter budgetgodkendelse.
+- **Fast kompetenceudviklingsordning:** årligt uddannelsesbudget på 15.000 kr. ved fuldtid, forholdsmæssigt ved deltid, til relevante kurser, certificeringer og faglig opdatering. Budgettet er et aftalt personalegode, mens konkret kursusvalg og planlægning godkendes med rimelig hensyntagen til driften.
+- **Betalt uddannelsestid:** op til fem arbejdsdage pr. kalenderår ved fuldtid til godkendte kurser, forholdsmæssigt ved deltid; aftal særskilt, om undervisning uden for arbejdstid tæller som arbejdstid.
+- **Videreuddannelse:** mulighed for særskilt arbejdsgiverfinansieret lederuddannelse, akademi-/diplommoduler eller tilsvarende efter skriftlig godkendelse af pris, arbejdstid og relevans. Større uddannelser ligger uden for de 15.000 kr. og er ikke automatisk bevilget.
+- **Individuel udviklingsplan:** årlig samtale om kompetencer og karrierevej fra Head of Sales mod eventuelt kommercielt direktøransvar. Fokus kan være SaaS-salg, AI, CRM, forhandling og salgsledelse.
+- **Økonomisk styring:** uddannelsesbudget og betalt uddannelsestid ligger uden for lønloftet på 75.000 kr., men indgår i Gainoras samlede personale- og likviditetsbudget. Ubrugte midler overføres ikke automatisk til næste år. Eventuelle tilbagebetalingsklausuler ved større uddannelser kræver særskilt juridisk vurdering.
 - Sundhedsforsikring kan tilbydes, når økonomien tillader det.
 - Kvartalsvis opfølgning på pipeline, betalt omsætning, fastholdelse, dækningsbidrag og salgsorganisation.
 - Tydelig adskillelse mellem eventuelle kommunale/politiske hverv og Gainoras salg, især habilitet, offentlige udbud og fortrolige oplysninger.
