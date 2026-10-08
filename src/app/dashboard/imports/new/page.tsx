@@ -1,13 +1,98 @@
 "use client";
-import {FormEvent,useEffect,useMemo,useState} from "react";
-type Org={role:string;organization:{id:string;name:string;created_at:string}|null};type Mapping={date?:string;account?:string;description?:string;amount?:string};type Preview={filename:string;size:number;rowCount:number;columns:string[];mapping:Mapping;preview:Record<string,string|number|null>[];rows:Record<string,string|number|null>[];error?:string};
-const labels={date:"Dato",account:"Konto",description:"Beskrivelse",amount:"Beløb"};
-export default function NewImportPage(){const[organizations,setVirksomheds]=useState<Org[]>([]);const[organizationId,setVirksomhedId]=useState("");const[file,setFile]=useState<File|null>(null);const[preview,setPreview]=useState<Preview|null>(null);const[mapping,setMapping]=useState<Mapping>({});const[auditFindings,setAuditFindings]=useState<any[]>([]);const[message,setMessage]=useState<string|null>(null);const[busy,setBusy]=useState(false);
-useEffect(()=>{fetch("/api/organizations").then(r=>r.json()).then(data=>{const items=(data.organizations??[]) as Org[];setVirksomheds(items);if(items[0]?.organization?.id)setVirksomhedId(items[0].organization.id)}).catch(()=>setMessage("Kunne ikke hente virksomheder."))},[]);
-const completeMapping=useMemo(()=>Boolean(mapping.date&&mapping.account&&mapping.description&&mapping.amount),[mapping]);
-async function previewFile(e:FormEvent<HTMLFormElement>){e.preventDefault();if(!file||!organizationId)return;setBusy(true);setMessage(null);setAuditFindings([]);try{const fd=new FormData();fd.set("organizationId",organizationId);fd.set("file",file);const response=await fetch("/api/imports/preview",{method:"POST",body:fd});const data=await response.json() as Preview;if(!response.ok)throw new Error(data.error??"preview_failed");setPreview(data);setMapping(data.mapping??{})}catch(error){setMessage(error instanceof Error?error.message:"preview_failed")}finally{setBusy(false)}}
-async function commitAndAudit(){if(!preview||!completeMapping)return;setBusy(true);setMessage(null);try{const cr=await fetch("/api/imports/commit",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({organizationId,filename:preview.filename,synthetic:true,mapping,rows:preview.rows})});const cd=await cr.json();if(!cr.ok)throw new Error(cd.error??"import_commit_failed");const ar=await fetch("/api/profit-audit/run",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({organizationId,importId:cd.importId})});const ad=await ar.json();if(!ar.ok)throw new Error(ad.error??"profit_audit_failed");setAuditFindings(ad.findings??[]);setMessage(`Import færdig · ${cd.rowsCommitted} rækker analyseret.`)}catch(error){setMessage(error instanceof Error?error.message:"import_failed")}finally{setBusy(false)}}
-function mappingSelect(field:keyof Mapping,value:string){setMapping(c=>({...c,[field]:value}))}
-return <main className="page"><div className="eyebrow">Profit Audit</div><h1>Økonomisk import</h1><p className="lead">Upload en CSV- eller XLSX-fil. Gainora matcher kolonnerne, validerer data og omsætter dem til konkrete fund.</p><div className="notice">Pilotbeskyttelse er aktiv. Kun syntetiske testdata kan gemmes, indtil produktionsklarhed er åbnet.</div><section className="card" style={{marginTop:18}}><form className="form-grid" onSubmit={previewFile}><label className="field">Virksomhed<select value={organizationId} onChange={e=>setVirksomhedId(e.target.value)} required><option value="">Vælg virksomhed</option>{organizations.map(i=>i.organization?<option key={i.organization.id} value={i.organization.id}>{i.organization.name}</option>:null)}</select></label><label className="field upload">Økonomifil<input type="file" accept=".csv,.xlsx" onChange={e=>setFile(e.target.files?.[0]??null)} required/><span className="muted">CSV or XLSX · maks. 5 MB</span></label><button type="submit" disabled={busy||!organizationId}>{busy?"Analyserer...":"Forhåndsvis import"}</button></form>{message?<p className={auditFindings.length?"notice success":"notice"} style={{marginTop:14}}>{message}</p>:null}</section>
-{preview?<section className="card" style={{marginTop:18}}><div className="eyebrow">Trin 2</div><h2>Bekræft kolonnematch</h2><p className="muted">{preview.filename} · {preview.rowCount} rækker fundet</p><div className="mapping">{(["date","account","description","amount"] as const).map(field=><label className="field" key={field}>{labels[field]}<select value={mapping[field]??""} onChange={e=>mappingSelect(field,e.target.value)}><option value="">Vælg kolonne</option>{preview.columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>)}</div><h3 style={{marginTop:24}}>Dataforhåndsvisning</h3><div className="table-wrap"><table className="table"><thead><tr>{preview.columns.map(c=><th key={c}>{c}</th>)}</tr></thead><tbody>{preview.preview.slice(0,8).map((row,i)=><tr key={i}>{preview.columns.map(c=><td key={c}>{String(row[c]??"")}</td>)}</tr>)}</tbody></table></div><div className="actions"><button type="button" disabled={busy||!completeMapping} onClick={commitAndAudit}>{busy?"Kører Profit Audit...":"Gem testdata og kør Profit Audit"}</button></div></section>:null}
-{auditFindings.length>0?<section className="card" style={{marginTop:18}}><div className="eyebrow">Analyse færdig</div><h2>Profit Audit-fund</h2><p className="muted">{auditFindings.length} fund genereret fra den importerede periode.</p>{auditFindings.map((f,i)=><article className="finding" key={i}><span className="status">{f.findingType?.replaceAll("_"," ")??"finding"}</span><div className="finding-title" style={{marginTop:8}}>{f.title}</div><p className="muted">{f.description}</p></article>)}</section>:null}</main>}
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import type { AuditFinding } from "@/lib/profit-audit/types";
+
+type Organization = { role: string; organization: { id: string; name: string } | null };
+
+export default function NewImportPage() {
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [organizationId, setOrganizationId] = useState("");
+  const [findings, setFindings] = useState<AuditFinding[]>([]);
+  const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    async function loadOrganizations() {
+      try {
+        const response = await fetch("/api/organizations");
+        if (!response.ok) throw new Error("organization_list_failed");
+        const data = await response.json();
+        const items = ((data.organizations ?? []) as Organization[])
+          .filter(item => item.organization && ["owner", "admin", "member"].includes(item.role));
+        if (active) {
+          setOrganizations(items);
+          setOrganizationId(items[0]?.organization?.id ?? "");
+        }
+      } catch {
+        if (active) setMessage("Kunne ikke hente virksomheder. Genindlæs siden og prøv igen.");
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    void loadOrganizations();
+    return () => { active = false; };
+  }, []);
+
+  async function runDemo() {
+    if (!organizationId || busy) return;
+    setBusy(true);
+    setMessage(null);
+    setFindings([]);
+    try {
+      const demo = await fetch("/api/imports/demo", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ organizationId })
+      });
+      if (!demo.ok) throw new Error("demo_failed");
+      const { importId } = await demo.json();
+      const audit = await fetch("/api/profit-audit/run", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ organizationId, importId })
+      });
+      if (!audit.ok) throw new Error("audit_failed");
+      const data = await audit.json();
+      setFindings(data.findings ?? []);
+      setMessage("Demo klar: 8 syntetiske posteringer analyseret. Eksisterende godkendelser og resultater bevares, hvis du kører demoen igen.");
+    } catch {
+      setMessage("Demoen kunne ikke gennemføres. Prøv igen; dine eksisterende fund bliver bevaret.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return <main className="page">
+    <div className="eyebrow">Profit Audit · demo</div>
+    <h1>Prøv Gainora med demodata</h1>
+    <p className="lead">Se økonomisk overblik og konkrete undersøgelsespunkter for en fiktiv virksomhed.</p>
+    <div className="notice">Filupload er lukket. Demoen bruger kun faste, syntetiske tal. Indtast ikke rigtige kundeoplysninger i demoens øvrige felter.</div>
+    <section className="card" style={{ marginTop: 18 }}>
+      <h2>En måned i en fiktiv virksomhed</h2>
+      <p className="muted">September 2026 · 8 posteringer · salg, vareindkøb, løn, husleje, software, forsikring, energi og markedsføring.</p>
+      <label className="field">Virksomhed
+        <select value={organizationId} disabled={busy || loading} onChange={event => {
+          setOrganizationId(event.target.value); setFindings([]); setMessage(null);
+        }}>
+          <option value="">Vælg virksomhed</option>
+          {organizations.map(item => item.organization ? <option key={item.organization.id} value={item.organization.id}>{item.organization.name}</option> : null)}
+        </select>
+      </label>
+      {!loading && !organizations.length ? <p>Du skal have skriverettigheder til en virksomhed. <Link href="/dashboard/organizations/new">Opret en demovirksomhed</Link>.</p> : null}
+      <div className="actions"><button type="button" disabled={busy || loading || !organizationId} onClick={runDemo}>
+        {busy ? "Kører demo..." : "Kør demo med syntetiske data"}
+      </button></div>
+      {message ? <p role="status" className="notice" style={{ marginTop: 14 }}>{message}</p> : null}
+    </section>
+    {findings.length > 0 ? <section className="card" style={{ marginTop: 18 }}>
+      <h2>Demoens fund</h2>
+      <p className="muted">Fundene er undersøgelsespunkter fra fiktive tal. De dokumenterer ikke en virkelig besparelse.</p>
+      {findings.map((finding, index) => <article className="finding" key={`${finding.findingType}-${index}`}>
+        <h3 className="finding-title">{finding.title}</h3><p className="muted">{finding.description}</p>
+      </article>)}
+      <Link href="/dashboard/opportunities">Gå til fund og godkendelser</Link>
+    </section> : null}
+  </main>;
+}

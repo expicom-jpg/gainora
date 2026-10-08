@@ -7,7 +7,7 @@
 
 ## Immediate execution order
 1. Run tests, typecheck, build in CI and capture exact results. Do not treat merged commits as deployment proof.
-2. Synthetic CSV/XLSX end-to-end: upload, preview, validation, tenant-scoped complete import, monthly totals, recommendations, approval, deletion.
+2. Fixed synthetic demo end-to-end: choose an authorized organization, run the eight-row demo, inspect monthly totals and recommendations, approve and record a synthetic result. File upload is closed; see `FIXED-SYNTHETIC-DEMO.md`.
 3. Negative tests: tenant A cannot access tenant B; malformed files, oversized uploads, incomplete paginated reads, duplicate imports, unauthenticated access.
 4. Verify pilot allowlist and owner bootstrap in staging with synthetic data; record evidence, not assumptions.
 5. Document actual infrastructure regions, DPAs, subprocessors, encryption, backups, retention, deletion, AI training terms before any real financial data.

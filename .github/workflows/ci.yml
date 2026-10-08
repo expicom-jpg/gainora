@@ -47,6 +47,7 @@ jobs:
             psql -v ON_ERROR_STOP=1 -f "$migration"
           done
           psql -v ON_ERROR_STOP=1 -f supabase/tests/audit_workflow_integrity.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/tests/fixed_synthetic_demo.sql
   quality:
     runs-on: ubuntu-latest
     timeout-minutes: 20

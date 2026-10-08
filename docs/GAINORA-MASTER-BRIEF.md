@@ -225,3 +225,8 @@ Dinero og e-conomic er prioriterede integrationsretninger; indbyrdes rækkefølg
 - [PR'er](https://github.com/expicom-jpg/gainora/pulls), [issues](https://github.com/expicom-jpg/gainora/issues), individuelle heads og CI kontrolleret 8. oktober.
 - Supabase read-only metadata: projekt, migrationer, tabeller, policies, bucket og live import-RPC samt security advisor; ingen kundeposteringer hentet.
 - Vercel 403-projektopslag, GitHub deployment-kommentar samt live readiness-endpoint; adgangen er udtrykkeligt begrænset.
+
+
+## Teknisk opdatering 8. oktober 2026
+
+PR #38 bevarer audit-historik og registrerer resultater atomart; PR #39 låser npm-afhængigheder og anvender `npm ci`. Den efterfølgende faste demo erstatter filupload og lukker direkte importrettigheder; se [FIXED-SYNTHETIC-DEMO.md](FIXED-SYNTHETIC-DEMO.md) for omfang, tests, deploymentrækkefølge og resterende begrænsninger. Tidligere beskrivelser af CSV/XLSX-import ovenfor er historik, ikke en aktuel åben funktion. Rigtige kundedata er fortsat ikke godkendt.
