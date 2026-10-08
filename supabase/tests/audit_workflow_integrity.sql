@@ -4,12 +4,10 @@ select set_config('request.jwt.claim.sub',gen_random_uuid()::text,true);
 set local role authenticated;
 select set_config('test.org_a', public.create_organization('Synthetic audit A')::text,true);
 select set_config('test.org_b', public.create_organization('Synthetic audit B')::text,true);
-select set_config('test.import_a', public.commit_financial_import(
-  current_setting('test.org_a')::uuid,'synthetic.csv',
-  '[{"date":"2026-10-01","account":"Salg","description":"Synthetic","amount":1000}]',true)::text,true);
+select set_config('test.import_a', public.create_demo_import(current_setting('test.org_a')::uuid)::text,true);
 select set_config('test.finding', (select id::text from public.persist_profit_audit(
   current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,
-  '[{"findingType":"financial_summary","title":"Synthetic baseline","description":"Test"}]',1) limit 1),true);
+  '[{"findingType":"financial_summary","title":"Synthetic baseline","description":"Test"}]',8) limit 1),true);
 
 do $$ begin
   begin
@@ -18,7 +16,7 @@ do $$ begin
     raise exception 'TEST FAILED: direct preapproved finding accepted';
   exception when check_violation then null; end;
   begin
-    perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',2);
+    perform public.persist_profit_audit(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'[]',9);
     raise exception 'TEST FAILED: stale row count accepted';
   exception when check_violation then
     if sqlerrm <> 'audit_rows_changed' then raise; end if;
@@ -55,7 +53,7 @@ values(current_setting('test.org_a')::uuid,current_setting('test.finding')::uuid
 
 do $$ declare repeated_id uuid; begin
   select id into repeated_id from public.persist_profit_audit(current_setting('test.org_a')::uuid,
-    current_setting('test.import_a')::uuid,'[{"findingType":"changed","title":"Do not replace"}]',1);
+    current_setting('test.import_a')::uuid,'[{"findingType":"changed","title":"Do not replace"}]',8);
   if repeated_id <> current_setting('test.finding')::uuid then raise exception 'TEST FAILED: rerun replaced finding'; end if;
   if not exists(select 1 from public.audit_findings where id=repeated_id and status='implemented'
     and approved_at=current_setting('test.approved_at')::timestamptz and title='Synthetic baseline') then
@@ -82,7 +80,7 @@ do $$ declare repeated_id uuid; begin
     insert into public.financial_rows(organization_id,import_id,transaction_date,account,amount)
     values(current_setting('test.org_a')::uuid,current_setting('test.import_a')::uuid,'2026-10-02','Late',50);
     raise exception 'TEST FAILED: audited input modified';
-  exception when check_violation then null; end;
+  exception when insufficient_privilege then null; end;
 end $$;
 
 -- An authenticated outsider must neither see nor operate on the other tenant.
