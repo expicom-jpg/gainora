@@ -18,7 +18,7 @@ Morten may start part time, with a defined threshold of verified paying customer
 
 **Cash exit bonus, not shares or voting rights.** Maximum 5% of a legally defined qualifying net sale-proceeds base. Each row represents the **total cumulative vested percentage**, not an additional percentage. Both elapsed time and sales threshold must be met.
 
-| Cumulative vested exit bonus | Minimum elapsed time | Verified paying customer threshold |
+| Cumulative vested exit bonus | Minimum elapsed time | Weighted paying-customer points threshold |
 |---|---|---|
 | 1% | 12 months | 10 |
 | 2% | 18 months | 25 |
@@ -26,7 +26,9 @@ Morten may start part time, with a defined threshold of verified paying customer
 | 4% | 36 months | 100 |
 | 5% | 48 months | 200 |
 
-- Eligible customers: actively paying, attributed to Morten's own sales or the sales organization he is responsible for, with at least three consecutive months of collected subscription payments. Define snapshot and treatment of churn and transferred customers before contract signature.
+- **Weighted sales-organization points:** 1.0 point for each active paying customer acquired directly by Morten or sales staff in his organization; 0.5 point for each active paying customer attributed to an external partner referral. All tiers (10/25/50/100/200) use these weighted points, not solely directly sourced customers. The 200-point final threshold is organization-wide, not Mortens personal sales quota.
+- Eligible customers must have at least three consecutive months of collected subscription payments; each customer counts only once, with mutually exclusive direct/partner attribution and auditable evidence. Define snapshot and treatment of churn, customer transfers, external partner attribution and attribution disputes before contract signature.
+- Example: 150 directly acquired active paying customers plus 100 active paying partner-referred customers = 200 points.
 - Time and performance are conjunctive: reaching a customer threshold early does not accelerate vesting, and tenure without threshold does not vest the next tier.
 - Vesting, sale-before-threshold, good/bad leaver, termination, disability, death, change of role, change of control and any acceleration need legal drafting.
 - Define payout base carefully: actual net cash proceeds to shareholders attributable to qualifying sale, after agreed debt, transaction fees, preferences and adjustments. Address earn-outs, escrows, staged sales, minority transactions, asset sales, rollover equity and multiple closings.
