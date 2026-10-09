@@ -11,9 +11,10 @@ python3 docs/sales_cash_model.py --self-test
 python3 docs/sales_cash_model.py --template > /tmp/gainora-private-inputs.json
 python3 docs/sales_cash_model.py --input /tmp/gainora-private-inputs.json
 python3 docs/sales_cash_model.py --demo
+python3 docs/sales_cash_model.py --bootstrap-demo
 ```
 
-Keep actual bank balances, employment details and private financial inputs outside the repository. The committed template deliberately has null values; a verified zero must be entered explicitly. The demo has invented scenarios and is always labelled ILLUSTRATIVE_ONLY. Its zero opening cash exposes funding needs; it is not a statement about Gainora's actual balance.
+Keep actual bank balances, employment details and private financial inputs outside the repository. The template now records founder-reported opening cash of 0 DKK (2026-10-09). Other unconfirmed values remain null; an actual zero must be entered explicitly. The demo has invented scenarios and is always labelled ILLUSTRATIVE_ONLY. Demo costs and revenue remain invented even though zero starting cash matches the founder's reported position.
 
 ## What it calculates
 
@@ -32,6 +33,9 @@ Enter each payment in its actual expected cash month, not when revenue or expens
 | Input | Meaning |
 |---|---|
 | opening_unrestricted_cash | Available company cash at the start, excluding restricted funds |
+| opening_deferred_obligations | Previously earned unpaid compensation at model start; unknown until confirmed |
+| deferred_costs_incurred | Newly earned compensation/costs payable later; not a current cash outflow |
+| deferred_obligations_paid | Cash settlement of tracked obligations; do not also enter in salary/commission/other cash lines |
 | commitment_start_month | Month the proposed employment commitment begins; assess each proposed hire separately |
 | subscription_collections | Subscription cash received excluding VAT, before separately entered refunds |
 | committed_funding_received | Only committed funding, entered when available; omit speculative fundraising by entering zero |
@@ -73,10 +77,32 @@ Self-checks cover original reconciliations, four commission boundaries, missing 
 
 ## Inputs still needed
 
-1. Dated available cash and outstanding obligations.
+1. Outstanding obligations and support for founder-reported 0 DKK opening cash.
 2. Actual settled customer revenue and channel/cohort evidence.
 3. Intended hiring dates/hours and itemized employment costs.
 4. Acquisition, onboarding, support and platform cost assumptions supported by evidence.
 5. Approval or revision of the proposed policy thresholds and reserve.
 
 These can be entered later without rebuilding the model. No live financial facts or contractual decisions have been invented.
+
+
+## Bootstrap scenario and deferred compensation
+
+The founder reports no starting capital and considers Morten's participation for later payment likely, not agreed. The template carries 0 opening cash but leaves opening deferred obligations and all monthly accrual/payment values unfilled.
+
+Deferred balance = previous balance + newly earned deferred costs - cash repayments.
+Accrual alone does not change cash. Repayment reduces both cash and the obligation. Repayment above the accrued balance is rejected. Outputs show outstanding deferred amounts and cash less those amounts; the latter is a planning exposure measure, not a complete balance sheet.
+
+New evidence flag deferred_terms_and_settlement_schedule_confirmed must be reviewed even when balances remain after month 18. It requires a documented schedule/trigger and treatment of post-horizon balances; the model cannot verify a contract or infer when a debt is due.
+
+--bootstrap-demo is a DISTINCT stress illustration, not an agreed Morten arrangement:
+- No employed salesperson and no team override; Morten owns 80% of customers, one partner owns 20%.
+- Partner marginal ladder is 10/12/15/18/20% over 1–10/11–20/21–40/41–75/76+ active customers, calculated per partner.
+- For stress testing only, the former full-time benchmark (35,000 + placeholder 15% costs) accrues for three months: 120,750 total, repaid in month 7. Current pay begins month 4. Own commission is paid currently in this demonstration.
+- This does NOT agree a salary, employment relationship, lawful deferral of employer charges, three-month pilot or month-7 payment date. Actual terms and employer costs must replace these assumptions.
+- Old 20,000 fixed operations and 10% platform assumptions remain visible. Reserve 120,500 represents two months of the example's ongoing 40,250 remuneration cost plus 20,000 operations.
+- Starting at zero still requires coverage for actual cash expenses; a deferred fee does not fund those expenses.
+
+The old --demo intentionally retains flat 20% partner commission and two current salaries to reconcile prior documents. It is a historical comparison, not the new operating direction.
+
+Tests now include partner-band boundaries, 20/100-customer examples, unpaid accrual without cash movement, later repayment cash movement, and rejection of repayment exceeding the obligation.
