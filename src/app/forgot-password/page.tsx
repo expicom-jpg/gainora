@@ -1,0 +1,8 @@
+"use client";
+import {FormEvent,useState} from "react";
+import Link from "next/link";
+import {createSupabaseBrowserClient} from "@/lib/supabase/browser";
+export default function ForgotPasswordPage(){
+const[email,setEmail]=useState("");const[busy,setBusy]=useState(false);const[message,setMessage]=useState<string|null>(null);const[error,setError]=useState<string|null>(null);
+async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();setBusy(true);setMessage(null);setError(null);try{const supabase=createSupabaseBrowserClient();const{error:sendError}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:window.location.origin+"/auth/recovery"});if(sendError)throw sendError;setMessage("Hvis der findes en konto med denne e-mail, modtager du et link til at vælge en ny adgangskode. Tjek også spam.")}catch(cause){setError(cause instanceof Error?cause.message:"Kunne ikke sende linket. Prøv igen.")}finally{setBusy(false)}}
+return <main className="auth"><section className="auth-card"><div className="auth-brand">Gainora<span>.</span></div><h1>Glemt adgangskode?</h1><p className="muted">Indtast din e-mail, så sender vi et link til nulstilling.</p><form onSubmit={submit}><label className="field">E-mail<input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><button disabled={busy} type="submit">{busy?"Sender...":"Send nulstillingslink"}</button>{message?<p role="status">{message}</p>:null}{error?<p role="alert" style={{color:"var(--bad)"}}>{error}</p>:null}</form><p><Link href="/login">Tilbage til login</Link></p></section></main>}
