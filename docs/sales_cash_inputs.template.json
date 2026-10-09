@@ -1,6 +1,7 @@
 {
   "status": "UNFILLED",
-  "opening_unrestricted_cash": null,
+  "opening_unrestricted_cash": 0,
+  "opening_deferred_obligations": null,
   "commitment_start_month": null,
   "evidence": {
     "costs_and_receipts_verified": null,
@@ -9,7 +10,8 @@
     "product_security_ready": null,
     "contracts_reviewed": null,
     "policy_thresholds_approved": null,
-    "founder_hiring_approval": null
+    "founder_hiring_approval": null,
+    "deferred_terms_and_settlement_schedule_confirmed": null
   },
   "metrics": {
     "minimum_channel_contribution_pct": null,
@@ -22,6 +24,7 @@
       {
         "month": 1,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -36,11 +39,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 2,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -55,11 +60,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 3,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -74,11 +81,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 4,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -93,11 +102,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 5,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -112,11 +123,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 6,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -131,11 +144,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 7,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -150,11 +165,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 8,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -169,11 +186,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 9,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -188,11 +207,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 10,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -207,11 +228,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 11,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -226,11 +249,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 12,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -245,11 +270,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 13,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -264,11 +291,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 14,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -283,11 +312,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 15,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -302,11 +333,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 16,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -321,11 +354,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 17,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -340,11 +375,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 18,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -359,13 +396,15 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       }
     ],
     "downside": [
       {
         "month": 1,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -380,11 +419,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 2,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -399,11 +440,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 3,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -418,11 +461,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 4,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -437,11 +482,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 5,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -456,11 +503,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 6,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -475,11 +524,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 7,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -494,11 +545,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 8,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -513,11 +566,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 9,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -532,11 +587,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 10,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -551,11 +608,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 11,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -570,11 +629,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 12,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -589,11 +650,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 13,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -608,11 +671,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 14,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -627,11 +692,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 15,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -646,11 +713,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 16,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -665,11 +734,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 17,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -684,11 +755,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 18,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -703,13 +776,15 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       }
     ],
     "severe": [
       {
         "month": 1,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -724,11 +799,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 2,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -743,11 +820,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 3,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -762,11 +841,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 4,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -781,11 +862,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 5,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -800,11 +883,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 6,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -819,11 +904,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 7,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -838,11 +925,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 8,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -857,11 +946,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 9,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -876,11 +967,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 10,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -895,11 +988,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 11,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -914,11 +1009,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 12,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -933,11 +1030,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 13,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -952,11 +1051,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 14,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -971,11 +1072,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 15,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -990,11 +1093,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 16,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -1009,11 +1114,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 17,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -1028,11 +1135,13 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       },
       {
         "month": 18,
         "reserve_required": null,
+        "deferred_costs_incurred": null,
         "subscription_collections": null,
         "committed_funding_received": null,
         "other_cash_received": null,
@@ -1047,7 +1156,8 @@
         "product_security_compliance": null,
         "tax_vat_payments": null,
         "refunds_and_chargebacks": null,
-        "capex_debt_and_other": null
+        "capex_debt_and_other": null,
+        "deferred_obligations_paid": null
       }
     ]
   }
