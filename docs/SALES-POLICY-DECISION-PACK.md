@@ -11,16 +11,39 @@ Consolidates the unresolved decisions in:
 
 Both remained open when reviewed. This pack does not silently amend either proposal. Proposed changes are explicit below. Adoption requires an approval record identifying policy version, effective date and decision owner; merging documentation alone does not authorize expenditure or contracts.
 
+## Updated founder direction — 2026-10-09
+
+- Founder reports current available capital is **0 DKK**. This is supplied planning information, not bank-verified.
+- Founder considers it likely Morten will contribute initially for future payment. Morten's acceptance, work terms and compensation basis remain unconfirmed.
+- Partner commission must start lower and rise to a maximum of 20%. The exact proposed bands below are new recommendations.
+- Immediate operating direction: founder-led acquisition with a separately agreed Morten pilot; no additional salaried seller assumed in the bootstrap scenario. Full-time salary figures below are future benchmarks, not automatic accrued entitlements.
+- Zero capital does not fund platform, legal, onboarding or other expenses. List unavoidable cash payments and a credible source/date of coverage before incurring them. Do not treat prospective sales, unpaid work or possible funding as cash.
+
+### Morten: proposed pilot term sheet for discussion
+
+Use a defined initial scope, time limit, hours limit and total compensation cap. Before work starts, record:
+1. Role, deliverables, start/end dates, working arrangement and ownership/confidentiality terms.
+2. Compensation basis and maximum earned amount. **Do not automatically accrue 35,000/month:** that is the earlier full-time salary benchmark, not an agreed pilot fee.
+3. Whether compensation is unconditionally earned but payable later, or a genuinely contingent success fee. These are economically different. Keep contingent obligations in a separate scenario register until their trigger; do not erase an earned debt because cash is unavailable.
+4. Treatment of own commission and any later employee override: included in the pilot fee or additional, paid currently or deferred. No double payment for the same component.
+5. When cash payment becomes due: a clear date or precisely defined trigger, repayment schedule and treatment on termination, delayed revenue or no financing. A vague promise to pay "when possible" is not a budget input.
+6. Cap on accrued compensation and a stop/review point BEFORE the cap is exceeded. No automatic work extension or indefinite debt growth.
+7. Applicable employer/tax/contract treatment reviewed for the chosen working arrangement; do not assume all associated costs can legally or practically be deferred.
+
+Recommended commercial structure: a small, capped pilot with agreed deferred compensation, followed by a separately approved paid role only when receipts and cash gates support it. Amount, hours, duration and due dates remain open for agreement with Morten. Nothing has been sent or agreed with him.
+
+The model now tracks opening deferred obligations, monthly newly earned deferred costs and cash repayments. Unpaid balances remain visible through month 18. Payment dates beyond the horizon must remain in a settlement schedule, not disappear from planning.
+
 ## 1. Recommended compensation policy
 
 | Item | Recommendation | Approval/evidence still needed |
 |---|---|---|
 | Founder salary | 0 DKK in initial planning; review personal sustainability monthly and before each hire | Founder confirms duration and any later salary start month/amount |
 | Sales Executive | 27,500 DKK gross/month at full time | Actual employer cost breakdown and contract review |
-| Head of Sales / Morten | 35,000 DKK gross/month at full time | Role, hours, start date; part-time pay must be separately specified |
+| Head of Sales / Morten | Future full-time benchmark 35,000 DKK gross/month; initially explore capped deferred pilot | No automatic salary accrual; role, fee, hours and deferred-payment terms must be agreed |
 | Own-portfolio commission | Same progressive marginal schedule for both roles | Explicit approval: replaces PR #32's illustrative flat 10% employee rate |
 | Head of Sales override | 2% on subordinate employed sellers' settled net subscription revenue | Reporting lines and effective dates |
-| External referrals | Retain 20% as a stress-tested planning assumption only | Partner term, activity obligations and actual agreed rate |
+| External referrals | Proposed marginal 10/12/15/18/20% ladder per partner | Exact bands and partner terms require agreement; 20% flat retained only as historical stress comparison |
 | Exit bonus | Separate potential 5% transaction liability; no subscription commission | Beneficiary, payer, basis, trigger, vesting, cap and waterfall |
 
 Progressive own-portfolio bands: customers 1–20: 8%; 21–40: 10%; 41–60: 12%; 61–100: 14%; 101+: 16%. Higher rates apply only to customers in the higher band, never retroactively to the entire portfolio.
@@ -41,21 +64,41 @@ Implementation must settle annual billing, partial payments, failed payments and
 |---|---|---|---|
 | Morten direct | Morten progressive bands | None | None |
 | Employed seller | Seller progressive bands | 2% if assigned subordinate | None |
-| External referral partner | None | None | Agreed partner rate; model currently assumes 20% |
+| External referral partner | None | None | Proposed marginal ladder, capped at 20% |
 
 One acquisition channel per customer at a time. The employee row intentionally contains two different compensation components; this is the only default permitted stacking.
 
 Record customer ID, channel, credited seller/partner, reporting manager, effective dates, policy/contract version, receipt ID, commission basis, band, rate, reversal link and approval audit. Store original attribution and append effective-dated changes rather than overwriting history. A payment must not be commissioned twice; refunds must reconcile to the original ledger entry. Assisted sales require an explicitly approved split within an agreed total envelope before committing to it.
 
-## 3. Partner term recommendation
+## 3. Revised partner ladder proposal
 
-Preferred discussion position: recurring commission while the customer remains paying AND the partner remains an active part of Gainora, subject to signed terms. This is a recommendation, not evidence of a signed agreement.
+The requirement for a rising ladder capped at 20% comes from the founder. These exact cutoffs/rates are a recommendation:
 
-Define "active partner" objectively: ongoing account relationship, agreed review cadence and compliance with the partner agreement; do not rely on an arbitrary monthly new-sales quota. Define cure period, notice, post-termination treatment and reassignment before offering the arrangement.
+| Active paying customers attributed to ONE partner | Marginal recurring rate |
+|---|---:|
+| 1–10 | 10% |
+| 11–20 | 12% |
+| 21–40 | 15% |
+| 41–75 | 18% |
+| 76+ | 20% |
 
-Keep 20% recurring in the planning downside until a different agreement is approved. Also price a time-limited or stepped-down alternative for negotiation; do not assume savings from an unsigned change. Never add the 2% employed-sales override to this channel by default.
+Rates apply only within each band, never to the entire portfolio retroactively. Count each partner separately, not all referral partners together. A top marginal rate of 20% does not mean the blended portfolio rate becomes 20%.
 
-## 4. Reconciled 100-customer illustration
+At 2,495/customer/month:
+- One partner with 20 customers: 10 × 2,495 × 10% + 10 × 2,495 × 12% = **5,489/month**, a blended 11%.
+- The old flat 20% example paid 9,980; this proposal saves **4,491/month**.
+- One partner with 100 customers: **41,167.50/month**, blended 16.5%, versus 49,900 at flat 20%.
+- Two partners with 10 customers each: **4,990 total**, demonstrating why partner distribution matters.
+
+Use the monthly active-paying snapshot and deterministic activation ordering described for employees. Recalculate future bands when a customer churns; refunds reverse original credited rates, not the current band's rate. Annual billing and activation/churn cutoffs must be specified before live payouts.
+
+Recommended eligibility remains recurring commission while the referred customer pays and the partner remains an active part of Gainora. Define active obligations, review cadence, notice/cure, exit and reassignment in the signed agreement. No default 2% Head of Sales override on partner referrals.
+
+At 20 customers for one partner, the channel retains 79% before variable support under the 10% platform assumption. At 100 it retains 73.5%. Customers in the top 20% marginal band still retain only 70% before additional variable support; a ladder improves average economics but does not remove that marginal constraint.
+
+The original #32 and sections 4–5 below remain historical comparisons using flat 20%; they are NOT the proposed partner policy. The new bootstrap demo uses the ladder and assumes one partner solely for illustration.
+
+## 4. Historical 100-customer reconciliation — flat-20% comparison
 
 DKK/month excluding VAT. All 100 customers pay 2,495 each; attribution 40 Morten / 40 employee / 20 partner. Same source assumptions as PR #32 except the employee now uses the proposed progressive schedule.
 
@@ -83,7 +126,7 @@ Sensitivity, each applied independently to the recommended illustration:
 
 The illustration excludes incremental marketing, unallocated onboarding/support, bad debt, founder compensation, corporation tax, transaction-bonus funding and additional staff. These must become explicit lines, not silently remain zero.
 
-## 5. Six-month ramp illustration — not an operating forecast
+## 5. Historical two-salary ramp — not the new bootstrap plan
 
 Assumes both full-time roles are paid from month 1; fixed monthly cost 91,875 including the 15% burden placeholder and 20,000 other operations. Customer channel mix stays 40/40/20. Progressive commission for both employees, 2% subordinate override, 20% referral and 10% platform cost.
 
@@ -133,7 +176,7 @@ Recommended hiring/full-time transition gates — all must pass:
 5. At least three monthly paid cohort observations, with proposed 90-day paid-customer retention >=90%; record actual denominator and loss count. Small samples must be acknowledged and cannot alone authorize a hire.
 6. Product/security readiness, customer-value evidence, contract review and founder approval recorded.
 
-Partner channel has exactly 70% contribution before additional variable support under the 20% commission + 10% platform assumptions. ANY further attributable variable delivery cost would breach the proposed floor. Therefore the 20% partner rate cannot be offered automatically: price, service cost or rate must be reconciled first.
+Under the historical flat-20% stress comparison, the partner channel has exactly 70% contribution before additional variable support. Under the new marginal ladder, this remains true for the top band, while average portfolio contribution is higher. ANY further attributable variable delivery cost would breach the proposed floor. Therefore the 20% partner rate cannot be offered automatically: price, service cost or rate must be reconciled first.
 
 Pause new hiring/extra discretionary acquisition commitments if the six-month gate or channel floor fails. Existing contractual obligations remain budgeted; this is not a unilateral right to stop earned payouts.
 
@@ -143,11 +186,11 @@ Pause new hiring/extra discretionary acquisition commitments if the six-month ga
 |---|---|---|---|
 | Employee schedule | Same progressive 8–16% bands as Morten | Founder | Proposed |
 | Stacking | Exclusive channels; employee-only 2% override | Founder | Proposed |
-| Partner term/rate | Active customer + active partner; stress-test 20% | Founder + partner, then contract adviser | Unresolved |
+| Partner term/rate | Founder requests ladder capped at 20%; proposed 10/12/15/18/20% marginal bands | Founder + partner, then contract adviser | Direction confirmed; exact terms proposed |
 | Founder salary duration | Monthly sustainability review; model later salary separately | Founder | Unresolved |
 | Actual employer cost | Itemized quote including variable compensation treatment | Payroll/accounting adviser | Missing |
-| Current cash/MRR | Bank and settled-payment evidence, dated | Founder/accounting | Missing |
-| Hiring timing | Start founder-led; each role separately clears gates | Founder | Proposed |
+| Current cash/MRR | Founder reports 0 DKK capital; actual MRR and obligations still unknown | Founder/accounting | Cash supplied 2026-10-09; other evidence missing |
+| Hiring timing | Founder-led + potential capped deferred Morten pilot; no new salaried seller initially | Founder + Morten | Morten acceptance/terms unconfirmed |
 | Reserve and KPI gates | Two-month reserve; 70% floor; <=12-month payback; >=90% 90-day retention | Founder | Proposed |
 | Exit bonus | Separate contract and transaction-waterfall scenario | Founder + contract adviser | Unresolved |
 | Operating forecast | Fill actual inputs and rerun 18 months | Project finance owner | Blocked on actual inputs |
@@ -166,4 +209,4 @@ Ledger acceptance cases to implement when coding:
 - Refund after reassignment reverses original recipients/rates.
 - Churn/reactivation, partial receipts, annual billing and effective-date changes reconcile to settled receipts.
 
-Next concrete inputs needed from founder: available unrestricted cash and outstanding obligations; actual paying-customer/MRR status; intended employment start dates/hours. An anonymized summary suffices. Contracts and quotes can then replace placeholders without changing the structure.
+Next concrete inputs: outstanding obligations; actual paying-customer/MRR status; Morten's acceptance, pilot scope, compensation cap and payment triggers. Available capital is now supplied as 0 DKK. An anonymized summary suffices. Contracts and quotes can then replace placeholders without changing the structure.
