@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
 
     if (!error) {
-      redirectTo.pathname = "/dashboard";
+      redirectTo.pathname = type === "recovery" ? "/reset-password" : "/dashboard";
       return NextResponse.redirect(redirectTo);
     }
   }
