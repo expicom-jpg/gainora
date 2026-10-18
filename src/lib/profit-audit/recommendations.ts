@@ -10,6 +10,7 @@ export type Recommendation = {
   dataNeeded: string[];
   scenario: { baseAmount: number; reductionPct: number; potential: number; label: string } | null;
   validation: string;
+  signals: string[];
 };
 
 const norm = (s: string) => s.toLocaleLowerCase("da-DK");
@@ -23,7 +24,8 @@ function recommendation(id: string, title: string, observation: string, actions:
     id, title, observation, actions, dataNeeded,
     evidence: "observed",
     scenario: base > 0 ? { baseAmount: base, reductionPct: 1, potential: costReductionScenario(base, 1), label: "Illustration: 1 % lavere omkostning på denne kontogruppe – ikke et dokumenteret besparelsespotentiale." } : null,
-    validation
+    validation,
+    signals: []
   };
 }
 
@@ -47,8 +49,22 @@ export function generateRecommendations(detail: AuditDetail): Recommendation[] {
     const matching = detail.accounts.filter(a => group.pattern.test(norm(a.account)));
     const amount = matching.reduce((sum,a) => sum+a.amount,0);
     if (amount <= 0) return [];
-    return [recommendation(group.id, group.title,
+    const signals: string[] = [];
+    if (detail.costs > 0) {
+      const share = amount / detail.costs * 100;
+      signals.push(`Kontogruppen udgør ${share.toLocaleString("da-DK", {maximumFractionDigits: 1})} % af de importerede omkostninger. Dette er en koncentration, ikke en påvist besparelse.`);
+    }
+    const months = detail.monthly.filter(m => m.costs > 0 && m.revenue > 0);
+    if (months.length >= 3) {
+      const ratios = months.map(m => ({month: m.month, ratio: m.costs / m.revenue * 100}));
+      const low = ratios.reduce((a,b) => a.ratio < b.ratio ? a : b);
+      const high = ratios.reduce((a,b) => a.ratio > b.ratio ? a : b);
+      if (high.ratio - low.ratio >= 5) {
+        signals.push(`Samlet omkostningsandel varierer fra ${low.ratio.toLocaleString("da-DK", {maximumFractionDigits: 1})} % (${low.month}) til ${high.ratio.toLocaleString("da-DK", {maximumFractionDigits: 1})} % (${high.month}) af omsætningen. Udsvinget vedrører alle omkostninger og kan ikke tilskrives denne kontogruppe uden yderligere data.`);
+      }
+    }
+    return [{...recommendation(group.id, group.title,
       `Importerede konti i denne gruppe: ${matching.map(a=>a.account).join(", ")}. Samlet udgift: ${dkk(amount)} i perioden.`,
-      [...group.actions], [...group.dataNeeded], amount, group.validation)];
+      [...group.actions], [...group.dataNeeded], amount, group.validation), signals}];
   });
 }
