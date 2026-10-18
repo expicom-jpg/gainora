@@ -34,5 +34,16 @@ export default function BillingPage(){
    <h2>Mit abonnement</h2>
    <p className="muted">Når Stripe er integreret, vil du her kunne se abonnementsstatus, kommende betaling, fakturaer, betalingsmetode og opsigelse. Funktionerne er ikke aktiveret endnu.</p>
   </section>
+  <section className="card" style={{marginTop:20}}>
+   <h2>Moms og regnskab</h2>
+   <p>Vi klargør en samlet oversigt over fakturaer, momsgrundlag, indbetalinger, kreditnotaer og afstemning. Denne visning er endnu ikke et bogføringssystem.</p>
+   <div className="table-wrap"><table className="table"><thead><tr><th>Område</th><th>Kommende funktion</th><th>Status</th></tr></thead><tbody>
+    <tr><td>Moms</td><td>Kontrol af kundeland, momsregistrering og korrekt momssats</td><td>Afventer integration</td></tr>
+    <tr><td>Fakturaer</td><td>Fakturanummer, betalingsstatus, momsoplysninger og download</td><td>Afventer integration</td></tr>
+    <tr><td>Kreditnotaer</td><td>Sporbar tilbageførsel af faktura og betaling</td><td>Afventer integration</td></tr>
+    <tr><td>Regnskab</td><td>Eksport og afstemning mod bogføringssystem</td><td>Afventer integration</td></tr>
+   </tbody></table></div>
+   <p className="muted">Dansk standardmoms er som udgangspunkt 25 %, men EU B2B, eksport og særlige forhold kræver særskilt vurdering. Moms beregnes først endeligt ved fakturering ud fra validerede kundeoplysninger.</p>
+  </section>
  </main>;
 }
