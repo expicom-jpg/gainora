@@ -16,7 +16,7 @@ export async function previewInvoiceExcel(buffer: ArrayBuffer): Promise<CsvPrevi
   if (!buffer.byteLength || buffer.byteLength > MAX_FILE_BYTES) throw new Error("excel_invalid_size");
   const ExcelJS = await import("exceljs");
   const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(buffer);
+  // ExcelJS types expect Node Buffer, but browser runtime accepts ArrayBuffer.\n  await workbook.xlsx.load(buffer as never);
   if (workbook.worksheets.length !== 1) throw new Error("excel_requires_one_sheet");
   const sheet = workbook.worksheets[0];
   if (sheet.rowCount > MAX_ROWS + 1) throw new Error("too_many_invoice_lines");
