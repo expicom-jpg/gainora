@@ -1,37 +1,87 @@
-import type {InvoiceLine} from "./invoice-lines";
-export type CsvPreview={rows:InvoiceLine[];errors:{row:number;message:string}[]};
-const fields=["invoiceId","invoiceDate","supplier","productKey","currency","unit","quantity","unitPrice"] as const;
-function parseRecords(text:string):string[][]{
- const records:string[][]=[];let row:string[]=[];let field="";let quoted=false;
- for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++}else if(c==='"')quoted=false;else field+=c}
- else if(c==='"'){if(field!=="")throw new Error("invalid_csv_quote");quoted=true}
- else if(c===","||c===";"){row.push(field);field=""}
- else if(c==="\n"){row.push(field);records.push(row);row=[];field=""}
- else if(c!=="\r")field+=c}
- if(quoted)throw new Error("invalid_csv_quote");
- if(field!==""||row.length){row.push(field);records.push(row)}
- return records;
-}
-const number=(value:string)=>Number(value.trim().replace(",","."));
-export function previewInvoiceCsv(text:string,maxRows=10000):CsvPreview{
- if(text.length>3_000_000)throw new Error("csv_too_large");
- const records=parseRecords(text.replace(/^\uFEFF/,""));
- if(!records.length)throw new Error("empty_csv");
- const header=records.shift()!.map(x=>x.trim());
- if(header.length!==fields.length||fields.some((f,i)=>header[i]!==f))throw new Error("invalid_csv_headers");
- if(records.length>maxRows)throw new Error("too_many_invoice_lines");
- const rows:InvoiceLine[]=[],errors:CsvPreview["errors"]=[];
- for(let i=0;i<records.length;i++){
-  const cells=records[i];if(cells.length===1&&!cells[0].trim())continue;
-  const row=i+2;
-  if(cells.length!==fields.length){errors.push({row,message:"Forkert antal kolonner"});continue}
-  const [invoiceId,invoiceDate,supplier,productKey,currency,unit,quantityText,priceText]=cells.map(x=>x.trim());
-  const quantity=number(quantityText),unitPrice=number(priceText);
-  const validDate=/^\d{4}-\d{2}-\d{2}$/.test(invoiceDate)&&!Number.isNaN(Date.parse(invoiceDate+"T00:00:00Z"))&&new Date(invoiceDate+"T00:00:00Z").toISOString().slice(0,10)===invoiceDate;
-  if(!invoiceId||!supplier||!productKey||!currency||!unit||!validDate||!Number.isFinite(quantity)||quantity<=0||!Number.isFinite(unitPrice)||unitPrice<0){
-   errors.push({row,message:"Ugyldig fakturalinje, dato, antal eller enhedspris"});continue;
+import type { InvoiceLine } from "./invoice-lines";
+
+export type CsvPreview = {
+  rows: InvoiceLine[];
+  errors: { row: number; message: string }[];
+};
+const FIELDS = ["invoiceId", "invoiceDate", "supplier", "productKey", "currency", "unit", "quantity", "unitPrice"] as const;
+const MAX_BYTES = 3_000_000;
+
+function parseRecords(text: string, delimiter: "," | ";"): { line: number; cells: string[] }[] {
+  const rows: { line: number; cells: string[] }[] = [];
+  let cells: string[] = [], value = "", quoted = false, afterQuote = false, line = 1, rowLine = 1;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (quoted) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { value += '"'; i++; }
+        else { quoted = false; afterQuote = true; }
+      } else {
+        if (ch === "\n") line++;
+        value += ch;
+      }
+      continue;
+    }
+    if (ch === '"') {
+      if (value !== "" || afterQuote) throw new Error("invalid_csv_quote");
+      quoted = true;
+    } else if (ch === delimiter) {
+      cells.push(value); value = ""; afterQuote = false;
+    } else if (ch === "\n" || ch === "\r") {
+      cells.push(value);
+      if (cells.some(c => c.trim() !== "")) rows.push({ line: rowLine, cells });
+      cells = []; value = ""; afterQuote = false;
+      if (ch === "\r" && text[i + 1] === "\n") i++;
+      line++; rowLine = line;
+    } else {
+      if (afterQuote && ch !== " " && ch !== "\t") throw new Error("invalid_csv_quote");
+      if (!afterQuote) value += ch;
+    }
   }
-  rows.push({invoiceId,invoiceDate,supplier,productKey,currency,unit,quantity,unitPrice});
- }
- return {rows,errors};
+  if (quoted) throw new Error("invalid_csv_quote");
+  cells.push(value);
+  if (cells.some(c => c.trim() !== "")) rows.push({ line: rowLine, cells });
+  return rows;
+}
+
+function parseNumber(value: string, decimalComma: boolean): number {
+  const cleaned = value.trim();
+  if (!cleaned || !(decimalComma ? /^-?\d+(?:,\d+)?$/ : /^-?\d+(?:\.\d+)?$/).test(cleaned)) return NaN;
+  return Number(decimalComma ? cleaned.replace(",", ".") : cleaned);
+}
+function validDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(value + "T00:00:00Z");
+  return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === value;
+}
+
+/** Local browser preview only: no storage, upload, tenant sharing or verified savings. */
+export function previewInvoiceCsv(text: string, maxRows = 10000): CsvPreview {
+  if (new TextEncoder().encode(text).length > MAX_BYTES) throw new Error("csv_too_large");
+  const source = text.replace(/^\uFEFF/, "");
+  const firstLine = source.split(/\r?\n/, 1)[0] ?? "";
+  const delimiter: "," | ";" = firstLine.includes(";") ? ";" : ",";
+  const records = parseRecords(source, delimiter);
+  if (!records.length) throw new Error("empty_csv");
+  const header = records.shift()!.cells.map(c => c.trim());
+  if (header.length !== FIELDS.length || FIELDS.some((field, i) => field !== header[i]))
+    throw new Error("invalid_csv_headers");
+  if (records.length > maxRows) throw new Error("too_many_invoice_lines");
+  const rows: InvoiceLine[] = [];
+  const errors: CsvPreview["errors"] = [];
+  for (const { line, cells } of records) {
+    if (cells.length !== FIELDS.length) {
+      errors.push({ row: line, message: "Forkert antal kolonner" }); continue;
+    }
+    const [invoiceId, invoiceDate, supplier, productKey, currency, unit, qty, price] = cells.map(c => c.trim());
+    const quantity = parseNumber(qty, delimiter === ";");
+    const unitPrice = parseNumber(price, delimiter === ";");
+    if (!invoiceId || !supplier || !productKey || !currency || !unit || !validDate(invoiceDate) ||
+        !Number.isFinite(quantity) || quantity <= 0 || !Number.isFinite(unitPrice) || unitPrice < 0 ||
+        !/^[A-Za-z]{3}$/.test(currency)) {
+      errors.push({ row: line, message: "Ugyldig dato, felt, valuta, antal eller enhedspris" }); continue;
+    }
+    rows.push({ invoiceId, invoiceDate, supplier, productKey, currency: currency.toUpperCase(), unit, quantity, unitPrice });
+  }
+  return { rows, errors };
 }
