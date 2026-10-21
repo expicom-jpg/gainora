@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import SupplierAuditDemo from "./supplier-audit-demo";
+import InvoiceCsvPreview from "./invoice-csv-preview";
 import { useEffect, useState } from "react";
 import type { AuditFinding } from "@/lib/profit-audit/types";
 
@@ -69,7 +70,7 @@ export default function NewImportPage() {
     <div className="eyebrow">Profit Audit · demo</div>
     <h1>Prøv Gainora med demodata</h1>
     <p className="lead">Se økonomisk overblik og konkrete undersøgelsespunkter for en fiktiv virksomhed.</p>
-    <SupplierAuditDemo/><div className="notice">Filupload er lukket. Demoen bruger kun faste, syntetiske tal. Indtast ikke rigtige kundeoplysninger i demoens øvrige felter.</div>
+    <SupplierAuditDemo/><InvoiceCsvPreview/><div className="notice">Filupload er lukket. Demoen bruger kun faste, syntetiske tal. Indtast ikke rigtige kundeoplysninger i demoens øvrige felter.</div>
     <section className="card" style={{ marginTop: 18 }}>
       <h2>En måned i en fiktiv virksomhed</h2>
       <p className="muted">September 2026 · 8 posteringer · salg, vareindkøb, løn, husleje, software, forsikring, energi og markedsføring.</p>
