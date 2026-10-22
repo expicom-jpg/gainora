@@ -2,6 +2,8 @@
 -- New partner logins default to no access until explicitly provisioned by an administrator.
 alter table public.partners
   add column if not exists introduced_by_partner_id uuid references public.partners(id);
+alter table public.leads add column if not exists contact_basis text;
+alter table public.leads add constraint leads_contact_basis_check check (contact_basis is null or char_length(contact_basis) between 10 and 500);
 alter table public.partners
   add constraint partners_cannot_self_introduce check (introduced_by_partner_id is null or introduced_by_partner_id <> id);
 
