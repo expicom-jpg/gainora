@@ -1,6 +1,7 @@
 import {createSupabaseServerClient} from "@/lib/supabase/server";
 import {requirePageUser} from "@/lib/auth-page";
 import {PartnerLeadForm} from "./partner-lead-form";
+import {PartnerLeadStatus} from "./partner-lead-status";
 import type {SupabaseClient} from "@supabase/supabase-js";
 export const dynamic="force-dynamic";
 const money=(minor:number,currency="DKK")=>new Intl.NumberFormat("da-DK",{style:"currency",currency}).format(minor/100);
@@ -43,7 +44,7 @@ export default async function PartnerDashboardPage(){
    <PartnerLeadForm partners={partners.filter(x=>x.status==="active"&&own.some(m=>m.partner_id===x.id&&["admin","seller"].includes(m.role))).map(x=>({id:x.id,name:x.name}))}/>
   </section>
   <section className="card" style={{marginTop:18}}><h2>Salgsarbejde og pipeline</h2>
-   {leads.length?<div className="table-wrap"><table className="table"><thead><tr><th>Virksomhed</th><th>Status</th><th>Registreret</th></tr></thead><tbody>{leads.map(x=><tr key={x.id}><td>{x.company_name}</td><td><span className="status">{x.status}</span></td><td>{new Date(x.created_at).toLocaleDateString("da-DK")}</td></tr>)}</tbody></table></div>:<p className="muted">Ingen registrerede leads endnu.</p>}
+   {leads.length?<div className="table-wrap"><table className="table"><thead><tr><th>Virksomhed</th><th>Status</th><th>Registreret</th></tr></thead><tbody>{leads.map(x=><tr key={x.id}><td>{x.company_name}</td><td><PartnerLeadStatus leadId={x.id} partnerId={x.partner_id} initialStatus={x.status} canEdit={own.some(m=>m.partner_id===x.partner_id&&["admin","seller"].includes(m.role))}/></td><td>{new Date(x.created_at).toLocaleDateString("da-DK")}</td></tr>)}</tbody></table></div>:<p className="muted">Ingen registrerede leads endnu.</p>}
   </section>
   <section className="card" style={{marginTop:18}}><h2>Provision og afregning</h2>
    {ledger.length?<div className="table-wrap"><table className="table"><thead><tr><th>Type</th><th>Dato</th><th>Beløb</th></tr></thead><tbody>{ledger.map(x=><tr key={x.id}><td>{x.entry_type}</td><td>{new Date(x.created_at).toLocaleDateString("da-DK")}</td><td>{money(x.commission_amount_minor,x.currency)}</td></tr>)}</tbody></table></div>:<p className="muted">Ingen verificerede provisionsposter endnu. Beregningen på 10 % + 2 % er endnu ikke koblet på betalingsudbyderens webhooks.</p>}
