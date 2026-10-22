@@ -39,6 +39,8 @@ alter table public.partner_payouts enable row level security;
 -- Authentication is distinct from authorization. No anonymous access.
 grant select on public.partner_members,public.partners,public.partner_agents,public.leads,public.commission_ledger,public.partner_payouts to authenticated;
 grant insert on public.leads to authenticated;
+grant update(status) on public.leads to authenticated;
+revoke insert on public.partners,public.partner_members,public.partner_agents,public.commission_ledger,public.partner_payouts from authenticated;
 revoke update,delete on public.partner_members,public.partners,public.partner_agents,public.leads,public.commission_ledger,public.partner_payouts from authenticated;
 
 create policy partner_members_own_read on public.partner_members for select to authenticated
@@ -56,7 +58,16 @@ create policy partner_leads_own_read on public.leads for select to authenticated
 -- Only direct partner sales admins/sellers can submit their own new leads.
 create policy partner_leads_self_insert on public.leads for insert to authenticated
  with check (partner_id is not null and partner_agent_id is null and sales_channel_id is null
- and status='new'
+ and status='new' and contact_basis is not null and char_length(contact_basis) between 10 and 500
+ and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')));
+
+
+-- Sellers can progress their own leads without editing ownership, lead source or attribution.
+-- Marking a lead as won is reserved for trusted billing/back-office reconciliation.
+create policy partner_leads_status_update on public.leads for update to authenticated
+ using (partner_id is not null
+ and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')))
+ with check (partner_id is not null and status in ('new','contacted','qualified','demo','offer','lost')
  and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')));
 
 -- Ledger and payouts can be READ only by the commission beneficiary. Writes remain server-side.
