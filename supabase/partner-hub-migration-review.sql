@@ -7,6 +7,15 @@ alter table public.leads add constraint leads_contact_basis_check check (contact
 alter table public.partners
   add constraint partners_cannot_self_introduce check (introduced_by_partner_id is null or introduced_by_partner_id <> id);
 
+create table if not exists public.partner_hub_admins (
+ user_id uuid primary key references auth.users(id) on delete cascade,
+ created_at timestamptz not null default now()
+);
+alter table public.partner_hub_admins enable row level security;
+grant select on public.partner_hub_admins to authenticated;
+create policy partner_hub_admins_self_read on public.partner_hub_admins
+ for select to authenticated using (user_id=(select auth.uid()));
+-- Administrators are provisioned out-of-band by the database owner, never by the browser.
 create table if not exists public.partner_members (
  id uuid primary key default gen_random_uuid(),
  partner_id uuid not null references public.partners(id) on delete cascade,
@@ -60,3 +69,20 @@ create policy partner_payouts_own_read on public.partner_payouts for select to a
 -- Admin provision of partner_members and partner hierarchy must be performed by trusted back office.
 -- TODO before rollout: test deny access for unrelated signed-in users, multi-memberships, 
 -- refunds and payout reconciliation. Do not apply to production without security review.
+
+-- Global back-office views are only available to approved hub administrators.
+create policy partner_admin_partner_read on public.partners for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+create policy partner_admin_members_read on public.partner_members for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+create policy partner_admin_leads_read on public.leads for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+create policy partner_admin_agents_read on public.partner_agents for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+create policy partner_admin_ledger_read on public.commission_ledger for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+create policy partner_admin_payouts_read on public.partner_payouts for select to authenticated
+ using (exists(select 1 from public.partner_hub_admins a where a.user_id=(select auth.uid())));
+
+-- Invoice/customer finance access is not granted to partners or hub admins.
+-- No authenticated client can change partner hierarchy, payments, or commission records.
