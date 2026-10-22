@@ -24,17 +24,21 @@ export async function previewInvoiceExcel(buffer: ArrayBuffer): Promise<CsvPrevi
   const cellText = (row: number, col: number): string => {
     const value = sheet.getRow(row).getCell(col).value;
     if (value === null || value === undefined) return "";
-    if (typeof value === "string" || typeof value === "number") return String(value);
+    if (typeof value === "string") { if (/[\r\n]/.test(value)) throw new Error("excel_multiline_cell"); return value; }
+    if (typeof value === "number") return String(value);
     if (value instanceof Date) return value.toISOString().slice(0, 10);
     // Reject formula, hyperlinks, rich text and any uncertain Excel cell shape.
     throw new Error("excel_unsupported_cell");
   };
   if (HEADERS.some((name, i) => cellText(1, i + 1).trim() !== name)) throw new Error("invalid_excel_headers");
   const lines = [HEADERS.join(",")];
+  const sourceRows = [1];
   for (let row = 2; row <= sheet.rowCount; row++) {
     const cells = HEADERS.map((_, i) => cellText(row, i + 1));
     if (cells.every(value => !value.trim())) continue;
     lines.push(cells.map(csvCell).join(","));
+    sourceRows.push(row);
   }
-  return previewInvoiceCsv(lines.join("\n"), MAX_ROWS);
+  const result = previewInvoiceCsv(lines.join("\n"), MAX_ROWS);
+  return { ...result, errors: result.errors.map(error => ({ ...error, row: sourceRows[error.row - 1] ?? error.row })) };
 }
