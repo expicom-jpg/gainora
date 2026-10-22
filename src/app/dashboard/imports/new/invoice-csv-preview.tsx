@@ -17,7 +17,7 @@ export default function InvoiceCsvPreview(){
     const isExcel = /\\.xlsx$/i.test(file.name);
     if (!isExcel && !/\\.csv$/i.test(file.name)) throw new Error("unsupported_file");
     const parsed = isExcel
-      ? await import("@/lib/profit-audit/invoice-excel-preview").then(m => m.previewInvoiceExcel(awaitFileBuffer(file)))
+      ? await import("@/lib/profit-audit/invoice-excel-preview").then(m => m.previewInvoiceExcel(await awaitFileBuffer(file)))
       : previewInvoiceCsv(await file.text());
     setPreview(parsed);
   } catch {
