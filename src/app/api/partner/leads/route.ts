@@ -17,9 +17,7 @@ export async function POST(request:Request){
  const {data:partner,error:partnerError}=await db.from("partners").select("id,status").eq("id",membership.partner_id).maybeSingle();
  if(partnerError||partner?.status!=="active")return NextResponse.json({error:"Denne partner er ikke aktiv."},{status:403});
  // No client-submitted status, owner, attribution, payout, or commission allowed.
- const {data:created,error:insertError}=await db.from("leads").insert({partner_id:membership.partner_id,company_name:valid.data.companyName,contact_email:valid.data.contactEmail,status:"new"}).select("id").single();
+ const {data:created,error:insertError}=await db.from("leads").insert({partner_id:membership.partner_id,company_name:valid.data.companyName,contact_email:valid.data.contactEmail,status:"new",contact_basis:valid.data.contactBasis}).select("id").single();
  if(insertError)return NextResponse.json({error:"Lead blev ikke registreret. Kontrollér partneradgangen."},{status:400});
- // The basis is deliberately not stored until the approved GDPR workflow has an audited field.
- // Therefore, leave contact details out of the lead until contact-basis storage is shipped.
  return NextResponse.json({id:created.id},{status:201});
 }
