@@ -20,6 +20,13 @@ describe("local invoice XLSX preview",()=>{
   const b=await wb.xlsx.writeBuffer();
   await expect(previewInvoiceExcel(Uint8Array.from(b).buffer)).rejects.toThrow("excel_unsupported_cell");
  });
+ it("reports the actual Excel sheet row after blank rows",async()=>{
+  const wb=new ExcelJS.Workbook();const ws=wb.addWorksheet("Invoices");ws.addRow(headers);
+  ws.getRow(4).values=["INV-4","2026-02-30","Supplier","tea","DKK","kg",1,25];
+  const b=await wb.xlsx.writeBuffer();
+  const result=await previewInvoiceExcel(Uint8Array.from(b).buffer);
+  expect(result.errors[0]?.row).toBe(4);
+ });
  it("rejects incorrect headers and multiple sheets",async()=>{
   const wrong=new ExcelJS.Workbook();wrong.addWorksheet("One").addRow(["Bad header"]);
   await expect(previewInvoiceExcel(Uint8Array.from(await wrong.xlsx.writeBuffer()).buffer)).rejects.toThrow("invalid_excel_headers");
