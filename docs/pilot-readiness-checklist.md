@@ -56,6 +56,8 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Ved mislykket eskalering får kunden en tydelig alternativ kontaktvej, som først vises når en reel adresse/kanal er konfigureret.
 - [ ] Compliance kan se, overtage, svare på, afslutte og dokumentere sagen; almindelige supportsager kan videresendes fra compliance til rette ansvarlige.
 - [ ] Compliance skal kunne besvare henvendelsen via **Svar i chat** i kundens oprindelige chat-tråd; kunden skal kunne svare tilbage, også efter genåbning.
+- [ ] Compliance skal aktivt vælge **Løbende dialog** eller **Endeligt svar** før hver afsendelse; ingen standardværdi. Serveren afviser svar uden et gyldigt valg.
+- [ ] Løbende dialog holder sagen åben; endeligt svar lukker/markerer sagen besvaret med mulighed for genåbning. Kun endelige svar må foreslås til ny vidensartikel, stadig med separat menneskelig godkendelse.
 - [ ] Menneskets svar skal tydeligt markeres og knyttes til korrekt sag og autoriseret bruger; kun verificeret kunde må læse personlige svar.
 - [ ] Afsluttede dialoger skal danne anonymiserede forslag til vidensbasen; compliance skal godkende en generel artikel før chatbotten må genbruge den.
 - [ ] I compliance-chatten findes et **frivilligt, umarkeret som standard** felt: "Endeligt svar – foreslå til chatbot-vidensbase". Markering opretter et anonymiseret forslag, som kræver eksplicit godkendelse før chatbotten må genbruge det; umarkerede svar er kun til kunden.
