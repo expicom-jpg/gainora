@@ -3,6 +3,20 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
+function recoveryErrorMessage(error: unknown): string {
+  if (error && typeof error === "object") {
+    const details = error as { status?: number; code?: string };
+    if (details.status === 429 || details.code === "over_email_send_rate_limit" || details.code === "over_request_rate_limit")
+      return "Der er sendt for mange anmodninger. Vent lidt, før du prøver igen.";
+    if (details.status === 422 && details.code === "email_address_invalid")
+      return "E-mailadressen blev ikke accepteret. Kontrollér adressen, og prøv igen.";
+    if (typeof details.status === "number" && details.status >= 500)
+      return "Mailtjenesten er midlertidigt utilgængelig. Kontakt Gainora-support, hvis fejlen fortsætter.";
+  }
+  if (error instanceof TypeError) return "Forbindelsen til login-tjenesten fejlede. Kontrollér internetforbindelsen, og prøv igen.";
+  return "Nulstillingslinket kunne ikke sendes. Prøv igen senere, eller kontakt Gainora-support.";
+}
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -17,8 +31,8 @@ export default function ForgotPasswordPage() {
       });
       if (authError) throw authError;
       setSent(true);
-    } catch {
-      setError("Anmodningen kunne ikke gennemføres lige nu. Prøv igen senere.");
+    } catch (cause) {
+      setError(recoveryErrorMessage(cause));
     } finally { setBusy(false); }
   }
   return <main className="auth"><section className="auth-card">
