@@ -2,6 +2,16 @@
 
 Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.**
 
+## Trin 0 – Masterrettigheder og medarbejdergodkendelse (obligatorisk for alle interne områder)
+- [ ] **Kun ejeren har Master-rollen**, der giver ret til at tildele, ændre og fratage medarbejderrettigheder i hele Gainora. Der kan ikke oprettes en anden Master af en anden bruger.
+- [ ] Alle ansatte oprettes med `pending_master_approval`, uden adgang til nogen interne sider eller API'er.
+- [ ] Master har en særskilt side med **umarkerede afkrydsningsfelter** for rettigheder pr. medarbejder og skal godkende eksplicit før adgang.
+- [ ] Separate valg for Partner Hub, onboarding, salg, økonomi, Compliance Portal læsning/svar/historik/eksport og chatbotviden.
+- [ ] Master kan straks ændre/fratage rettigheder, suspendere bruger og tilbagekalde eksisterende sessionsadgang, med revisionsspor.
+- [ ] MFA, entydig ejeridentitet, databasehåndhævet rolle-unikhed og sikker recoveryproces er testet.
+- [ ] Negative tests: uautoriseret medarbejder, almindelig admin og partner kan ikke give sig selv/andre rettigheder, tilgå intern side eller kalde dens API.
+- [ ] Kravspecifikation i docs/master-access-and-employee-permissions.md på Partner Hub PR #77.
+
 ## Trin A – import og teknisk kvalitet
 - [x] Browserbaseret CSV-preview med validering.
 - [ ] Excel-preview bygget, testet og godkendt i produktion.
@@ -85,4 +95,4 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Gratis pilot uden automatisk overgang til betalingsabonnement.
 
 ## Fælles beslutningspunkt
-**Pilot med rigtige data må først begynde, når Trin A–E er gennemgået og godkendt. Partner Hub, de fem kunders tilknytning til Morten og en testet chatbot med fungerende compliance-eskalering er ufravigelige adgangskriterier, på linje med datasikkerheden.**
+**Pilot med rigtige data må først begynde, når Trin 0 og A–E er gennemgået og godkendt. Partner Hub, de fem kunders tilknytning til Morten og en testet chatbot med fungerende compliance-eskalering er ufravigelige adgangskriterier, på linje med datasikkerheden.**
