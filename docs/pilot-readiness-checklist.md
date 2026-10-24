@@ -12,6 +12,15 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Negative tests: uautoriseret medarbejder, almindelig admin og partner kan ikke give sig selv/andre rettigheder, tilgå intern side eller kalde dens API.
 - [ ] Kravspecifikation i docs/master-access-and-employee-permissions.md på Partner Hub PR #77.
 
+## Trin 0B – fire Master-/Partner-funktioner skal være klar inden pilotstart
+- [ ] **Master Audit Log**: serverside registrering og adgangsbeskyttet, søgbar historik over adgang, partnerhandlinger, sikkerhed og compliance-relevante ændringer.
+- [ ] **Master Alerts**: relevante sikkerheds- og provisionsalarmer vises med korrekt prioritet i Master-indbakken; mulighed for at kvittere og følge op.
+- [ ] **Automatisk partner-onboarding**: Master godkender; systemet opretter derefter partner-ID, sikkert individuelt login og isoleret partnerdashboard uden ny kode/deployment.
+- [ ] **Master opgave- og godkendelsesindbakke**: én beskyttet side samler nye medarbejdere, nye partnere, rettighedsændringer og beslutningskrævende hændelser.
+- [ ] Alle Master-godkendelser skal være eksplicitte og kontrolleres serverside; afslag holder adgang lukket, og der logges en revisionshændelse.
+- [ ] Test konflikt/dobbeltklik, falsk Master-identitet, suspenderet partner, ugyldig invitation og om rettigheder træder korrekt i kraft/ophører.
+- [ ] Krav og roadmap: `docs/partner-master-active-roadmap.md` på Partner Hub-grenen PR #77. Fire P0-funktioner må ikke forveksles med de syv senere planlagte moduler.
+
 ## Trin A – import og teknisk kvalitet
 - [x] Browserbaseret CSV-preview med validering.
 - [ ] Excel-preview bygget, testet og godkendt i produktion.
@@ -98,4 +107,4 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Gratis pilot uden automatisk overgang til betalingsabonnement.
 
 ## Fælles beslutningspunkt
-**Pilot med rigtige data må først begynde, når Trin 0 og A–E er gennemgået og godkendt. Partner Hub, de fem kunders tilknytning til Morten og en testet chatbot med fungerende compliance-eskalering er ufravigelige adgangskriterier, på linje med datasikkerheden.**
+**Pilot med rigtige data må først begynde, når Trin 0, 0B og A–E er gennemgået og godkendt. Partner Hub, de fem kunders tilknytning til Morten og en testet chatbot med fungerende compliance-eskalering er ufravigelige adgangskriterier, på linje med datasikkerheden.**
