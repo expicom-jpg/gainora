@@ -12,8 +12,33 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 4. Eskalér ved usikkerhed, utilstrækkelig viden, kundeønske om menneske, klager, sikkerhedshændelser, persondatarettigheder, juridiske/compliance-spørgsmål eller kontospecifikke spørgsmål der ikke kan besvares uden sikker identifikation.
 5. Efter tydelig accept registreres et minimum af nødvendige data: sags-id, oprettelsestidspunkt, kategori, prioritet, kontakt-/organisations-reference hvis relevant, kort opsummering, nødvendige chatuddrag, status og kø=COMPLIANCE.
 6. Sagsoprettelse skal ske serverside i et organisations- og rollebeskyttet register; log den konkrete succes eller fejl. Ved succes vises sagsnummer. Ved fejl vises **ikke** at sagen er sendt, men en godkendt alternativ kontaktmulighed.
-7. Compliance får en opgavekø med status ny/under behandling/afventer kunde/løst, kan svare via verificeret kontaktkanal og evt. overdrage almindelig support til andre funktioner.
+7. Compliance får en opgavekø med status ny/under behandling/afventer kunde/løst og svarer **direkte i den samme chat-tråd**, som kunden startede. Kunden kan besvare compliance og fortsætte samtalen i samme tråd. Almindelige supportsager kan fordeles til en passende medarbejder.
 8. Ved akutte sikkerhedssager markeres hastegrad efter godkendte regler. Ingen chatbot må alene afgøre juridisk ansvar eller love en bestemt tidsfrist.
+
+## Tovejs-chat: compliance ↔ den konkrete kunde
+- Når botten eskalerer, knyttes et sikkert `conversation_id` og `ticket_id` til kundens autentificerede organisations-/kontaktidentitet. For anonym websitechat benyttes en verificeret kontakt- eller adgangsmekanisme, inden personlige sagsoplysninger vises.
+- Compliance har en intern indbakke med tildelte sager, prioritet og fuld **relevant** kontekst fra tråden. Compliance kan sende et manuelt, synligt svar til kunden med én **Svar i chat**-handling.
+- Svaret gemmes som en rollemarkeret besked (afsender: compliance/medarbejder) i samme samtale. Kunden modtager det i chatten og kan svare tilbage; nye kundesvar genåbner eller opdaterer sagen.
+- Kun autentificerede, autoriserede compliance-brugere må svare på vegne af compliance. Beskeder journalføres med tidsstempel, afsenderrolle, leveringsstatus og nødvendig revisionshistorik.
+- Hvis kunden er offline, vises svaret ved næste besøg på verificeret konto/chat. Notifikation må sendes via tilvalgt og korrekt konfigureret kanal, uden fortrolige detaljer i selve adviseringen.
+- Kunden skal tydeligt kunne se, hvornår beskeder kommer fra **Gainora AI** og fra et **menneske i compliance**.
+- Kun faktisk gemte/afsendte beskeder må vises som sendt. Fejl ved levering eller adgang skal kunne opdages og genforsøges sikkert, uden duplikerede svar.
+
+## Læring fra medarbejderens svar i chatten
+- Efter hver afsluttet sag foreslår systemet automatisk en anonymiseret **spørgsmål → svar → emne**-vidensartikel baseret på den konkrete dialog; udelad navne, aftaler, fakturanumre og andre kunde-/virksomhedsfortrolige detaljer.
+- Compliance kan vælge **Godkend til vidensbase**, **Ret før godkendelse** eller **Kun kundespecifikt – må ikke genbruges**. Ingen automatisk offentliggørelse af menneskesvar.
+- Godkendte artikler gemmes versionsstyret med kilde-sags-ID i det interne revisionsspor (ikke i kundevendt svar), godkender, gyldighed og organisation-/global-scope.
+- Botten kan derefter genbruge godkendt **generel** viden til andre kunder. Kundespecifikke svar må kun bruges i samme organisations kontekst og med legitim adgang.
+- Feedback måler både om svaret var korrekt og om kunden fik løst problemet. Lav confidence, gentagne fejl eller nye regelændringer sender artiklen tilbage til revision.
+- Denne læring er en kontrolleret opdatering af vidensbasen, ikke automatisk modeltræning på rå kundehenvendelser.
+
+### Accepttests for menneskelig svarfunktion og læringssløjfe
+- [ ] Bot eskalerer → compliance åbner sagen → svarer via **Svar i chat** → kunden ser svaret i samme tråd.
+- [ ] Kunden svarer igen, og compliance kan fortsætte/afslutte samtalen.
+- [ ] En anden virksomhed, partner eller anonym besøgende kan ikke se eller sende i kundens tråd.
+- [ ] Compliance-svar kan opsummeres til anonymiseret vidensforslag, men bruges **ikke** af botten før godkendelse.
+- [ ] Afvist eller kundespecifikt svar kan ikke genbruges på tværs af virksomheder.
+- [ ] Fejlet levering eller databasefejl må ikke udløse falsk “besked sendt”-bekræftelse.
 
 ## Løbende empiri og kontrolleret forbedring
 Chatbotten skal ikke blot svare på spørgsmål; den skal skabe en systematisk læringssløjfe. Forbedring sker ved opsamling af dokumenterbare mønstre og godkendt viden, **ikke** ved ukontrolleret selvtræning på private chats.
