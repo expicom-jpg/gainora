@@ -17,10 +17,10 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] **Master Alerts**: relevante sikkerheds- og provisionsalarmer vises med korrekt prioritet i Master-indbakken; mulighed for at kvittere og følge op.
 - [ ] **Automatisk partner-onboarding**: Master godkender; systemet opretter derefter partner-ID, sikkert individuelt login og isoleret partnerdashboard uden ny kode/deployment.
 - [ ] **Officiel partner-mail**: Morten får en unik verificeret Gainora-mailadresse og kan sende og modtage i Partner Hub. Al officiel Gainora-kundekorrespondance foregår via adressen og er tilknyttet korrekt partner-ID.
-- [ ] **Mailintegration**: foreløbigt valg Resend som API-transport med Gainora-indbakke; test domæne/DNS, tovejs-mail, sikkerhed, SPF/DKIM/DMARC, webhooksignaturer, indbakkeisolation og søgbar historie.
+- [ ] **Mailintegration: Google Workspace er valgt.** Test domæne/DNS, Gmail og Directory API, tovejs-mail, OAuth/MFA, SPF/DKIM/DMARC, individuelt login, partnerisolation og adgang til relevant korrespondancehistorik. Partneren kan bruge Gmail direkte, og Partner Hub integrerer udvalgte funktioner.
 - [ ] Partner 2 har separat mailadresse og adgang; direkte API-kald kan ikke læse eller sende på vegne af Morten.
-- [ ] Master kan omgående suspendere mailsending og mailadgang; leveringsfejl og opsætningsfejl vises ærligt.
-- [ ] Mailtjenestens aftale, pris/kvoter, databehandlerforhold, opbevaring og risiko ved ændringer af eksisterende MX er afklaret, inden rigtige mails sendes.
+- [ ] Master kan straks tilbagekalde Gainora-mailintegrationens adgang og igangsætte sikker suspension af partnerens Google Workspace-konto. Fejl i ekstern kontosuspension vises tydeligt og eskaleres.
+- [ ] Google Workspace-plan, særskilte licensomkostninger per partnerbruger, domæne, API-tilladelser, databehandlerforhold, opbevaring/evt. Vault og risiko ved ændringer af eksisterende MX er afklaret, inden rigtige mails sendes.
 - [ ] **Master opgave- og godkendelsesindbakke**: én beskyttet side samler nye medarbejdere, nye partnere, rettighedsændringer og beslutningskrævende hændelser.
 - [ ] Alle Master-godkendelser skal være eksplicitte og kontrolleres serverside; afslag holder adgang lukket, og der logges en revisionshændelse.
 - [ ] Test konflikt/dobbeltklik, falsk Master-identitet, suspenderet partner, ugyldig invitation og om rettigheder træder korrekt i kraft/ophører.
