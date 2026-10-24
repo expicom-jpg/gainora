@@ -37,17 +37,35 @@ Status: **kravspecifikation – ikke implementeret/godkendt**. Supplerer Partner
 - [ ] Login, invitation, MFA/adgangsgendannelse, rolleændringer og negative RLS-tests fungerer for alle roller.
 - [ ] Kunde- og compliance-data forbliver beskyttet uanset administratorens eller partnerens navigationssti.
 
-## Officiel partner-mail og kalender – krav inden pilot (P0)
-- **Resend er fravalgt** som primær løsning, fordi den mangler kalender. Mail og kalender skal leveres samlet til partnerne.
-- **Zoho Mail Premium evalueres først**: virksomhedsmail, integreret kalender og eDiscovery, inkl. søgning/eksport for Master. Google Workspace og Exchange Online er mulige alternativer, men ingen løsning er endnu bestilt.
-- Hver aktiv, af Master godkendt partner skal have en unik Gainora-mailadresse og personlig kalender med individuelt login og MFA, uden nødvendigvis at få adgang til en fuld kontorpakke.
-- Partneren må kun se egen mailbox/kalender; hverken sidegrene eller downline giver adgang til andres kommunikation.
-- Gainoras eneste Master skal have en egen godkendt administrationsfunktion til søgning, visning og dokumenterbar eksport af **al officiel partnerkorrespondance**, med logging af egen adgang og hændelser. Løsningen skal bygge på faktiske udbyderfunktioner, ikke uautoriseret kontoovertagelse.
-- Mail- og kalenderhistorik skal håndteres med fast retention, dokumenteret lovligt grundlag, gennemsigtig information til partnere og dataminimering. eDiscovery og adgang til arkiverede/slettede beskeder er ikke nødvendigvis inkluderet i en billig basisplan.
-- Integration til Partner Hub kan vise relaterede møder og mailtråde i det omfang udbyderens API og adgangspolitik tillader det, men må aldrig bryde partner- eller kundeisolation.
-- Masterkontrol af brugeradgang, oprettelse og suspension kræver valideret, autoriseret integration med leverandøren og skal give tydelig fejlmelding, hvis ekstern handling ikke lykkes.
-- Acceptance tests: To partnerkonti, separat mail/kalender, Master mailoverblik og eDiscovery-eksport, rollenegative tests, leverandørsuspension, mødeinvitation, audit og retention.
-- **Status:** Mailleverandør endnu ikke endeligt valgt/konfigureret; førstegangsundersøgelse af Zoho Mail Premium. Ingen konti oprettet.
+## Master-onboarding: samlet partnergodkendelse og Google Workspace (P0)
+**Endelig produktmodel:** Du gennemfører al ny partner-onboarding inde i Gainoras Master-side. Google Workspace leverer kun mail og kalender i baggrunden; partnerne får adgang til disse funktioner gennem deres personlige Gainora-login i Partner Hub. Resend og Zoho er fravalgt.
+
+### Master-onboarding i Gainora
+1. Ny partner oprettes som `pending_master_approval`, uden aktivt Partner Hub-login, officiel afsendelsesret eller Workspace-konto.
+2. Du åbner en ny opgave i **Master-indbakken** og gennemgår navn/firma, kontaktperson, introducer/downline, partneraftale, provisionsvilkår og relevante rettigheder. Adgangsfelter er ikke markeret som standard.
+3. På samme side viser Gainora den **foreslåede, ledige officielle mailadresse**, unik partner-ID-tilknytning og krav til Google Workspace-licens/kalender. Adresse og rettigheder kan ikke selv vælges eller ændres af partneren.
+4. Du trykker **Godkend og opret partner**. Kun en verificeret session for Gainoras ene Master må starte handlingen. Beslutningen logges.
+5. Et idempotent backend-job opretter/inviterer partnerens Google Workspace-konto via autoriseret Google Admin API, tildeler mail/kalender efter faktisk licens og binder Google-identiteten sikkert til partnerens Gainora-bruger og partner-ID.
+6. Først efter verificeret konto, korrekt mailrouting, funktionskontrol og accepterede vilkår aktiveres de specifikt godkendte partnerrettigheder. Fejl står som `provisioning_failed` eller `pending` i din Master-indbakke; ingen falsk grøn status.
+7. Partneren logger derefter ind i Gainora og ser kun sin egen mail, kalender, kunder, leads og aftalte downline-data. Ingen direkte adgang til andre partneres mail eller interne administration.
+
+### Master-styring og sikkerhed
+- Google er mail-/kalendermotor, ikke en separat arbejdsplatform for partneren; ingen Docs, Sheets, Drive eller andre kontorprogrammer tilbydes via Gainora.
+- Personlige Google-passwords må ikke være kendt eller gemt hos Gainora. Brug sikre autoriserede API'er og mindst mulige rettigheder; direkte Google-login kan ikke garanteres spærret ved et Gainora-mellemlogin alene. SSO/Workspace-politikker og eventuelle alternative Google-loginveje skal dokumenteres og testes før pilot.
+- Partneren kan ikke selv ændre officiel mailadresse, Google-kontobinding eller rettighedstildeling. Master kan tilbagekalde Gainora-adgang og iværksætte kontrolleret Google-kontosuspension.
+- Du er som eneste Master autoriseret til at søge i, læse og eksportere **officiel partnerkommunikation**, med begrænset, revisionslogget adgang og passende oplysningspligt, retention og lovligt grundlag. Workspace-eDiscovery-licens og de reelle API-/arkivmuligheder skal verificeres.
+- Downline giver ikke adgang til underpartneres mails eller kalender. API'er validerer partner-ID og Google-identitet serverside, aldrig blot ud fra et klientvalgt konto-ID.
+- Google Workspace-abonnementer/omkostninger pr. konto, domæne/DNS, Admin-API, Gmail/Calendar-integration, MFA, SSO, audit og GDPR skal verificeres inden rigtig onboarding.
+
+### Accepttest
+- [ ] Du gennemfører hele Morten-onboarding på én Master-side og godkender med én eksplicit handling; mailadresse/kalender kobles til korrekt partner-ID.
+- [ ] En ikke-godkendt partner har ingen Workspace- eller Gainora-adgang.
+- [ ] En anden partner får særskilte mail-/kalenderressourcer uden at se Mortens oplysninger.
+- [ ] Workspace-fejl stopper aktivering og skaber en konkret opgave i din Master-indbakke.
+- [ ] Partneren kan ikke ændre Google-login, afsenderadresse eller bruge direkte Google-login uden om den validerede sikkerhedspolitik.
+- [ ] Du kan finde og eksportere officiel partnerkorrespondance i en sikret Master-funktion og se tilhørende auditspor.
+
+**Status:** Dette er vedtagne krav, ikke en gennemført Google-integration eller fungerende onboarding.
 
 ## Partnerlivscyklus
 1. Gainora-admin opretter partner med firmanavn/person, kontakt, land, sprog, status, kommerciel aftaleversion og evt. introducer/rekrutterende partner. Alternativt: offentlig partneransøgning med manuel accept før aktivering.
