@@ -15,8 +15,29 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 7. Compliance får en opgavekø med status ny/under behandling/afventer kunde/løst og svarer **direkte i den samme chat-tråd**, som kunden startede. Kunden kan besvare compliance og fortsætte samtalen i samme tråd. Almindelige supportsager kan fordeles til en passende medarbejder.
 8. Ved akutte sikkerhedssager markeres hastegrad efter godkendte regler. Ingen chatbot må alene afgøre juridisk ansvar eller love en bestemt tidsfrist.
 
+## Ejergodkendt adgang – kun af Gainoras ejer personligt godkendte personer
+**Ufravigeligt adgangskrav:** Kun medarbejdere, som Gainoras ejer personligt har godkendt, må tilgå Compliance Portal, kundesamtaler, sagsoversigter, søgning, historik, vedhæftninger eller rapporteksport.
+
+- Definér en særskilt, sikkert verificeret ejeridentitet og en rolle som `compliance_access_approver`, der kun må tildeles Gainoras ejer via en kontrolleret bootstrap-/identitetsproces. Rollen må ikke kunne tildeles via almindeligt adminpanel, partnerkonto, database-frontend eller egenregistrering.
+- Alle nye compliance-medarbejdere starter med `pending` og **ingen læse- eller skriverettigheder**, indtil ejeren personligt godkender en konkret navngiven bruger med identificeret login og afgrænset rettighed.
+- Kræv eksplicit, servervalideret ejergodkendelse før `compliance_agent`/`compliance_manager` bliver aktiv. Gem approver-user-id, identitet, tidspunkt, rettighedsniveau og revisionsspor. Ingen selv-godkendelse, automatisk rolle-arv eller delegation til andre Gainora-administratorer.
+- Gainora-administratorer og partnere kan eventuelt **foreslå** en medarbejder til godkendelse, men kan hverken godkende, læse kundedialoger eller få adgang gennem almindelige administratorrettigheder. Ejers egen adgang er en særskilt, eksplicit autoriseret rolle.
+- Ejeren kan når som helst suspendere/tilbagekalde adgang; dette skal træde i kraft serverside med tilbagekaldte sessioner/tokens og revalidering af alle læse-/skrivekald. Eksisterende sags- og auditspor bevares efter gældende regler.
+- Log enhver godkendelse, rolleændring, afvisning, suspendering og adgang til eller eksport af kundekommunikation. Vis ejeren en liste over præcis hvem der har adgang og hvornår.
+- Beskyt adgang med individuelle logins og MFA for compliance og ejer. Ingen fælles adgangskoder, skjulte superbruger-bagveje eller automatisk adgang gennem Partner Main.
+- Håndtér ejerens mistede adgang gennem en særskilt dokumenteret genoprettelsesproces med stærk identitetskontrol; aldrig via vilkårlig admin eller e-mail alene.
+- Adgangskontroller håndhæves i API og database (RLS/permissions), ikke kun ved at skjule knapper. Servicekonti/baggrundsprocesser skal have snævert teknisk formål og må ikke fungere som menneskelig læseadgang.
+
+### Godkendelsestests før pilot
+- [ ] Uden ejergodkendelse: compliance-login afvises fra sager, kundechats, historik, søgning og eksport – både i UI og direkte API.
+- [ ] Kun ejer kan aktivere eller ændre compliance-rettigheder; Gainora-admin, partner og compliance-medarbejder kan ikke godkende sig selv eller andre.
+- [ ] Godkendt navngiven medarbejder kan logge ind med MFA og arbejde med tildelte sager.
+- [ ] Ejeren kan tilbagekalde adgang, og brugerens eksisterende session/API-tilgang ophører.
+- [ ] Alle godkendelses- og adgangshændelser kan revideres i en beskyttet historik.
+- [ ] To forskellige compliance-roller testes for least-privilege; tvisterapporter og bulk-eksport kræver ekstra rolle.
+
 ## Separat Compliance Portal – dedikerede medarbejdere
-- Compliance får egen beskyttet side efter login, fx `/compliance`, med særskilt rolle `compliance_agent` og eventuelt `compliance_manager`. Kun autoriserede brugere må komme ind; adgang kan gives, ændres eller tilbagekaldes af Gainora-admin.
+- Compliance får egen beskyttet side efter login, fx `/compliance`, med særskilt rolle `compliance_agent` og eventuelt `compliance_manager`. Kun personer med dokumenteret personlig ejergodkendelse må komme ind; kun ejeren kan godkende, ændre eller tilbagekalde compliance-adgang.
 - Den dedikerede medarbejder får en **indbakke** med nye/åbne/afventer kunde/afsluttede/genåbnede sager, prioritet, ansvarlig og svartid.
 - Compliance kan overtage eller tildele sager til en medarbejder, læse den relevante chatkontekst, vælge svarform **Løbende dialog** eller **Endeligt svar** aktivt for hver besked, og sende svaret direkte i samme kundechat.
 - Dedikerede medarbejdere får egne individuelle logins; ingen fælles compliance-adgangskode. Server-side tilladelsescheck, sessionssikkerhed og auditspor på læsning, eksporter og ændringer.
