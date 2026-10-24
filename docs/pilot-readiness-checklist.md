@@ -38,7 +38,19 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Ingen provision udbetales på gratis pilot, og foreløbige provisionssatser må ikke beskrives som aftalt kontrakt.
 - [ ] Partnerkonto, tildeling, visning, invitationsflow og pilot-til-betaling er testet med syntetiske virksomheder før første rigtige pilot.
 
-## Trin E – 30 dages pilot
+## Trin E – kundeservice-chatbot og compliance-eskalering
+- [ ] Chatbot på Gainoras hjemmeside (og relevant i kundeportalen) med tydelig oplysning om at kunden taler med AI.
+- [ ] Botten svarer på verificerede FAQ-emner: platform, oprettelse, pilot, priser, importkrav og generelle funktioner; ingen opfundne garantier, priser eller juridiske svar.
+- [ ] Botten kan identificere manglende viden, usikkerhed, tekniske problemer, adgangsproblemer, klager og forespørgsler om privatliv/data.
+- [ ] Hvis svaret ikke kan gives sikkert, opretter systemet en rigtig support-/compliance-sag i et adgangsbegrænset sagsregister og sender den til compliance-køen; bekræft først eskalering efter vellykket lagring/kvittering.
+- [ ] Kunden får sagsnummer, forventet næste trin og mulighed for at supplere sagen uden at gentage alt; ingen falske løfter om svartider.
+- [ ] Ved mislykket eskalering får kunden en tydelig alternativ kontaktvej, som først vises når en reel adresse/kanal er konfigureret.
+- [ ] Compliance kan se, overtage, svare på, afslutte og dokumentere sagen; almindelige supportsager kan videresendes fra compliance til rette ansvarlige.
+- [ ] Kritiske sikkerheds-/databeskyttelsessager flagges særskilt; chatbotten må ikke træffe bindende complianceafgørelser eller sende fortrolige regnskabsdata til uvedkommende.
+- [ ] Adgangskontrol, samtykke/oplysningspligt, begrænset logning, opbevaring/sletning og tests for prompt-injektion samt adgang på tværs af organisationer.
+- [ ] End-to-end test: besvaret FAQ, ukendt spørgsmål, compliance-eskalering, fejlet eskalering, sagsnummer og tilbagemelding til kunde før pilotstart.
+
+## Trin F – 30 dages pilot
 - [ ] Morten kontakter de fem interesserede virksomheder og får skriftlig accept af rammer.
 - [ ] Aftal virksomhedens kontaktperson og lovligt datagrundlag.
 - [ ] Dag 1–7: sikker onboarding og datakontrol.
@@ -48,4 +60,4 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Gratis pilot uden automatisk overgang til betalingsabonnement.
 
 ## Fælles beslutningspunkt
-**Pilot med rigtige data må først begynde, når Trin A–D er gennemgået og godkendt. Partner Hub og de fem kunders tilknytning til Morten er ufravigelige adgangskriterier, på linje med datasikkerheden.**
+**Pilot med rigtige data må først begynde, når Trin A–E er gennemgået og godkendt. Partner Hub, de fem kunders tilknytning til Morten og en testet chatbot med fungerende compliance-eskalering er ufravigelige adgangskriterier, på linje med datasikkerheden.**
