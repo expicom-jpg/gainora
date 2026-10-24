@@ -51,6 +51,10 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Kunden får sagsnummer, forventet næste trin og mulighed for at supplere sagen uden at gentage alt; ingen falske løfter om svartider.
 - [ ] Ved mislykket eskalering får kunden en tydelig alternativ kontaktvej, som først vises når en reel adresse/kanal er konfigureret.
 - [ ] Compliance kan se, overtage, svare på, afslutte og dokumentere sagen; almindelige supportsager kan videresendes fra compliance til rette ansvarlige.
+- [ ] Compliance skal kunne besvare henvendelsen via **Svar i chat** i kundens oprindelige chat-tråd; kunden skal kunne svare tilbage, også efter genåbning.
+- [ ] Menneskets svar skal tydeligt markeres og knyttes til korrekt sag og autoriseret bruger; kun verificeret kunde må læse personlige svar.
+- [ ] Afsluttede dialoger skal danne anonymiserede forslag til vidensbasen; compliance skal godkende en generel artikel før chatbotten må genbruge den.
+- [ ] Kundespecifikke eller afviste svar må ikke genbruges på tværs af virksomheder.
 - [ ] Kritiske sikkerheds-/databeskyttelsessager flagges særskilt; chatbotten må ikke træffe bindende complianceafgørelser eller sende fortrolige regnskabsdata til uvedkommende.
 - [ ] Adgangskontrol, samtykke/oplysningspligt, begrænset logning, opbevaring/sletning og tests for prompt-injektion samt adgang på tværs af organisationer.
 - [ ] End-to-end test: besvaret FAQ, ukendt spørgsmål, compliance-eskalering, fejlet eskalering, sagsnummer og tilbagemelding til kunde før pilotstart.
