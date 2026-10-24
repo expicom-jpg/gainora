@@ -63,6 +63,26 @@ Status: **kravspecifikation – ikke implementeret/godkendt**. Supplerer Partner
 - Send adviseringer om nyt lead, pilotstart og konvertering via konfigurerede kanaler med dataminimering.
 - Integrér med supportchat: botten kan svare generelt; support-/compliance-sager ejes af rette kø og deles ikke automatisk med partneren.
 
+## Partneradgang som standard: egen forretning og egen downline – intet andet
+
+**Default-deny:** Hver partner må alene se og arbejde med `egen partnerorganisation`, dens egne leads og kunder, egne abonnements-/provisionsoplysninger og de oplysninger om **sin egen downline** der er nødvendige for aftalt partnerdrift og dokumenteret provision.
+
+- **Egen forretning:** Partneren kan se sine direkte tilknyttede kunder, kunde-/pilotstatus, egne salg, egne abonnementer og egen optjent/beregnet provision inden for aftalt rettighed.
+- **Egen downline:** En partner kan se de partnere, der faktisk tilhører dens egen hierarkiske gren (direkte og eventuelt længere nede, hvis den underskrevne aftale giver den ret). Vis som udgangspunkt partnernavn, hierarkiniveau, relevant aktivitetsstatus og aggregerede nøgletal/provisionsgrundlag – **ikke** automatisk de enkelte underpartneres kunder, kontakter, kontrakter, indtjening eller chatindhold.
+- **Uden for downline:** Ingen indsigt i sidegrene, urelaterede partnere, andre partneres direkte kunder, salgsdata, leads, provisionssatser, betalinger eller aftaler.
+- **Særligt følsomt:** Ingen partner har som standard adgang til kunders regnskabsfiler, Profit Audit-resultater, compliance-sager eller kundechats, heller ikke for egen downline.
+- **Master-styring:** Kun Gainoras eneste Master kan ændre særlige partnerrettigheder, hvis der er et dokumenteret sagligt formål, lovligt grundlag og revisionsspor. Ingen partner kan selv udvide sin synlighed eller give ansatte udvidede Gainora-rettigheder.
+- **Teknisk håndhævelse:** Autorisation afgøres på server/database af partner-ID, faktisk hierarkisk tilknytning og eksplicit rettighed. RLS beskytter alle partner-, kunde-, lead-, provisions- og hierarkiforespørgsler, inkl. søgning, eksport og statistikker. Klientvalgte filtre er aldrig sikkerhed.
+- **Hierarkiændringer:** Ændring af sponsor, ejerskab, aktivering, suspension eller flytning mellem downlines sker kun via godkendt Masterproces med ikrafttrædelse og audit. Tidligere provisionshistorik overskrives ikke.
+
+### Testkrav for default-visibility
+- [ ] Morten ser egne fem pilotkunder og egen downline, hvis en sådan oprettes.
+- [ ] Partner B ser alene egne kunder og sin egen downline; hverken Mortens kunder eller hans sidegren kan læses via UI, API, direkte ID'er eller eksport.
+- [ ] Overordnet partner ser kun aftalte, aggregerede oplysninger om sin downline, ikke underpartneres detaljerede kundedata uden særskilt gyldig autorisation.
+- [ ] Urelaterede partnere er helt usynlige, også i søgning, totaler og partneroversigter.
+- [ ] Suspenderet partner mister adgang; kundetilknytning og revisionshistorik bevares.
+- [ ] Alle udvidelser af synlighed er Mastergodkendte, sporbare og testede.
+
 ## Skalerings- og sikkerhedskrav
 - Understøt mange partnere, flere brugere hos en partner og flere kunder pr. partner.
 - Unikke partner-ID'er og databasesikret én aktiv attributering pr. kunde efter besluttet model; idempotente invitationer/onboarding/webhooks.
