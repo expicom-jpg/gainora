@@ -15,6 +15,37 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 7. Compliance får en opgavekø med status ny/under behandling/afventer kunde/løst og svarer **direkte i den samme chat-tråd**, som kunden startede. Kunden kan besvare compliance og fortsætte samtalen i samme tråd. Almindelige supportsager kan fordeles til en passende medarbejder.
 8. Ved akutte sikkerhedssager markeres hastegrad efter godkendte regler. Ingen chatbot må alene afgøre juridisk ansvar eller love en bestemt tidsfrist.
 
+## Separat Compliance Portal – dedikerede medarbejdere
+- Compliance får egen beskyttet side efter login, fx `/compliance`, med særskilt rolle `compliance_agent` og eventuelt `compliance_manager`. Kun autoriserede brugere må komme ind; adgang kan gives, ændres eller tilbagekaldes af Gainora-admin.
+- Den dedikerede medarbejder får en **indbakke** med nye/åbne/afventer kunde/afsluttede/genåbnede sager, prioritet, ansvarlig og svartid.
+- Compliance kan overtage eller tildele sager til en medarbejder, læse den relevante chatkontekst, vælge svarform **Løbende dialog** eller **Endeligt svar** aktivt for hver besked, og sende svaret direkte i samme kundechat.
+- Dedikerede medarbejdere får egne individuelle logins; ingen fælles compliance-adgangskode. Server-side tilladelsescheck, sessionssikkerhed og auditspor på læsning, eksporter og ændringer.
+- Der skal være **søgbar historik** efter sagsnummer, virksomhed (kun hvis adgang), dato/periode, emne, status, medarbejder og sikre fuldtekstsøgekriterier. Søgeresultater må aldrig vise data fra utilgængelige organisationer.
+- Sagsdetalje viser kronologisk **tidslinje**: chatbeskeder fra bot/kunde/compliance, tidspunkt, afsenderrolle, valget løbende/endeligt, overdragelser, statusændringer, interne notater, levering og kvitteringer. Interne notater vises aldrig til kunden.
+- Historik opbevares efter fastsat, dokumenteret databevarings- og slettepolitik, med begrænsning af personlige/fortrolige oplysninger og mulighed for korrekt håndtering af indsigt, sletning og lovlige opbevaringsbehov.
+
+## Dokumentation og tvist
+- Originale ind- og udgående beskeder samt væsentlige hændelser bevares på en manipulationskontrolleret måde, fx append-only audit-events med kædede hashes eller en tilsvarende revisionssikker løsning. Rettelser skal fremgå som nye begivenheder frem for lydløst at overskrive historik.
+- Registrér meddelelsernes tidsstempler, autentificerede afsendere, reference til sag/kunde, svartype, statusændringer og teknisk afsendelses-/leveringsstatus. Skeln mellem `oprettet`, `afsendt`, `leveret` og `læst`; påstå ikke mere end systemet faktisk kan dokumentere.
+- Autoriseret compliance-manager kan generere en **sagsrapport** med tidslinje, dokumentation, revisionsspor og relevante bilag (PDF/CSV efter behov), med rapport-ID og eksportlog. Rapporten skal være egnet som materiale ved tvist, men **er ikke i sig selv garanti for juridisk bevisværdi**.
+- Lovlighed, databehandling, dokumentbevarelse, signatur-/tidsstempelstandarder og konkret anvendelse som bevis skal vurderes juridisk. Begræns uforholdsmæssig opbevaring og forhindre vilkårlig adgang/masseeksport.
+- Undgå at bruge uverificerede anonyme webchats som sikkert bevis for en bestemt persons identitet; oplys identitets- og kvitteringsniveau i sagsrapporten.
+
+## Historik som grundlag for læring
+- Compliance kan bruge historikken til at finde tidligere lignende sager i **sit eget autoriserede arbejdsområde** og foreslå et svarudkast med kildehenvisning. Interne private svar må ikke automatisk sendes til andre kunder.
+- Et **Endeligt svar** lukker sagen, men er ikke automatisk godkendelse til den fælles chatbot-viden. Et separat, frivilligt **Foreslå til vidensbase**-valg kræver redaktionel gennemgang, anonymisering og særskilt godkendelse.
+- **Løbende dialog** forbliver åben og kan indgå i den komplette historik; den er ikke en godkendt afsluttende løsning.
+- Godkendte vidensartikler kan søges i compliance-portalens vidensbank, med udgave, godkender, gyldighed, kilde-sags-ID og mulighed for tilbagekaldelse.
+
+### Accepttests for portal og tvistedokumentation
+- [ ] Dedikeret compliance-bruger kan logge ind og se egen kø og søgbar, autoriseret historik.
+- [ ] Partner/kunde/anden virksomhed kan ikke se compliance-portal, interne notater eller andre virksomheders historik – også ved direkte URL/API-anmodning.
+- [ ] Tidslinjen viser både løbende og endelige svar, relevante statusændringer, hvem der svarede og teknisk leveringsstatus.
+- [ ] En autoriseret manager kan eksportere en sagsrapport, og eksporten registreres i auditloggen.
+- [ ] Rettelser og sletninger følger godkendte regler og kan ikke bruges til at manipulere væsentlig sagskronologi.
+- [ ] En afsluttet sag genåbnes korrekt ved nyt kundesvar, uden tab af tidligere hændelser.
+- [ ] Svarvalg og særskilt læringsvalg testes hver for sig; intet internt svar bliver automatisk til generel chatbotviden.
+
 ## Tovejs-chat: compliance ↔ den konkrete kunde
 - Når botten eskalerer, knyttes et sikkert `conversation_id` og `ticket_id` til kundens autentificerede organisations-/kontaktidentitet. For anonym websitechat benyttes en verificeret kontakt- eller adgangsmekanisme, inden personlige sagsoplysninger vises.
 - Compliance har en intern indbakke med tildelte sager, prioritet og fuld **relevant** kontekst fra tråden. Compliance kan sende et manuelt, synligt svar til kunden med én **Svar i chat**-handling.
@@ -60,7 +91,7 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 - [ ] Fejlet levering eller databasefejl må ikke udløse falsk “besked sendt”-bekræftelse.
 
 ## Endeligt svar – afkrydsningsfelt til læring
-Compliance-medarbejderen kan svare i kundens eksisterende chat-tråd som normalt. Ved afsendelse vises et **frivilligt felt, som ikke er markeret på forhånd**:
+Compliance-medarbejderen kan svare i kundens eksisterende chat-tråd som normalt. Når medarbejderen separat har valgt **Endeligt svar** som obligatorisk svartype, vises desuden et **frivilligt felt, som ikke er markeret på forhånd**:
 
 - [ ] **Endeligt svar – foreslå til chatbot-vidensbase**
 
