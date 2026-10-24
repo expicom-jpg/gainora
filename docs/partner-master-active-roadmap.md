@@ -18,7 +18,13 @@ Opdateret 24. oktober 2026. **Plan/udvikling; ikke production-ready.**
 - Master kan deaktivere/suspendere mailbox og intern adgang omgående; sikker overdragelse og arkivadgang kræver sporbar ejerbeslutning og databeskyttelseshensyn.
 - Kunders compliance-kommunikation forbliver i den sikrede Compliance Portal. En partner-mail giver aldrig automatisk adgang til compliance-sager.
 - Test separat for Morten og en anden partner: unik adresse, isolation mellem indbakker, historik, tilbagesporing til relevante leads og spærring ved suspension.
-- **Leveranceafhængighed:** vælg/forbind mailudbyder, verificér faktisk Gainora-domæne, og afklar mailbox-licenser, priser, retention og databehandleraftale. Ingen adresse eller mailforsendelse er etableret af dette dokument.
+- **Foreløbigt teknisk førstevalg:** Resend til udgående og indgående API-mail, med separat intern partnerindbakke, reply/threads, søgning og adgangsstyret historik bygget i Gainora. Resend er mailtransport, **ikke** en traditionel selvstændig Outlook/Gmail-postkasse.
+- Indgående webhooks skal signaturvalideres, være idempotente og hente beskedindhold gennem API; knyt modtageradresse til præcis ét aktivt partner-ID og afvis ukendte/inaktive modtagere efter dokumenteret politik.
+- Brug en dedikeret **mail-subdomæne-routing** til partnerkorrespondance, hvis hoveddomænet allerede har Gmail/Outlook MX. Flyt aldrig hoveddomænets MX uden eksplicit gennemgang; ellers risikeres eksisterende mail.
+- Implementér Reply-To/In-Reply-To/References, DKIM/SPF/DMARC, signaturer, aflevering/afvisning, sikker håndtering af vedhæftninger, malwarefiltrering, spam, retention samt DSAR/sletning og revisionsspor.
+- Hold API-nøgler på serversiden og anvend kortlægning af afsenderadresse -> aktivt godkendt partner, så ingen partner kan spoofe anden Gainora-afsender. Søge- og eksportrettigheder isoleres per partner/downline-regel; Master kan suspendere afsenderadgang straks.
+- **Leveranceafhængighed:** verificér faktisk domæne, DNS og valgt leverandøraftale, EU-dataoverførsel/databehandleraftale, transaktionsvolumen, kvoter og forventede omkostninger. Resend skal først funktionstestes på udviklingsdomæne. Overvej Microsoft 365/Zoho, hvis individuelle fulde mailboxes eller Outlook/IMAP kræves.
+- Ingen adresse eller mailforsendelse er etableret af dette dokument.
 
 ### Krav til samlet Master-indbakke
 - Ét beskyttet overblik over `pending`, `in_review`, `approved`, `rejected`, `completed` med filtrering, type, prioritet, dato og ansvarlig.
