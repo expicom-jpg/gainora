@@ -16,11 +16,12 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] **Master Audit Log**: serverside registrering og adgangsbeskyttet, søgbar historik over adgang, partnerhandlinger, sikkerhed og compliance-relevante ændringer.
 - [ ] **Master Alerts**: relevante sikkerheds- og provisionsalarmer vises med korrekt prioritet i Master-indbakken; mulighed for at kvittere og følge op.
 - [ ] **Automatisk partner-onboarding**: Master godkender; systemet opretter derefter partner-ID, sikkert individuelt login og isoleret partnerdashboard uden ny kode/deployment.
-- [ ] **Officiel partner-mail**: Morten får en unik verificeret Gainora-mailadresse og kan sende og modtage i Partner Hub. Al officiel Gainora-kundekorrespondance foregår via adressen og er tilknyttet korrekt partner-ID.
-- [ ] **Mailintegration: Google Workspace er valgt.** Test domæne/DNS, Gmail og Directory API, tovejs-mail, OAuth/MFA, SPF/DKIM/DMARC, individuelt login, partnerisolation og adgang til relevant korrespondancehistorik. Partneren kan bruge Gmail direkte, og Partner Hub integrerer udvalgte funktioner.
+- [ ] **Officiel partner-mail og kalender**: Morten får unik Gainora-mailadresse, selvstændig kalender og mødeinvitationer; al officiel Gainora-kundekorrespondance foregår via adressen og tilknyttes korrekt partner-ID.
+- [ ] **Mail og kalender:** Resend er fravalgt; evaluer først Zoho Mail Premium (mail, kalender og eDiscovery). Verificér leverandør, plan, pris, domæne/DNS, sikkerhed, personlig kalender, mødeinvitation og partnerisolation før valg og opsætning.
 - [ ] Partner 2 har separat mailadresse og adgang; direkte API-kald kan ikke læse eller sende på vegne af Morten.
-- [ ] Master kan straks tilbagekalde Gainora-mailintegrationens adgang og igangsætte sikker suspension af partnerens Google Workspace-konto. Fejl i ekstern kontosuspension vises tydeligt og eskaleres.
-- [ ] Google Workspace-plan, særskilte licensomkostninger per partnerbruger, domæne, API-tilladelser, databehandlerforhold, opbevaring/evt. Vault og risiko ved ændringer af eksisterende MX er afklaret, inden rigtige mails sendes.
+- [ ] Master kan suspendere partnerens Gainora-adgang og iværksætte sikker suspension af ekstern mail-/kalenderkonto. Fejl eskaleres.
+- [ ] Valgt udbyders licenser, domæne, API, databehandlerforhold, retention/eDiscovery, Master-audit, kalender og MX-risici er afklaret før rigtige mails.
+- [ ] **Kun Master kan søge i og eksportere al officiel partnerkommunikation**, via lovlig, kontrolleret og revisionslogget eDiscovery/adgang. Ingen partner kan læse andre partneres mail.
 - [ ] **Master opgave- og godkendelsesindbakke**: én beskyttet side samler nye medarbejdere, nye partnere, rettighedsændringer og beslutningskrævende hændelser.
 - [ ] Alle Master-godkendelser skal være eksplicitte og kontrolleres serverside; afslag holder adgang lukket, og der logges en revisionshændelse.
 - [ ] Test konflikt/dobbeltklik, falsk Master-identitet, suspenderet partner, ugyldig invitation og om rettigheder træder korrekt i kraft/ophører.
