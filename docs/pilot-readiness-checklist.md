@@ -37,6 +37,11 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Provisionsgrundlag følger partnerrelationen ved senere aktivering af betalte abonnementer/tilkøb og kan afstemmes mod faktiske betalinger, tilbagebetalinger og opsigelser.
 - [ ] Ingen provision udbetales på gratis pilot, og foreløbige provisionssatser må ikke beskrives som aftalt kontrakt.
 - [ ] Partnerkonto, tildeling, visning, invitationsflow og pilot-til-betaling er testet med syntetiske virksomheder før første rigtige pilot.
+- [ ] Nye partnere kan efter admin-godkendelse inviteres, oprette login og automatisk få egen rolle, dashboard, leadpipeline og unikt partner-ID uden kodeændringer eller separat deployment.
+- [ ] Opret mindst én anden testpartner og dokumentér, at denne kun kan se egne leads, kunder, provisionsdata og medlemmer (negativ RLS-test).
+- [ ] Partnerrelation, aftaleversion og evt. introducer registreres, så partnerens kunder følger korrekt ejerskab gennem pilot, betaling og tilkøb.
+- [ ] Udløbne invitationer, dubletkunder, suspendering og administrativ overdragelse med audit trail fungerer.
+- [ ] Se detaljeret kravspecifikation: docs/partner-onboarding-and-automation.md i Partner Hub PR #77.
 
 ## Trin E – kundeservice-chatbot og compliance-eskalering
 - [ ] Chatbot på Gainoras hjemmeside (og relevant i kundeportalen) med tydelig oplysning om at kunden taler med AI.
