@@ -40,6 +40,29 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 - [ ] Afvist eller kundespecifikt svar kan ikke genbruges på tværs af virksomheder.
 - [ ] Fejlet levering eller databasefejl må ikke udløse falsk “besked sendt”-bekræftelse.
 
+## Endeligt svar – afkrydsningsfelt til læring
+Compliance-medarbejderen kan svare i kundens eksisterende chat-tråd som normalt. Ved afsendelse vises et **frivilligt felt, som ikke er markeret på forhånd**:
+
+- [ ] **Endeligt svar – foreslå til chatbot-vidensbase**
+
+**Når feltet ikke er markeret:** Svaret sendes kun til kunden og registreres i kundens adgangsbeskyttede sag. Chatbotten må ikke bruge teksten til fælles vidensbase.
+
+**Når feltet markeres:** Svaret sendes til kunden og der oprettes et **vidensforslag** baseret på spørgsmål, godkendt svar og emne. Systemet skal først fjerne/markere navne, virksomhedsdata, kontrakter, beløb, fakturaoplysninger og andre identifikatorer. Compliance får en kort gennemgang af det rensede generelle svar, hvor det kan godkendes til publicering eller afvises. Først efter eksplicit godkendelse bruges det af botten til andre kunder.
+
+- Afkrydsningen må ikke i sig selv give fri adgang til privat chatindhold; den udløser alene en kontrolleret læringsproces.
+- Separat mulighed: **Kun denne kunde** – kan markeres hvis svaret er endeligt, men ikke generelt. Så må botten alene anvende det i det autentificerede kundeforløb, hvis behandlingsgrundlaget tillader det.
+- Godkendte vidensemner får versionsnummer, godkender, kilde-sags-ID (kun internt), dato og afgrænsning (global eller organisationsspecifik). Artikler kan tilbagekaldes.
+- Ved senere rettelser, genåbnet sag eller negativ feedback sendes tidligere godkendt viden til ny vurdering, før genbrug fortsætter.
+- Log beslutningerne auditérbart: hvem markerede feltet, hvem godkendte, og hvilken anonymiseret vidensversion blev oprettet. Udvis ikke private sagsdata i bot-svar.
+
+### Særlige accepttests
+- [ ] Svar uden afkrydsning når frem til kunden og skaber **ikke** vidensforslag.
+- [ ] Svar med afkrydsning opretter forslag, men publicerer det **ikke automatisk**.
+- [ ] Compliance kan kontrollere og godkende anonymiseret svar til botten, som derefter kan genbruge netop den godkendte version.
+- [ ] Kunden kan svare tilbage, og genåbning/ændringer udløser ny kvalitetskontrol ved behov.
+- [ ] Kundespecifikke, fortrolige eller afviste svar kan ikke deles på tværs af kunder.
+- [ ] Dobbeltklik, genafsendelser og netværksfejl medfører ikke dublerede vidensartikler eller falske afsendelsesbekræftelser.
+
 ## Løbende empiri og kontrolleret forbedring
 Chatbotten skal ikke blot svare på spørgsmål; den skal skabe en systematisk læringssløjfe. Forbedring sker ved opsamling af dokumenterbare mønstre og godkendt viden, **ikke** ved ukontrolleret selvtræning på private chats.
 
