@@ -55,6 +55,11 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Kunden får sagsnummer, forventet næste trin og mulighed for at supplere sagen uden at gentage alt; ingen falske løfter om svartider.
 - [ ] Ved mislykket eskalering får kunden en tydelig alternativ kontaktvej, som først vises når en reel adresse/kanal er konfigureret.
 - [ ] Compliance kan se, overtage, svare på, afslutte og dokumentere sagen; almindelige supportsager kan videresendes fra compliance til rette ansvarlige.
+- [ ] Compliance har en **separat, rollebeskyttet side ved login** med individuel medarbejderadgang, sagsindbakke, tildeling og søgbar historik.
+- [ ] Saghistorikken viser komplet kronologi og revisionsspor for kundechat, medarbejdersvar, aktive svarvalg, hændelser og leveringsstatus.
+- [ ] En autoriseret compliance-manager kan eksportere en logget sagsrapport til dokumentation ved tvist, med korrekte forbehold om identitetskontrol og bevisværdi.
+- [ ] Historiske sager understøtter søgning og anonymiserede vidensforslag, men ingen automatisk deling uden compliance-godkendelse.
+- [ ] Historik, eksport, adgang, databevaring og sletning er rollebeskyttet og testet på tværs af virksomheder.
 - [ ] Compliance skal kunne besvare henvendelsen via **Svar i chat** i kundens oprindelige chat-tråd; kunden skal kunne svare tilbage, også efter genåbning.
 - [ ] Compliance skal aktivt vælge **Løbende dialog** eller **Endeligt svar** før hver afsendelse; ingen standardværdi. Serveren afviser svar uden et gyldigt valg.
 - [ ] Løbende dialog holder sagen åben; endeligt svar lukker/markerer sagen besvaret med mulighed for genåbning. Kun endelige svar må foreslås til ny vidensartikel, stadig med separat menneskelig godkendelse.
