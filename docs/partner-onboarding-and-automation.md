@@ -37,25 +37,27 @@ Status: **kravspecifikation – ikke implementeret/godkendt**. Supplerer Partner
 - [ ] Login, invitation, MFA/adgangsgendannelse, rolleændringer og negative RLS-tests fungerer for alle roller.
 - [ ] Kunde- og compliance-data forbliver beskyttet uanset administratorens eller partnerens navigationssti.
 
-## Officiel partner-mail – leverandørvalg og integreret indbakke (P0)
-- **Foreløbigt valg: Resend til mailtransport og modtagelse, Gainora som selve mailprogrammet**. Partnerne ser, sender, besvarer og søger mails i Partner Hub, ikke i en ekstern fælles Resend-indbakke.
-- Ved Mastergodkendelse tildeles en unik planlagt Gainora-afsenderadresse, knyttet til partner-ID. Adressen aktiveres først, når domæne, inbound-routing, afsendelse, modtagelse og sikker identitet er kontrolleret.
-- Al officiel kundekorrespondance på vegne af Gainora skal ske via partnerens godkendte Gainora-adresse og logges til relevant lead/kunde uden at sammenblande partneres data.
-- Indgående mails via verificeret webhook, sikker hentning af indhold og vedhæftninger samt idempotent behandling. Ukendte afsender-/modtagerrelationer skal til manuel afklaring; aldrig lække dem til anden partner.
-- Udgående API-kald skal kontrollere aktivt partner-ID, den verificerede adresse og Mastertildelte rettigheder. Partneren må ikke angive vilkårlig `from`-adresse. Alle mails får audit, logget leveringsstatus og beskyttelse mod gentaget afsendelse.
-- Partnerens egen indbakke får tråde, søgning, beskedudkast, vedhæftninger, kobling til kunde/lead, tildelte opgaver og historik. Den er begrænset til egen forretning, og downline-medlemskab giver **ikke** automatisk læseadgang til underpartnernes mail.
-- SPF/DKIM/DMARC, anti-spam, phishing/malwarefiltrering, retention, DPA og eventuelle internationale dataoverførsler skal håndteres, før rigtige mails behandles.
-- Brug et separat e-mail-subdomæne, hvis Gainoras hoveddomæne allerede modtager post hos en anden udbyder. Opsætning må ikke ændre hoveddomænets MX uforvarende.
-- Microsoft 365/Zoho kan bruges til egentlige eksterne mailpostkasser, men skaber en anden drifts- og licensmodel. Leverandørvalg skal afsluttes efter verifikation af domæne og en test af tovejs korrespondance i Partner Hub.
-- Ingen partner-mailadresse er oprettet af denne specifikation; mailydelsen og integrationen er endnu ikke tilsluttet.
+## Officiel partner-mail – Google Workspace og Gmail-integration (P0)
+- **Valgt leverandør: Google Workspace.** Gmail bliver partnerens rigtige mailpostkasse, suppleret af Workspace-funktioner som Kalender, Drive, Docs, Sheets og Meet efter behov og licens.
+- Hver godkendt partner får en individuel Gainora-mailadresse på et verificeret domæne, **før** vedkommende kommunikerer som Gainora-partner. For flere sælgere hos samme partner gives individuelle konti med rettigheder; ingen delte adgangskoder.
+- Partneren kan arbejde i Gmail, mens Partner Hub viser relevante kundetråde, korrespondancestatus og søgning gennem en adgangsstyret Gmail API-integration. Deling af mailindhold mellem Gainora og Google er underlagt aftale, dokumenteret grundlag og dataminimering.
+- Master godkender nye partnere og deres rettigheder; automatiseret brugeroprettelse kan etableres via **Google Admin SDK Directory API** efter konfiguration af administratorautorisation, domæne, licenser og nødvendig verifikation. Markér provisioning som afventende, indtil Google har bekræftet konto og korrekt licens.
+- Google OAuth adgang pr. bruger / en godkendt administrativ API-model skal have mindst mulige scopes og beskytte tokens; kontroller Google krav om sikkerhedsverifikation og ansvarlig behandling af data.
+- Gainora kontrollerer den autentificerede brugers partner-ID ved hver læse- og skrivehandling. En partner kan ikke angive andre partneres mailadresser, ændre afsenderidentitet, læse underpartneres mail eller omgå adgang via Gmail-synk/API.
+- Mailtråde knyttes til korrekte leads/kunder, og de nødvendige sagsmetadata logges. Retention, arkivering, adgang til mail ved opsigelse og evt. Vault/eDiscovery vurderes særskilt – e-mailhistorik er ikke automatisk juridisk revisionssikret.
+- Suspendering hos Gainora skal ledsages af en godkendt proces til lukning af den eksterne Google Workspace-konto; hvis Google-handlingen fejler, skal Master få en alarm, ikke en falsk kvittering.
+- DNS, MX, SPF, DKIM og DMARC opsættes først efter verifikation af Gainoras reelle maildomæne og eventuelle eksisterende postkasser. Ingen ukontrolleret MX-omlægning.
+- Compliance Portal og kundernes private finansdata er fortsat utilgængelige for partnere uden særskilt eksplicit ret og grundlag.
+- **Status:** Integrationsdesign besluttet; domæne, Workspace-tenant, konti og API-forbindelse er endnu ikke opsat.
 
-### Accepttest for partner-mail
-- [ ] Master godkender Morten -> unik Gainora-adresse oprettes/aktiveres, og han kan sende og modtage inde fra Partner Hub.
-- [ ] En anden partner får anden adresse og kan ikke læse, søge, sende som eller eksportere Mortens mail.
-- [ ] Partnerens mailtråd kan knyttes til korrekt kunde/lead; svar fra kunde vises i samme samtale med verificeret modtager.
-- [ ] Suspenderet partner kan ikke sende, modtage adgang eller læse mail via gammel session/API.
-- [ ] Indgående webhook med falsk signatur, dubletbesked og ukendt modtager håndteres sikkert.
-- [ ] Udgående leveringsfejl vises ærligt; historikken giver auditspor og overholder vedtagne retentionregler.
+### Accepttest – Google Workspace
+- [ ] Master godkender Morten; individuel Workspace-adresse oprettes med godkendt licens, MFA og logget identitet.
+- [ ] Morten kan sende og modtage både i Gmail og via tilladte integrationer til Partner Hub.
+- [ ] Anden partner får selvstændig adresse og kan ikke åbne, søge eller sende fra Mortens postkasse.
+- [ ] Mail kan knyttes til korrekt kunde/lead med beskyttet historik og relevant retention.
+- [ ] Master kan tilbagekalde Gainora-rettigheder, og ekstern Workspace-suspension kontrolleres særskilt.
+- [ ] OAuth, Gmail API, Directory API, Google-kvoter og fejlbehandling er gennemtestet med syntetiske data.
+- [ ] Godkendt domæne, licenser, DNS, sikkerhed, GDPR/databehandleraftale og evt. arkivbehov er dokumenteret.
 
 ## Partnerlivscyklus
 1. Gainora-admin opretter partner med firmanavn/person, kontakt, land, sprog, status, kommerciel aftaleversion og evt. introducer/rekrutterende partner. Alternativt: offentlig partneransøgning med manuel accept før aktivering.
