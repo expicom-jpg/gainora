@@ -15,6 +15,25 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 7. Compliance får en opgavekø med status ny/under behandling/afventer kunde/løst, kan svare via verificeret kontaktkanal og evt. overdrage almindelig support til andre funktioner.
 8. Ved akutte sikkerhedssager markeres hastegrad efter godkendte regler. Ingen chatbot må alene afgøre juridisk ansvar eller love en bestemt tidsfrist.
 
+## Løbende empiri og kontrolleret forbedring
+Chatbotten skal ikke blot svare på spørgsmål; den skal skabe en systematisk læringssløjfe. Forbedring sker ved opsamling af dokumenterbare mønstre og godkendt viden, **ikke** ved ukontrolleret selvtræning på private chats.
+
+1. **Opsamling:** Gem begrænset og relevant metadata per henvendelse: kategori, om botten besvarede sagen, om den blev eskaleret, kilde/version på brugt FAQ, om kunden fandt svaret hjælpsomt, og anonymiseret problemkategori. Bevar kun nødvendige chatuddrag i den adgangsbeskyttede supportsag efter fastlagt slettepolitik.
+2. **Mønstergenkendelse:** Dan oversigter over hyppige spørgsmål, fejlsvar, gentagne produktfejl, manglende artikler, kundeønsker og compliance-henvendelser. Aggreger på tværs af organisationer kun når person- og forretningshemmeligheder ikke kan udledes.
+3. **Human-in-the-loop:** Compliance/support gennemgår, retter og godkender de rette svar. Godkendte svar udgives som versionsstyrede vidensartikler med ejer, dato, kilde og gyldighed.
+4. **Læringssløjfe:** Nye henvendelser søger i senest godkendte artikler. Tidligere løste sager er kun forslag til nye artikler, aldrig autoritativ kundevendt viden uden godkendelse.
+5. **Produktindsigt:** Aggregeret feedback kan blive til fejlrapporter og featureforslag til udviklingsteamet; ingen automatisk produkt- eller compliancebeslutning.
+6. **Måling og kvalitet:** Mål løsningsgrad, kundefeedback, eskaleringsgrad, genåbnede sager, kvalitet af citerede FAQ-svar og antal nye godkendte artikler. Tjek stikprøver løbende for hallucinationer og fejl.
+7. **Databeskyttelse:** Dataminimering, adskillelse af virksomheder, rollebaseret adgang, redaktionel anonymisering, begrænset opbevaring og dokumenteret behandlingsgrundlag. Private henvendelser må ikke bruges til model-finetuning eller generelle svar på tværs af kunder uden særskilt vurdering og lovligt grundlag.
+
+### Supplerende accepttests
+- [ ] To forskellige formuleringer af samme spørgsmål samles i én anonymiseret emnekategori.
+- [ ] Ubesvaret spørgsmål bliver til forslag i intern forbedringskø, men ikke automatisk offentlig FAQ.
+- [ ] Compliance-godkendelse opretter ny artikelversion, som botten kan bruge efter publicering.
+- [ ] Trukket eller forældet FAQ-version kan ikke længere bruges til kundesvar.
+- [ ] Kundespecifikke detaljer og fakturadata lækker ikke via samlet læringsbase.
+- [ ] Dashboard viser udvikling i løsningsgrad uden at forveksle færre eskaleringer med højere kvalitet.
+
 ## Tekniske minimumskrav
 - Adskil offentligt website og autentificeret kundeportal. Aldrig implicit kontoadgang ud fra fri chattekst.
 - Server-side adgangskontrol og RLS for sager, organisationer og compliance-roller; negative multi-tenant tests.
