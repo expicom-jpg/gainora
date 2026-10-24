@@ -24,6 +24,25 @@ En synlig AI-chat på website, eventuelt også i login-området, besvarer hyppig
 - Kunden skal tydeligt kunne se, hvornår beskeder kommer fra **Gainora AI** og fra et **menneske i compliance**.
 - Kun faktisk gemte/afsendte beskeder må vises som sendt. Fejl ved levering eller adgang skal kunne opdages og genforsøges sikkert, uden duplikerede svar.
 
+## Obligatorisk svarvalg: løbende dialog eller endeligt svar
+- Hver gang en compliance-medarbejder trykker **Svar i chat**, skal medarbejderen **aktivt vælge præcis én** svartype: `Løbende dialog` eller `Endeligt svar`. Ingen forudvalgt standard; **Send svar** er deaktiveret, indtil et valg er foretaget.
+- Valget gælder **den aktuelle besked**; det skal vælges på ny ved næste svar. API/server afviser enhver afsendelse uden eksplicit `reply_type` i den tilladte enum, også ved omgåelse af brugergrænsefladen.
+- **Løbende dialog:** Beskeden sendes til kunden i samme tråd; sagen forbliver åben/under behandling eller afventer kunden, og kunden kan fortsætte dialogen.
+- **Endeligt svar:** Beskeden sendes til kunden og markeres som compliance-medarbejderens afsluttende svar. Sagen får status `besvaret/afsluttet` med tidspunkt og medarbejder, men kundens mulighed for at svare eller genåbne ved nyt spørgsmål bevares.
+- En besked må ikke automatisk registreres som endeligt svar på baggrund af formuleringen alene. Svartype gemmes sammen med besked-ID, sag, afsenderrolle, tidspunkt og revisionsspor.
+- For læring: `Løbende dialog` samler yderligere kontekst, men udløser ikke publicering af et FAQ-svar. `Endeligt svar` opretter **kun et udkast** til generel/anonymiseret vidensartikel. Compliance skal særskilt kontrollere og godkende artiklen, før botten må bruge den på tværs af kunder.
+- Hvis kunden svarer efter et endeligt svar, genåbnes sagen sikkert, eller der oprettes en koblet opfølgningssag med den oprindelige historik bevaret.
+- Vis en tydelig status for kunden (fx `Vi er stadig i dialog` eller `Compliance har sendt et endeligt svar – du kan svare igen`). Fejlet levering må ikke ændre sagens status.
+
+### Accepttests: tvunget aktivt valg
+- [ ] Send-knappen er blokeret, indtil medarbejderen har valgt svartype.
+- [ ] Efter én afsendelse nulstilles valget; medarbejderen skal vælge igen ved næste besked.
+- [ ] `Løbende dialog` lader sagen være åben; kunden kan svare.
+- [ ] `Endeligt svar` registrerer afslutning og kan efterfølges af kundens genåbning.
+- [ ] Server/API afviser manglende eller ugyldig svartype.
+- [ ] Kun afsluttede sager kan foreslå vidensartikler, og godkendelse er separat fra afsendelse.
+- [ ] Audit viser medarbejderens svarvalg pr. besked.
+
 ## Læring fra medarbejderens svar i chatten
 - Efter hver afsluttet sag foreslår systemet automatisk en anonymiseret **spørgsmål → svar → emne**-vidensartikel baseret på den konkrete dialog; udelad navne, aftaler, fakturanumre og andre kunde-/virksomhedsfortrolige detaljer.
 - Compliance kan vælge **Godkend til vidensbase**, **Ret før godkendelse** eller **Kun kundespecifikt – må ikke genbruges**. Ingen automatisk offentliggørelse af menneskesvar.
