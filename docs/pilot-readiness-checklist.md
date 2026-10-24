@@ -47,6 +47,9 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Partnerdashboard viser kun Mortens egne kundeemner og virksomheder, kontaktpersoner, onboardingstatus, pilotstart/slut, opfølgning og aftalt kommerciel status.
 - [ ] Partneren kan oprette/invitere et lead og se dets status; admin kan godkende oprettelse og styre ejerskab, inkl. registreret ændringshistorik.
 - [ ] Server-side adgangskontrol og negative RLS-tests: en anden partner må ikke kunne se, ændre eller overtage Mortens kunder.
+- [ ] Partneres standardsynlighed er **kun egen forretning og egen downline**; ingen sidegrene eller andre partneres salg/kunder/provision, heller ikke gennem søgning, API eller eksport.
+- [ ] Downline-overblik viser som udgangspunkt kun aftalt hierarki og aggregerede nøgletal; ingen automatisk adgang til underpartneres kundedetaljer, regnskabsdata eller compliance-sager.
+- [ ] Enhver udvidet adgang skal komme fra den eneste Master og auditeres. Test med mindst to uafhængige partnere og en underpartner.
 - [ ] Partnerrollen giver ikke som standard adgang til kunders fakturaer, økonomiske rådata eller analyser; eventuel deling kræver særskilt tilladelse.
 - [ ] Provisionsgrundlag følger partnerrelationen ved senere aktivering af betalte abonnementer/tilkøb og kan afstemmes mod faktiske betalinger, tilbagebetalinger og opsigelser.
 - [ ] Ingen provision udbetales på gratis pilot, og foreløbige provisionssatser må ikke beskrives som aftalt kontrakt.
