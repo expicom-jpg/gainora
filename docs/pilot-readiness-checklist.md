@@ -56,6 +56,10 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 - [ ] Ved mislykket eskalering får kunden en tydelig alternativ kontaktvej, som først vises når en reel adresse/kanal er konfigureret.
 - [ ] Compliance kan se, overtage, svare på, afslutte og dokumentere sagen; almindelige supportsager kan videresendes fra compliance til rette ansvarlige.
 - [ ] Compliance har en **separat, rollebeskyttet side ved login** med individuel medarbejderadgang, sagsindbakke, tildeling og søgbar historik.
+- [ ] **Kun ejeren af Gainora personligt** kan godkende navngivne compliance-brugere før adgang; ingen almindelig admin, partner eller medarbejder kan selv tildele rettigheden.
+- [ ] Ejer skal kunne se, godkende, afvise, ændre og straks tilbagekalde hver enkelt compliance-brugers rettigheder, med MFA og reviderbart godkendelsesspor.
+- [ ] Negative adgangstests dokumenterer, at både ikke-godkendte medarbejdere og almindelige Gainora-admins afvises ved læsning, svar, søgning, historik og eksport – også gennem direkte API.
+- [ ] Dokumenteret identitetskontrol af ejer og sikker kontogendannelse må ikke udhule kravet om personlig godkendelse.
 - [ ] Saghistorikken viser komplet kronologi og revisionsspor for kundechat, medarbejdersvar, aktive svarvalg, hændelser og leveringsstatus.
 - [ ] En autoriseret compliance-manager kan eksportere en logget sagsrapport til dokumentation ved tvist, med korrekte forbehold om identitetskontrol og bevisværdi.
 - [ ] Historiske sager understøtter søgning og anonymiserede vidensforslag, men ingen automatisk deling uden compliance-godkendelse.
