@@ -28,6 +28,10 @@ Status: Intern implementeringsplan. **Ikke godkendt til rigtige kundedata endnu.
 
 ## Trin D – Partner Hub er en launch-blocker (Morten ejer pilotrelationen)
 - [ ] Morten har en aktiv, sikker partnerkonto og rollebaseret adgang.
+- [ ] Hver partner har sit eget personlige login og isoleret partnerdashboard; ingen delte adgangskoder og ingen automatisk adgang til andre partneres kundeporteføljer.
+- [ ] Gainora-admin har en særskilt **Partner Main**-side til oprettelse/godkendelse/suspendering af partnere, kundetilknytning, aftaleversioner, rettigheder og provisionsoverblik.
+- [ ] Fra Partner Main kan Gainora oprette endnu en testpartner og automatisk provisionere et unikt login og dashboard uden kodeændring.
+- [ ] Test Gainora-admin, Morten og anden partner som tre adskilte roller inklusive serverside-/RLS-adgangskontrol og reviderbare adminændringer.
 - [ ] Alle fem pilotvirksomheder knyttes til Mortens partner-ID ved oprettelse, før de får pilotadgang; ingen midlertidig ejer på Gainoras generelle konto.
 - [ ] Kundetilknytningen er varig og auditerbar gennem invitation, 30 dages gratis pilot, eventuel betalt konvertering, tilkøb og opsigelse.
 - [ ] Partnerdashboard viser kun Mortens egne kundeemner og virksomheder, kontaktpersoner, onboardingstatus, pilotstart/slut, opfølgning og aftalt kommerciel status.
