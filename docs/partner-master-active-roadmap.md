@@ -8,15 +8,17 @@ Opdateret 24. oktober 2026. **Plan/udvikling; ikke production-ready.**
 4. **Master opgave- og godkendelsesindbakke**: én samlet, personlig indbakke for ejeren. Der kommer opgaver ind fra rettighedsansøgninger, ny medarbejder, nye partnere, adgangsændringer, sikkerhedsalarmer og andre godkendelseskrævende handlinger. Kun ejeren som eneste Master kan godkende, afslå eller tilbagekalde Master-beslutninger. Ingen stiltiende auto-godkendelse.
 5. **Officiel Gainora-partnermail + sporbar kommunikation**: alle godkendte partnere får en unik Gainora-mailadresse som del af onboarding. Partnerens kommunikation på vegne af Gainora skal ske via denne adresse og knyttes til korrekt partner, kunder og relevant aftalehistorik. Master skal kunne suspendere og tilbagekalde mailadgang.
 
-### Krav til samlet partner-mail og kalender (P0) – Resend fravalgt, leverandør under afklaring
-- **Resend er afvist** som primær partnerløsning, fordi der mangler en integreret kalender. Ingen mailleverandør skal aktiveres, før både mail, kalender og Mastertilsyn er verificeret.
-- **Første kandidat: Zoho Mail Premium**, der omfatter erhvervsmail, kalender samt eDiscovery/mailarkiv. Zoho Mail Lite har også kalender, men leverer ikke eDiscovery, som er nødvendig for den ønskede centrale søge- og dokumentationsfunktion. Sammenlign eventuelt med Google Workspace inkl. egnet Vault-plan og Exchange Online.
-- Hver partner får individuel officiel Gainora-mail og kalender. Partneren ser kun egen forretning, egen kalender og egne mails. Downline giver ikke adgang til underpartneres postkasser.
-- Kun Gainoras ene Master skal have særligt autoriseret, revisionslogget adgang til hele den officielle partnerkorrespondance, med søgning, visning, eksport og historik til dokumentation. Dette kræver udtrykkelig aftale og korrekt juridisk grundlag, gennemsigtighed og dataminimering, ikke en skjult bagdør.
-- Verificér plan, licensvilkår og de konkrete eDiscovery-/adminfunktioner før køb. Selv en udbyder-superadmin er ikke nødvendigvis identisk med Gainoras eneste Masterrolle; konti, nødadgang, udbyderroller og API-begrænsninger skal gennemgås.
-- Master kan godkende partnerkonti og straks suspendere Gainora-adgang. Mail- og kalenderadgang skal også kunne suspenderes i udbyderens adminsystem; fejl skal eskaleres.
-- Test med Morten og en anden partner: separate postkasser og kalendere, sending/receiving, mødeindkaldelser, adgangsisolation, Master-søgning/eksport, audit og suspension.
-- Domæne/DNS, mailudbyderaftale, MFA, retention, GDPR/databehandleraftale og omkostninger pr. partner skal afklares inden pilot. **Status: Ingen leverandør opsat; kandidat skal godkendes og testes.**
+### Besluttet P0-model – Google Workspace knyttet til partnerens Gainora-login
+- **En partner → ét individuelt Gainora-login → én Master-godkendt Google Workspace-identitet med mail og kalender.** Google er valgt, Resend og Zoho er fravalgt.
+- Master godkender først partneren; en autoriseret backend-proces opretter eller tildeler derefter Google Workspace-konto med unik officiel Gainora-mailadresse og Google Kalender, verificerer resultatet og binder det til et uforanderligt partner-ID. Ingen adgang gives før godkendelse og vellykket oprettelse.
+- Partneren bruger kun Gainora Partner Hub som arbejdsflade: mail, svar, tråde, søgning, møder og kalender. Ingen Google Docs, Sheets, Drive eller generel Workspace-brugerflade tilbydes via Gainora.
+- Partneren må ikke ændre den officielle afsenderadresse, Google-kontotilknytning eller identitet. Kun Master kan autorisere ændring/ophør; adgang håndhæves serverside på hvert API-kald.
+- **Ingen kendte eller delte Google-adgangskoder.** Brug Googles officielle API'er og sikker token-/serviceautorisering, med snævre rettigheder. Gainora-login alene blokerer ikke nødvendigvis direkte Google-login: det kræver verificeret Workspace-loginpolitik/SSO, og dette skal afprøves konkret inden pilot.
+- Master får lovligt, rollebeskyttet og revisionslogget overblik over den officielle mailkorrespondance på tværs af partnerkonti: søgning, dokumentation og eksport efter afklaret Workspace/eDiscovery-setup, databehandlingsgrundlag og kommunikeret kontrolpolitik. Ingen skjult eller uautoriseret bagdør.
+- Kun egen mailbox/kalender for partneren; downline giver ikke adgang til underpartneres postkasser. Beskyt også søgning, historik, vedhæftninger og kalenderaftaler mod adgang på tværs.
+- Når Master suspenderer partneren, ophører Gainora-adgangen straks, og ekstern Google-adgang/tokens skal deaktiveres via en kontrolleret, verificeret proces.
+- Før pilot: faktisk Gainora-domæne, Workspace-licenser og budget pr. partner, API/SSO, MFA, DNS, mail- og kalenderflow, retention/eDiscovery og GDPR skal være afklaret. Test Morten og en separat partner med forskellige konti.
+- **Status:** Arkitekturen er besluttet og dokumenteret, men Google-konti, integration og sikkerhedstest er endnu ikke gennemført.
 
 ### Krav til samlet Master-indbakke
 - Ét beskyttet overblik over `pending`, `in_review`, `approved`, `rejected`, `completed` med filtrering, type, prioritet, dato og ansvarlig.
