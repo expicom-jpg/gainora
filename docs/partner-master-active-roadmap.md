@@ -62,3 +62,11 @@ P1–P3 er planlagt, **ikke startet**. Hver funktion kræver særskilt udvikling
 - Beslutningskriterier: konkret dokumenteret effekt, pris, sikkerhed, databehandlerforhold og sammenligning med vores eksisterende værktøjer. Priser/funktioner kontrolleres igen ved vurderingen.
 - Første eventuelle test bør være gratis eller lavrisiko, separat fra produktion og **uden adgang til GitHub, Supabase, Stripe eller kundedata**.
 - Ikke et pilotkrav. Må ikke forsinke Master Control, Partner Hub, Google-integration, Compliance eller Excel-import.
+
+## Efter pilot: vurder Ventora til markedsføring og kundeanskaffelse
+- **Kandidat på observationslisten:** https://ventora.cc/
+- **Genbesøg når** de første fem pilotkunder er onboardet, løsningen er sikker og stabil, og Gainora er klar til aktiv kundeanskaffelse / skalering.
+- Vurder en afgrænset gratis eller billig test af markedsføring, leadgenerering og landingssider med målbare KPI'er som leads, bookingrate, pris per kvalificeret lead og faktiske konverteringer.
+- **Ingen ny opgave før pilotklarhed.** Ventora må ikke forsinke Master Control, Partner Hub, Google-integration, compliance eller sikker dataimport.
+- Giv aldrig Ventora adgang til Gainoras produktions-GitHub, Supabase, Stripe, Workspace-konti eller kundedata blot for en test. Kræv uafhængig vurdering af databehandling, adgangsrettigheder, faktiske leverancer og økonomi før eventuel integration.
+- Status: **Gemt som en fremtidig beslutningsmulighed, ikke valgt, købt eller implementeret.**
