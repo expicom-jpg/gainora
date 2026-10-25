@@ -4,6 +4,7 @@ import {previewInvoiceCsv} from "@/lib/profit-audit/invoice-csv-preview";
 import {analyzeImportedInvoiceLines} from "@/lib/profit-audit/invoice-signal-adapter";
 import type {CsvPreview} from "@/lib/profit-audit/invoice-csv-preview";
 import type {SupplierSignal} from "@/lib/profit-audit/supplier-signals";
+async function awaitFileBuffer(file: File): Promise<ArrayBuffer> { return file.arrayBuffer(); }
 export default function InvoiceCsvPreview(){
  const [preview,setPreview]=useState<CsvPreview|null>(null);
  const [signals,setSignals]=useState<SupplierSignal[]>([]);
@@ -12,17 +13,26 @@ export default function InvoiceCsvPreview(){
   setPreview(null);setSignals([]);setError("");
   if(!file)return;
   if(file.size>3_000_000){setError("Filen er for stor (maks. 3 MB).");return}
-  try{setPreview(previewInvoiceCsv(await file.text()))}catch{setError("CSV-filen kunne ikke læses. Kontrollér kolonneoverskrifter og format.")}
+  try {
+    const isExcel = /\.xlsx$/i.test(file.name);
+    if (!isExcel && !/\.csv$/i.test(file.name)) throw new Error("unsupported_file");
+    const parsed = isExcel
+      ? await (await import("@/lib/profit-audit/invoice-excel-preview")).previewInvoiceExcel(await awaitFileBuffer(file))
+      : previewInvoiceCsv(await file.text());
+    setPreview(parsed);
+  } catch {
+    setError("Filen kunne ikke læses. Brug en CSV- eller XLSX-fil med de otte angivne kolonner, højst 10.000 rækker og uden Excel-formler.");
+  }
  }
  function analyze(){
   if(!preview||preview.errors.length||!preview.rows.length)return;
   try{setSignals(analyzeImportedInvoiceLines(preview.rows))}catch{setError("Analysen kunne ikke gennemføres. Kontrollér fakturalinjerne.")}
  }
  return <section className="card" style={{marginTop:18}}>
-  <h2>CSV-fakturaanalyse · lokal forhåndsvisning</h2>
+  <h2>Fakturaanalyse · lokal CSV- og Excel-forhåndsvisning</h2>
   <p className="muted">Denne tidlige funktion læser filen i din browser. Den uploader eller gemmer ikke fakturalinjerne. Brug kun syntetiske eller anonymiserede testdata, indtil kundesikkerheden er godkendt.</p>
   <p className="muted">Kolonner i rækkefølge: invoiceId, invoiceDate, supplier, productKey, currency, unit, quantity, unitPrice. Dato: ÅÅÅÅ-MM-DD. Beløb ekskl. moms og ensartede enheder.</p>
-  <label className="field">Vælg CSV-fil<input type="file" accept=".csv,text/csv" onChange={e=>void onFile(e.target.files?.[0])}/></label>
+  <label className="field">Vælg CSV- eller Excel-fil<input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={e=>void onFile(e.target.files?.[0])}/></label>
   {error?<p role="alert">{error}</p>:null}
   {preview?<div><p><strong>{preview.rows.length}</strong> gyldige linjer · <strong>{preview.errors.length}</strong> fejl</p>
    {preview.errors.slice(0,20).map((e,i)=><p key={i} role="alert">Linje {e.row}: {e.message}</p>)}
