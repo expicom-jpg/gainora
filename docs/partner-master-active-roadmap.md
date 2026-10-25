@@ -54,3 +54,11 @@ F. **Partner Academy** – selvbetjent oplæring, produktviden, godkendt salgsma
 G. **Master Business Intelligence** – samlet omsætning, kundetilgang/-afgang, provision, supportbelastning og dokumenteret kundeeffekt.
 
 P1–P3 er planlagt, **ikke startet**. Hver funktion kræver særskilt udvikling, sikkerhedstest og godkendelse før produktionsrelease.
+
+## Parkeret mulighed – Ventora (først efter pilot)
+- Kilde: https://ventora.cc/
+- **Status:** Ingen køb, ingen integration og ingen adgang til Gainoras systemer.
+- Når de første fem pilotkunder er onboardet, platformen er stabil, og kundeanskaffelse/markedsføring prioriteres, genvurderes Ventora som mulig hjælp til kampagner, landingssider og leadgenerering.
+- Beslutningskriterier: konkret dokumenteret effekt, pris, sikkerhed, databehandlerforhold og sammenligning med vores eksisterende værktøjer. Priser/funktioner kontrolleres igen ved vurderingen.
+- Første eventuelle test bør være gratis eller lavrisiko, separat fra produktion og **uden adgang til GitHub, Supabase, Stripe eller kundedata**.
+- Ikke et pilotkrav. Må ikke forsinke Master Control, Partner Hub, Google-integration, Compliance eller Excel-import.
