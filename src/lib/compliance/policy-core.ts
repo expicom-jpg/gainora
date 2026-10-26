@@ -58,6 +58,7 @@ export function hasCurrentComplianceGrant(
     Array.isArray(grant.organizationIds) &&
     grant.organizationIds.includes(organizationId) &&
     Array.isArray(grant.permissions) &&
+    permissions.length > 0 &&
     permissions.every((permission) => grant.permissions.includes(permission))
   );
 }
@@ -69,7 +70,7 @@ export function decideStaffCaseAction(
   item: ComplianceCase,
   action: StaffCaseAction
 ): ComplianceDecision {
-  if (!item?.id || !item.organizationId || !item.status)
+  if (!item?.id || !item.organizationId || !["bot_open", "queued", "assigned", "resolved"].includes(item.status))
     return deny("invalid_case");
   const required: Record<StaffCaseAction, readonly CompliancePermission[]> = {
     read: ["compliance.case.read"],
