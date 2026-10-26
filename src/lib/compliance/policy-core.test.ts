@@ -31,6 +31,7 @@ describe("Master-approved compliance access: default deny", () => {
   it("requires authenticated actor, active Master-approved staff and current grant", () => {
     expect(hasCurrentComplianceGrant(staff, "staff-a", "org-a", ["compliance.case.read"])).toBe(true);
     expect(hasCurrentComplianceGrant(null, "staff-a", "org-a", ["compliance.case.read"])).toBe(false);
+    expect(hasCurrentComplianceGrant(staff, "staff-a", "org-a", [])).toBe(false);
     expect(hasCurrentComplianceGrant(staff, "staff-b", "org-a", ["compliance.case.read"])).toBe(false);
     expect(hasCurrentComplianceGrant({ ...staff, status: "suspended" }, "staff-a", "org-a", ["compliance.case.read"])).toBe(false);
     expect(hasCurrentComplianceGrant({ ...staff, status: "pending_master_approval" }, "staff-a", "org-a", ["compliance.case.read"])).toBe(false);
@@ -55,6 +56,12 @@ describe("Master-approved compliance access: default deny", () => {
     const noExport: StaffGrant = { ...staff, permissions: ["compliance.case.read", "compliance.case.reply"] };
     expect(decideStaffCaseAction(noExport, "staff-a", queued, "read").allowed).toBe(true);
     expect(decideStaffCaseAction(noExport, "staff-a", queued, "export").allowed).toBe(false);
+  });
+
+  it("rejects invalid case states even for authorized staff", () => {
+    expect(decideStaffCaseAction(staff, "staff-a", { ...queued, status: "unknown" as never }, "read")).toEqual({
+      allowed: false, reason: "invalid_case"
+    });
   });
 
   it("denies unexpected actions at runtime", () => {
