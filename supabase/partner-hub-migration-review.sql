@@ -14,7 +14,8 @@ create table if not exists public.partner_hub_admins (
 alter table public.partner_hub_admins enable row level security;
 grant select on public.partner_hub_admins to authenticated;
 create policy partner_hub_admins_self_read on public.partner_hub_admins
- for select to authenticated using (user_id=(select auth.uid()));
+ for select to authenticated using (user_id=(select auth.uid())
+ and exists(select 1 from public.partners p where p.id=partner_members.partner_id and p.status='active'));
 -- Administrators are provisioned out-of-band by the database owner, never by the browser.
 create table if not exists public.partner_members (
  id uuid primary key default gen_random_uuid(),
@@ -47,18 +48,23 @@ create policy partner_members_own_read on public.partner_members for select to a
  using (user_id=(select auth.uid()));
 
 create policy partner_own_read on public.partners for select to authenticated
- using (exists(select 1 from public.partner_members m where m.partner_id=partners.id and m.user_id=(select auth.uid())));
+ using (exists(select 1 from public.partner_members m where m.partner_id=partners.id and m.user_id=(select auth.uid()) and partners.status='active'));
 
 create policy partner_agents_own_read on public.partner_agents for select to authenticated
- using (exists(select 1 from public.partner_members m where m.partner_id=partner_agents.partner_id and m.user_id=(select auth.uid())));
+ using (exists(select 1 from public.partner_members m where m.partner_id=partner_agents.partner_id and m.user_id=(select auth.uid())
+ and exists(select 1 from public.partners p where p.id=partner_agents.partner_id and p.status='active')));
 
 create policy partner_leads_own_read on public.leads for select to authenticated
- using (exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid())));
+ using (exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()))
+ and exists(select 1 from public.partners p where p.id=leads.partner_id and p.status='active'));
 
+-- Suspended partners lose access at the database boundary, including direct API calls.
+-- Regression-test two partners, an inactive partner, and an approved back-office admin.
 -- Only direct partner sales admins/sellers can submit their own new leads.
 create policy partner_leads_self_insert on public.leads for insert to authenticated
  with check (partner_id is not null and partner_agent_id is null and sales_channel_id is null
  and status='new' and contact_basis is not null and char_length(contact_basis) between 10 and 500
+ and exists(select 1 from public.partners p where p.id=leads.partner_id and p.status='active')
  and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')));
 
 
@@ -66,15 +72,19 @@ create policy partner_leads_self_insert on public.leads for insert to authentica
 -- Marking a lead as won is reserved for trusted billing/back-office reconciliation.
 create policy partner_leads_status_update on public.leads for update to authenticated
  using (partner_id is not null
+ and exists(select 1 from public.partners p where p.id=leads.partner_id and p.status='active')
  and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')))
  with check (partner_id is not null and status in ('new','contacted','qualified','demo','offer','lost')
+ and exists(select 1 from public.partners p where p.id=leads.partner_id and p.status='active')
  and exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()) and m.role in ('admin','seller')));
 
 -- Ledger and payouts can be READ only by the commission beneficiary. Writes remain server-side.
 create policy partner_ledger_own_read on public.commission_ledger for select to authenticated
- using (exists(select 1 from public.partner_members m where m.partner_id=commission_ledger.partner_id and m.user_id=(select auth.uid())));
+ using (exists(select 1 from public.partner_members m where m.partner_id=commission_ledger.partner_id and m.user_id=(select auth.uid())
+ and exists(select 1 from public.partners p where p.id=commission_ledger.partner_id and p.status='active')));
 create policy partner_payouts_own_read on public.partner_payouts for select to authenticated
- using (exists(select 1 from public.partner_members m where m.partner_id=partner_payouts.partner_id and m.user_id=(select auth.uid())));
+ using (exists(select 1 from public.partner_members m where m.partner_id=partner_payouts.partner_id and m.user_id=(select auth.uid())
+ and exists(select 1 from public.partners p where p.id=partner_payouts.partner_id and p.status='active')));
 
 -- No partner-user permission to insert payment events or commission ledger entries.
 -- Admin provision of partner_members and partner hierarchy must be performed by trusted back office.
