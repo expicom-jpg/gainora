@@ -15,6 +15,9 @@ export async function PATCH(request:Request){
  const {data:member,error:membershipError}=await db.from("partner_members").select("role")
   .eq("user_id",user.id).eq("partner_id",parsed.data.partnerId).in("role",["admin","seller"]).maybeSingle();
  if(membershipError||!member)return NextResponse.json({error:"Ingen adgang til at ændre dette lead."},{status:403});
+ const {data:partner,error:partnerError}=await db.from("partners").select("status")
+  .eq("id",parsed.data.partnerId).maybeSingle();
+ if(partnerError||partner?.status!=="active")return NextResponse.json({error:"Denne partner er ikke aktiv."},{status:403});
  // Database grants permit updating *only* status, and RLS must independently verify ownership.
  const {data,error}=await db.from("leads").update({status:parsed.data.status})
   .eq("id",parsed.data.leadId).eq("partner_id",parsed.data.partnerId).select("id,status").maybeSingle();
