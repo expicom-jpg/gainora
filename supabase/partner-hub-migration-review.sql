@@ -14,8 +14,7 @@ create table if not exists public.partner_hub_admins (
 alter table public.partner_hub_admins enable row level security;
 grant select on public.partner_hub_admins to authenticated;
 create policy partner_hub_admins_self_read on public.partner_hub_admins
- for select to authenticated using (user_id=(select auth.uid())
- and exists(select 1 from public.partners p where p.id=partner_members.partner_id and p.status='active'));
+ for select to authenticated using (user_id=(select auth.uid()));
 -- Administrators are provisioned out-of-band by the database owner, never by the browser.
 create table if not exists public.partner_members (
  id uuid primary key default gen_random_uuid(),
@@ -58,7 +57,9 @@ create policy partner_leads_own_read on public.leads for select to authenticated
  using (exists(select 1 from public.partner_members m where m.partner_id=leads.partner_id and m.user_id=(select auth.uid()))
  and exists(select 1 from public.partners p where p.id=leads.partner_id and p.status='active'));
 
--- Suspended partners lose access at the database boundary, including direct API calls.
+-- Suspended partners lose business-data access at the database boundary, including direct API calls.
+-- Membership self-read remains available to avoid circular RLS (partners policy reads partner_members).
+-- Do not expose sensitive data via partner_members metadata.
 -- Regression-test two partners, an inactive partner, and an approved back-office admin.
 -- Only direct partner sales admins/sellers can submit their own new leads.
 create policy partner_leads_self_insert on public.leads for insert to authenticated
