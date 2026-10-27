@@ -10,7 +10,7 @@ Status: **domain guards + unit tests only** on a separate development branch. No
 4. Execute case state changes and an append-only audit entry **in one transaction**, with optimistic concurrency or row locking. Include actor, tenant, case, action, before/after status, timestamp, request/correlation ID and reason; deny the action if audit persistence fails.
 5. Never allow browser callers to assert `verifiedBotService`. Verify service identity server-side, rate-limit escalation and sanitize chatbot inputs. The bot can only queue a case, never assign an employee or send a final human reply.
 6. Staff can claim only queued/unassigned cases. An interim reply retains assigned status; a final reply resolves the case. A case must be assigned to the replying employee. Prevent double-claim races at the database layer.
-7. A suggested knowledge-base answer must be reviewed by a **different** active, Master-approved employee with explicit `compliance.knowledge.approve`. Approval yields `approved_for_publication`, **not automatic publication**. A later separate audited publishing step must verify the approval is current, the text is safe, tenant scope and source restrictions, and the bot knowledge index is updated only from published revisions.
+7. A suggested knowledge-base answer must be reviewed by a **different** active, Master-approved employee with explicit `compliance.knowledge.approve`. Approval yields `approved_for_publication`, **not automatic publication**. A later separate audited publishing step must verify the approval is current, the text is safe, tenant scope and source restrictions, and the bot knowledge index is updated only from published revisions. The pure publication gate checks explicit `compliance.knowledge.publish`, independent approval, approved revision and digest. **The digest must be recomputed server-side from the stored canonical text**; a client-supplied digest or status is not evidence of approval. Publication must atomically record audit and a durable index-update outbox event; until that transaction and worker exist, do not publish.
 8. Redact secrets and personal/financial data from logs and knowledge proposals. Define retention, subject-access/deletion, and audit review before any customer onboarding.
 
 ## Pure-domain entry points
@@ -19,6 +19,7 @@ Status: **domain guards + unit tests only** on a separate development branch. No
 - `decideStaffCaseAction`: separate read, claim, interim reply, final reply and export actions.
 - `decideBotEscalation`: verified-service-only queue transition with reason.
 - `decideKnowledgeApproval`: independent human approval of a pending suggestion.
+- `decideKnowledgePublication`: distinct publish permission, independent prior reviewer, unchanged approved revision/digest and auditable publish decision. This is **not** an index write.
 
 Each positive decision includes `auditRequired: true`. This is a **contract**, not an audit implementation.
 
