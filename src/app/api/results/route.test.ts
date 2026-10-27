@@ -8,7 +8,8 @@ const single=vi.fn();
 const query={insert:vi.fn().mockReturnThis(),select:vi.fn().mockReturnThis(),single};
 const from=vi.fn(()=>query);
 const request=()=>new NextRequest("http://localhost/api/results",{method:"POST",body:JSON.stringify({
- organizationId:"00000000-0000-4000-8000-000000000001",findingId:"00000000-0000-4000-8000-000000000002",title:"Synthetic result"
+ organizationId:"00000000-0000-4000-8000-000000000001",findingId:"00000000-0000-4000-8000-000000000002",title:"Synthetic result",
+ baselineValue:1000,resultValue:900
 })});
 beforeEach(()=>{vi.clearAllMocks();mocks.user.mockResolvedValue({id:"test-user"});mocks.client.mockResolvedValue({from});});
 it("relies on the atomic database operation, without a second status write",async()=>{
@@ -21,4 +22,14 @@ it.each([["23514",409],["42501",403],["XX000",500]])("reports DB error %s withou
  single.mockResolvedValue({data:null,error:{code,message:"synthetic test error"}});
  expect((await POST(request())).status).toBe(status);
  expect(from).toHaveBeenCalledTimes(1);
+});
+
+it("rejects missing financial values before writing to the database",async()=>{
+ const invalid=new NextRequest("http://localhost/api/results",{method:"POST",body:JSON.stringify({
+  organizationId:"00000000-0000-4000-8000-000000000001",
+  findingId:"00000000-0000-4000-8000-000000000002",
+  title:"Synthetic result"
+ })});
+ expect((await POST(invalid)).status).toBe(400);
+ expect(from).not.toHaveBeenCalled();
 });
