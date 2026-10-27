@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   decideBotEscalation,
   decideKnowledgeApproval,
+  decideKnowledgePublication,
   decideStaffCaseAction,
   hasCurrentComplianceGrant,
   type ComplianceCase,
@@ -117,5 +118,56 @@ describe("Separate human knowledge approval", () => {
     expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, organizationId: "org-b" }, "ok").allowed).toBe(false);
     expect(decideKnowledgeApproval(staff, "staff-a", proposal, " ").allowed).toBe(false);
     expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, status: "approved_for_publication" }, "ok").allowed).toBe(false);
+  });
+});
+
+describe("Separate publication gate: synthetic approved revisions only", () => {
+  const publisher: StaffGrant = {
+    ...staff,
+    permissions: ["compliance.knowledge.publish"]
+  };
+  const approved = {
+    id: "suggestion-a",
+    organizationId: "org-a",
+    proposedBy: "staff-b",
+    approvedBy: "staff-c",
+    status: "approved_for_publication" as const,
+    revision: 7,
+    approvedRevision: 7,
+    contentDigest: "synthetic-digest-v7",
+    approvedContentDigest: "synthetic-digest-v7"
+  };
+
+  it("permits publication only after independent review of the exact revision", () => {
+    expect(decideKnowledgePublication(publisher, "staff-a", approved, "Ready for publication")).toEqual({
+      allowed: true,
+      nextStatus: "published",
+      eventType: "compliance.knowledge_published",
+      auditRequired: true
+    });
+  });
+
+  it("denies unreviewed, rejected, already published and modified revisions", () => {
+    for (const status of ["pending_review", "rejected", "published"] as const)
+      expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, status }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, revision: 8 }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: "changed" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, revision: 0, approvedRevision: 0 }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: "", approvedContentDigest: "" }, "ok").allowed).toBe(false);
+  });
+
+  it("requires a different human reviewer and denies self-publishing proposals", () => {
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, approvedBy: "staff-b" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, proposedBy: "staff-a" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, approvedBy: null }, "ok").allowed).toBe(false);
+  });
+
+  it("denies wrong tenant, revoked or stale grant, and missing explicit publish permission", () => {
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, organizationId: "org-b" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication({ ...publisher, status: "revoked" }, "staff-a", approved, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication({ ...publisher, currentGrantVersion: 5 }, "staff-a", approved, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(staff, "staff-a", approved, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-z", approved, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", approved, " ").allowed).toBe(false);
   });
 });
