@@ -48,6 +48,23 @@ jobs:
           done
           psql -v ON_ERROR_STOP=1 -f supabase/tests/audit_workflow_integrity.sql
           psql -v ON_ERROR_STOP=1 -f supabase/tests/fixed_synthetic_demo.sql
+  # Keep vulnerability scanning independent: a failed audit must never hide
+  # typecheck, unit-test or production-build failures from reviewers.
+  # Both jobs remain required release gates; neither suppresses failures.
+  security_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
+
   quality:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -60,7 +77,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=high
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
