@@ -11,7 +11,8 @@ export type CompliancePermission =
   | "compliance.case.reply"
   | "compliance.case.export"
   | "compliance.history.search"
-  | "compliance.knowledge.approve";
+  | "compliance.knowledge.approve"
+  | "compliance.knowledge.publish";
 
 export interface StaffGrant {
   actorId: string;
@@ -144,6 +145,70 @@ export function decideKnowledgeApproval(
     allowed: true,
     nextStatus: "approved_for_publication",
     eventType: "compliance.knowledge_approved",
+    auditRequired: true
+  };
+}
+
+/**
+ * Publication is a SECOND gate after independent human approval, not an
+ * automatic side effect of approval. The server must fetch this candidate
+ * from trusted storage, recompute the content digest, and commit publication,
+ * audit entry and search-index outbox event atomically. This decision alone
+ * NEVER changes the bot's knowledge base.
+ */
+export interface KnowledgePublicationCandidate {
+  id: string;
+  organizationId: string;
+  proposedBy: string;
+  approvedBy: string | null;
+  status: "pending_review" | "approved_for_publication" | "published" | "rejected";
+  revision: number;
+  approvedRevision: number;
+  contentDigest: string;
+  approvedContentDigest: string;
+}
+
+export type KnowledgePublicationDecision =
+  | { allowed: false; reason: string }
+  | { allowed: true; nextStatus: "published"; eventType: "compliance.knowledge_published"; auditRequired: true };
+
+export function decideKnowledgePublication(
+  grant: StaffGrant | null | undefined,
+  authenticatedActorId: string,
+  candidate: KnowledgePublicationCandidate,
+  reason: string
+): KnowledgePublicationDecision {
+  if (
+    !candidate ||
+    typeof candidate.id !== "string" || !candidate.id.trim() ||
+    typeof candidate.organizationId !== "string" || !candidate.organizationId.trim() ||
+    typeof candidate.proposedBy !== "string" || !candidate.proposedBy.trim() ||
+    typeof candidate.approvedBy !== "string" || !candidate.approvedBy.trim()
+  ) return { allowed: false, reason: "invalid_publication_candidate" };
+
+  if (!hasCurrentComplianceGrant(grant, authenticatedActorId, candidate.organizationId, ["compliance.knowledge.publish"]))
+    return { allowed: false, reason: "knowledge_publication_denied" };
+
+  if (candidate.status !== "approved_for_publication")
+    return { allowed: false, reason: "knowledge_not_approved" };
+
+  if (candidate.proposedBy === candidate.approvedBy || candidate.proposedBy === authenticatedActorId)
+    return { allowed: false, reason: "independent_review_required" };
+
+  if (
+    !Number.isSafeInteger(candidate.revision) || candidate.revision <= 0 ||
+    candidate.approvedRevision !== candidate.revision ||
+    typeof candidate.contentDigest !== "string" || !candidate.contentDigest.trim() ||
+    candidate.approvedContentDigest !== candidate.contentDigest
+  ) return { allowed: false, reason: "knowledge_revision_changed" };
+
+  if (typeof reason !== "string" || !reason.trim())
+    return { allowed: false, reason: "publication_reason_required" };
+
+  return {
+    allowed: true,
+    nextStatus: "published",
+    eventType: "compliance.knowledge_published",
     auditRequired: true
   };
 }
