@@ -38,6 +38,10 @@ export type ComplianceDecision =
   | { allowed: true; eventType: string; nextStatus: ComplianceCaseStatus; auditRequired: true };
 
 const deny = (reason: string): ComplianceDecision => ({ allowed: false, reason });
+const knownPermissions: readonly string[] = [
+  "compliance.case.read", "compliance.case.reply", "compliance.case.export",
+  "compliance.history.search", "compliance.knowledge.approve", "compliance.knowledge.publish"
+];
 
 /** No role inheritance, cached role claims or implied permission from partner/admin. */
 export function hasCurrentComplianceGrant(
@@ -60,7 +64,7 @@ export function hasCurrentComplianceGrant(
     grant.organizationIds.includes(organizationId) &&
     Array.isArray(grant.permissions) &&
     Array.isArray(permissions) && permissions.length > 0 &&
-    permissions.every((permission) => typeof permission === "string" && grant.permissions.includes(permission))
+    permissions.every((permission) => typeof permission === "string" && knownPermissions.includes(permission) && (grant.permissions as readonly string[]).includes(permission))
   );
 }
 
