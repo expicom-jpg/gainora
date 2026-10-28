@@ -171,3 +171,40 @@ describe("Separate publication gate: synthetic approved revisions only", () => {
     expect(decideKnowledgePublication(publisher, "staff-a", approved, " ").allowed).toBe(false);
   });
 });
+
+describe("Runtime trust boundary hardening (synthetic malformed inputs)", () => {
+  it("fails closed for malformed identity, permission list and case assignment", () => {
+    expect(hasCurrentComplianceGrant(staff, 42 as never, "org-a", ["compliance.case.read"])).toBe(false);
+    expect(hasCurrentComplianceGrant(staff, "staff-a", "org-a", null as never)).toBe(false);
+    expect(hasCurrentComplianceGrant(staff, "staff-a", "org-a", "compliance.case.read" as never)).toBe(false);
+    expect(hasCurrentComplianceGrant({ ...staff, permissions: null as never }, "staff-a", "org-a", ["compliance.case.read"])).toBe(false);
+    expect(decideStaffCaseAction(staff, "staff-a", { ...queued, id: 42 as never }, "read")).toEqual({
+      allowed: false, reason: "invalid_case"
+    });
+    expect(decideStaffCaseAction(staff, "staff-a", { ...queued, assignedTo: undefined as never }, "read").allowed).toBe(false);
+    expect(decideStaffCaseAction(staff, "staff-a", { ...assigned, assignedTo: "" }, "reply_final").allowed).toBe(false);
+    expect(decideStaffCaseAction(staff, "staff-a", { ...queued, assignedTo: "staff-a" }, "read").allowed).toBe(false);
+  });
+
+  it("does not treat truthy strings or objects as verified bot service identity", () => {
+    const botOpen: ComplianceCase = { ...queued, status: "bot_open" };
+    expect(decideBotEscalation(botOpen, "false" as never, "needs staff")).toEqual({
+      allowed: false, reason: "verified_bot_service_required"
+    });
+    expect(decideBotEscalation(botOpen, {} as never, "needs staff").allowed).toBe(false);
+    expect(decideBotEscalation(botOpen, true, { trim: 1 } as never)).toEqual({
+      allowed: false, reason: "escalation_reason_required"
+    });
+    expect(decideBotEscalation({ ...botOpen, organizationId: 7 as never }, true, "needs staff").allowed).toBe(false);
+  });
+
+  it("rejects malformed knowledge proposals and non-string review reasons", () => {
+    const proposal = { id: "synthetic-proposal", organizationId: "org-a", proposedBy: "staff-b", status: "pending_review" as const };
+    expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, proposedBy: 4 as never }, "reviewed")).toEqual({
+      allowed: false, reason: "invalid_proposal"
+    });
+    expect(decideKnowledgeApproval(staff, "staff-a", proposal, { trim: 1 } as never)).toEqual({
+      allowed: false, reason: "approval_reason_required"
+    });
+  });
+});
