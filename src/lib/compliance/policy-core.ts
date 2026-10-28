@@ -48,9 +48,9 @@ export function hasCurrentComplianceGrant(
 ): boolean {
   return Boolean(
     grant &&
-    authenticatedActorId &&
-    grant.actorId === authenticatedActorId &&
-    organizationId &&
+    typeof authenticatedActorId === "string" && authenticatedActorId.trim().length > 0 &&
+    typeof grant.actorId === "string" && grant.actorId === authenticatedActorId &&
+    typeof organizationId === "string" && organizationId.trim().length > 0 &&
     grant.status === "active" &&
     grant.masterApproved === true &&
     Number.isSafeInteger(grant.grantVersion) &&
@@ -59,8 +59,8 @@ export function hasCurrentComplianceGrant(
     Array.isArray(grant.organizationIds) &&
     grant.organizationIds.includes(organizationId) &&
     Array.isArray(grant.permissions) &&
-    permissions.length > 0 &&
-    permissions.every((permission) => grant.permissions.includes(permission))
+    Array.isArray(permissions) && permissions.length > 0 &&
+    permissions.every((permission) => typeof permission === "string" && grant.permissions.includes(permission))
   );
 }
 
@@ -71,8 +71,14 @@ export function decideStaffCaseAction(
   item: ComplianceCase,
   action: StaffCaseAction
 ): ComplianceDecision {
-  if (!item?.id || !item.organizationId || !["bot_open", "queued", "assigned", "resolved"].includes(item.status))
-    return deny("invalid_case");
+  if (
+    !item || typeof item.id !== "string" || !item.id.trim() ||
+    typeof item.organizationId !== "string" || !item.organizationId.trim() ||
+    !["bot_open", "queued", "assigned", "resolved"].includes(item.status) ||
+    (item.assignedTo !== null && typeof item.assignedTo !== "string") ||
+    (item.status === "assigned" && (!item.assignedTo || !item.assignedTo.trim())) ||
+    ((item.status === "bot_open" || item.status === "queued") && item.assignedTo !== null)
+  ) return deny("invalid_case");
   const required: Record<StaffCaseAction, readonly CompliancePermission[]> = {
     read: ["compliance.case.read"],
     claim: ["compliance.case.read", "compliance.case.reply"],
@@ -107,10 +113,13 @@ export function decideBotEscalation(
   verifiedBotService: boolean,
   reason: string
 ): ComplianceDecision {
-  if (!verifiedBotService) return deny("verified_bot_service_required");
-  if (!item?.id || !item.organizationId || item.status !== "bot_open" || item.assignedTo !== null)
-    return deny("case_not_escalatable");
-  if (!reason?.trim()) return deny("escalation_reason_required");
+  if (verifiedBotService !== true) return deny("verified_bot_service_required");
+  if (
+    !item || typeof item.id !== "string" || !item.id.trim() ||
+    typeof item.organizationId !== "string" || !item.organizationId.trim() ||
+    item.status !== "bot_open" || item.assignedTo !== null
+  ) return deny("case_not_escalatable");
+  if (typeof reason !== "string" || !reason.trim()) return deny("escalation_reason_required");
   return { allowed: true, eventType: "compliance.bot_escalated", nextStatus: "queued", auditRequired: true };
 }
 
@@ -131,15 +140,18 @@ export function decideKnowledgeApproval(
   proposal: KnowledgeProposal,
   reason: string
 ): KnowledgeDecision {
-  if (!proposal?.id || !proposal.organizationId || !proposal.proposedBy)
-    return { allowed: false, reason: "invalid_proposal" };
+  if (
+    !proposal || typeof proposal.id !== "string" || !proposal.id.trim() ||
+    typeof proposal.organizationId !== "string" || !proposal.organizationId.trim() ||
+    typeof proposal.proposedBy !== "string" || !proposal.proposedBy.trim()
+  ) return { allowed: false, reason: "invalid_proposal" };
   if (!hasCurrentComplianceGrant(grant, authenticatedActorId, proposal.organizationId, ["compliance.knowledge.approve"]))
     return { allowed: false, reason: "knowledge_approval_denied" };
   if (proposal.status !== "pending_review")
     return { allowed: false, reason: "proposal_not_pending" };
   if (proposal.proposedBy === authenticatedActorId)
     return { allowed: false, reason: "self_approval_forbidden" };
-  if (!reason?.trim())
+  if (typeof reason !== "string" || !reason.trim())
     return { allowed: false, reason: "approval_reason_required" };
   return {
     allowed: true,
