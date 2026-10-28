@@ -23,6 +23,11 @@ Status: **domain guards + unit tests only** on a separate development branch. No
 
 Each positive decision includes `auditRequired: true`. This is a **contract**, not an audit implementation.
 
+### Runtime input hardening (28 Oct 2026)
+
+The pure decision functions reject malformed runtime identities, permissions, case identifiers/assignments and review reasons without throwing. In particular, `verifiedBotService` must be the literal boolean `true` (a truthy string such as `"false"` is denied). This prevents accidental acceptance of malformed caller data, **but does not authenticate a bot**: service identity must still be derived from trusted server credentials, never a request body. All allow decisions remain non-authoritative until server-side authorization, database RLS and transactional audit persistence are implemented. Synthetic negative tests are included.
+
+
 ## Pilot launch blockers
 
 - [ ] Sole Master and employee grant schema + protected approval workflow implemented.
