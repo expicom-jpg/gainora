@@ -17,7 +17,7 @@ describe("real customer data deployment gate", () => {
     expect(evaluateRealCustomerDataGate({ ...base, vercelEnvironment: undefined, vercelMarker: undefined })).toBe(true);
   });
 
-  it.each([
+  const deniedCases: Array<[string, Partial<Parameters<typeof evaluateRealCustomerDataGate>[0]>]> = [
     ["development app", { appEnvironment: "development" }],
     ["staging app", { appEnvironment: "staging" }],
     ["missing approval", { approvalFlag: undefined }],
@@ -27,7 +27,9 @@ describe("real customer data deployment gate", () => {
     ["Vercel development", { vercelEnvironment: "development" }],
     ["missing Vercel environment", { vercelEnvironment: undefined }],
     ["unknown Vercel environment", { vercelEnvironment: "custom" }]
-  ])("denies %s", (_scenario, changes) => {
+  ];
+
+  it.each(deniedCases)("denies %s", (_scenario, changes) => {
     expect(evaluateRealCustomerDataGate({ ...base, ...changes })).toBe(false);
   });
 
