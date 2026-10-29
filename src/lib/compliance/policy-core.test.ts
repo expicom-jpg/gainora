@@ -5,6 +5,7 @@ import {
   decideKnowledgePublication,
   decideStaffCaseAction,
   hasCurrentComplianceGrant,
+  MAX_COMPLIANCE_REPLY_LENGTH,
   type ComplianceCase,
   type StaffGrant
 } from "./policy-core";
@@ -91,11 +92,22 @@ describe("Escalation and reply state machine", () => {
     expect(decideStaffCaseAction(staff, "staff-a", { ...queued, assignedTo: "staff-b" }, "claim").allowed).toBe(false);
   });
 
+  it("never sends empty, malformed or oversized interim/final replies", () => {
+    for (const action of ["reply_interim", "reply_final"] as const) {
+      for (const body of [undefined, "", "   ", "\n\t", 42, {}, "x".repeat(MAX_COMPLIANCE_REPLY_LENGTH + 1)]) {
+        expect(decideStaffCaseAction(staff, "staff-a", assigned, action, body as never)).toEqual({
+          allowed: false, reason: "reply_body_invalid"
+        });
+      }
+      expect(decideStaffCaseAction(staff, "staff-a", assigned, action, "x".repeat(MAX_COMPLIANCE_REPLY_LENGTH)).allowed).toBe(true);
+    }
+  });
+
   it("distinguishes interim reply from final resolution and prevents other staff replying", () => {
-    expect(decideStaffCaseAction(staff, "staff-a", assigned, "reply_interim")).toEqual({
+    expect(decideStaffCaseAction(staff, "staff-a", assigned, "reply_interim", "We are investigating")).toEqual({
       allowed: true, eventType: "compliance.interim_reply", nextStatus: "assigned", auditRequired: true
     });
-    expect(decideStaffCaseAction(staff, "staff-a", assigned, "reply_final")).toEqual({
+    expect(decideStaffCaseAction(staff, "staff-a", assigned, "reply_final", "Your case is resolved")).toEqual({
       allowed: true, eventType: "compliance.final_reply", nextStatus: "resolved", auditRequired: true
     });
     expect(decideStaffCaseAction(staff, "staff-a", { ...assigned, assignedTo: "staff-b" }, "reply_final").allowed).toBe(false);
