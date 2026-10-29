@@ -33,6 +33,8 @@ export interface ComplianceCase {
 }
 
 export type StaffCaseAction = "read" | "claim" | "reply_interim" | "reply_final" | "export";
+/** Guardrail only; API must separately sanitize and persist the message with its audit event. */
+export const MAX_COMPLIANCE_REPLY_LENGTH = 10_000;
 export type ComplianceDecision =
   | { allowed: false; reason: string }
   | { allowed: true; eventType: string; nextStatus: ComplianceCaseStatus; auditRequired: true };
@@ -73,7 +75,8 @@ export function decideStaffCaseAction(
   grant: StaffGrant | null | undefined,
   authenticatedActorId: string,
   item: ComplianceCase,
-  action: StaffCaseAction
+  action: StaffCaseAction,
+  replyBody?: string
 ): ComplianceDecision {
   if (
     !item || typeof item.id !== "string" || !item.id.trim() ||
@@ -106,6 +109,10 @@ export function decideStaffCaseAction(
   }
   if (item.status !== "assigned" || item.assignedTo !== authenticatedActorId)
     return deny("case_not_assigned_to_actor");
+  // A reply must contain actual text; an empty final reply must never close a case.
+  // Sanitization, content safety, rate limiting and transactional persistence remain server duties.
+  if (typeof replyBody !== "string" || !replyBody.trim() || replyBody.length > MAX_COMPLIANCE_REPLY_LENGTH)
+    return deny("reply_body_invalid");
   return action === "reply_interim"
     ? { allowed: true, eventType: "compliance.interim_reply", nextStatus: "assigned", auditRequired: true }
     : { allowed: true, eventType: "compliance.final_reply", nextStatus: "resolved", auditRequired: true };
