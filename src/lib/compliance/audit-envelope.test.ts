@@ -89,9 +89,8 @@ describe("Fail-closed case audit envelope (synthetic-only; no database writes)",
     expect(prepareCaseAuditEnvelope(queued, { ...claimed, auditRequired: false } as never, "staff-a", requestId, now, 1).allowed).toBe(false);
     expect(prepareCaseAuditEnvelope(queued, { allowed: true, eventType: "compliance.final_reply", nextStatus: "resolved", auditRequired: true }, "staff-a", requestId, now, 1).allowed).toBe(false);
     expect(prepareCaseAuditEnvelope(queued, { allowed: true, eventType: "compliance.case_deleted", nextStatus: "queued", auditRequired: true } as never, "staff-a", requestId, now, 1).allowed).toBe(false);
-    expect(prepareCaseAuditEnvelope({ ...queued, organizationId: "org-b" }, claimed, "staff-a", requestId, now, 1).allowed).toBe(true);
-    // The envelope alone cannot prove tenant authorization: callers must load
-    // the current case/grant from trusted storage and recheck them in the DB.
+    const crossTenantDecision = decideStaffCaseAction(grant, "staff-a", { ...queued, organizationId: "org-b" }, "claim");
+    expect(prepareCaseAuditEnvelope({ ...queued, organizationId: "org-b" }, crossTenantDecision, "staff-a", requestId, now, 1).allowed).toBe(false);
   });
 
   it("rejects forged reply actor and malformed trusted context", () => {
