@@ -10,10 +10,11 @@ export function evaluateRealCustomerDataGate(input: {
   vercelMarker: string | undefined;
 }): boolean {
   if (input.appEnvironment !== "production" || input.approvalFlag !== "true") return false;
-  // A preview deployment must never become customer-data-ready through a
-  // misconfigured NEXT_PUBLIC_APP_ENV or copied production environment variable.
-  if (input.vercelEnvironment !== undefined && input.vercelEnvironment !== "production") return false;
-  // Vercel supplies VERCEL=1 and VERCEL_ENV. Missing VERCEL_ENV is not proof of production.
-  if (input.vercelMarker === "1" && input.vercelEnvironment !== "production") return false;
-  return true;
+
+  // A non-Vercel production deployment has neither Vercel variable.
+  // If either variable is present, require BOTH exact production markers.
+  // Otherwise VERCEL_ENV=production with VERCEL missing/spoofed could
+  // incorrectly make a misconfigured deployment customer-data-ready.
+  if (input.vercelEnvironment === undefined && input.vercelMarker === undefined) return true;
+  return input.vercelEnvironment === "production" && input.vercelMarker === "1";
 }
