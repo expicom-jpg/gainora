@@ -28,6 +28,14 @@ Each positive decision includes `auditRequired: true`. This is a **contract**, n
 The pure decision functions reject malformed runtime identities, permissions, case identifiers/assignments and review reasons without throwing. In particular, `verifiedBotService` must be the literal boolean `true` (a truthy string such as `"false"` is denied). This prevents accidental acceptance of malformed caller data, **but does not authenticate a bot**: service identity must still be derived from trusted server credentials, never a request body. All allow decisions remain non-authoritative until server-side authorization, database RLS and transactional audit persistence are implemented. Synthetic negative tests are included.
 
 
+## Synthetic audit envelope contract (30 Oct 2026)
+
+- `prepareCaseAuditEnvelope` in `src/lib/compliance/audit-envelope.ts` builds a **pure, non-persistent** event envelope for case reads, exports, bot handoff, staff claim, interim replies and final replies.
+- It records a strict event/reason code, actor type and identifier, organization/case identifiers, request correlation ID, canonical UTC timestamp, and before/after case status, assignee and optimistic version. It rejects malformed identifiers, forged/unaudited decisions, impossible transitions, wrong reply assignees, invalid timestamps and version overflow.
+- A read/export event preserves the case version; a handoff/claim/reply transition increments it. The envelope intentionally excludes customer message text and free-form reasons to avoid leaking personal information into audit metadata.
+- **This is not an audit log or proof of authorization.** Server-side identity, current Master approval, tenant membership, source case, version and timestamps must be fetched from trusted context. The database must re-authorize, enforce RLS and append the audit entry atomically with the case/message update. Read/export events also require durable audited persistence before results are disclosed. Fail closed if audit persistence fails.
+- Unit tests use synthetic cases only. No audit table, RPC, endpoint, migration or worker has been deployed.
+
 ## Pilot launch blockers
 
 - [ ] Sole Master and employee grant schema + protected approval workflow implemented.
