@@ -55,7 +55,7 @@ const safeIdentifier = (value: unknown): value is string =>
   typeof value === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,127}$/.test(value);
 const validUtcTimestamp = (value: unknown): value is string =>
   typeof value === "string" &&
-  /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/.test(value) &&
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value) &&
   Number.isFinite(Date.parse(value)) &&
   new Date(value).toISOString() === value;
 
