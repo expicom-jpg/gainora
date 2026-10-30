@@ -9,7 +9,7 @@ describe("real customer data deployment gate", () => {
     vercelMarker: "1"
   };
 
-  it("allows an explicitly approved production deployment", () => {
+  it("allows an explicitly approved Vercel production deployment", () => {
     expect(evaluateRealCustomerDataGate(base)).toBe(true);
   });
 
@@ -26,19 +26,32 @@ describe("real customer data deployment gate", () => {
     ["Vercel preview", { vercelEnvironment: "preview" }],
     ["Vercel development", { vercelEnvironment: "development" }],
     ["missing Vercel environment", { vercelEnvironment: undefined }],
-    ["unknown Vercel environment", { vercelEnvironment: "custom" }]
+    ["unknown Vercel environment", { vercelEnvironment: "custom" }],
+    ["missing Vercel marker", { vercelMarker: undefined }],
+    ["empty Vercel marker", { vercelMarker: "" }],
+    ["false Vercel marker", { vercelMarker: "0" }],
+    ["noncanonical Vercel marker", { vercelMarker: "true" }]
   ];
 
   it.each(deniedCases)("denies %s", (_scenario, changes) => {
     expect(evaluateRealCustomerDataGate({ ...base, ...changes })).toBe(false);
   });
 
-  it("denies a preview marker even when the app environment claims production", () => {
+  it("denies a preview environment even if the Vercel marker is absent", () => {
     expect(evaluateRealCustomerDataGate({
       appEnvironment: "production",
       approvalFlag: "true",
       vercelEnvironment: "preview",
       vercelMarker: undefined
+    })).toBe(false);
+  });
+
+  it("denies an orphaned Vercel marker without VERCEL_ENV", () => {
+    expect(evaluateRealCustomerDataGate({
+      appEnvironment: "production",
+      approvalFlag: "true",
+      vercelEnvironment: undefined,
+      vercelMarker: "1"
     })).toBe(false);
   });
 });
