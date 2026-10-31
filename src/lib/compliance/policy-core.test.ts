@@ -28,6 +28,7 @@ const queued: ComplianceCase = {
   id: "case-a", organizationId: "org-a", status: "queued", assignedTo: null
 };
 const assigned: ComplianceCase = { ...queued, status: "assigned", assignedTo: "staff-a" };
+const approvedDigest = `sha256:${"a".repeat(64)}`;
 
 describe("Master-approved compliance access: default deny", () => {
   it("requires authenticated actor, active Master-approved staff and current grant", () => {
@@ -116,13 +117,37 @@ describe("Escalation and reply state machine", () => {
 });
 
 describe("Separate human knowledge approval", () => {
-  const proposal = { id: "suggestion-a", organizationId: "org-a", proposedBy: "staff-b", status: "pending_review" as const };
+  const proposal = {
+    id: "suggestion-a", organizationId: "org-a", proposedBy: "staff-b",
+    status: "pending_review" as const, revision: 7, contentDigest: approvedDigest
+  };
+
+  it("pins independent approval to the exact canonical content revision", () => {
+    const decision = decideKnowledgeApproval(staff, "staff-a", proposal, "Reviewed");
+    expect(decision.allowed).toBe(true);
+    if (decision.allowed) {
+      expect(decision.approvedRevision).toBe(proposal.revision);
+      expect(decision.approvedContentDigest).toBe(proposal.contentDigest);
+    }
+    for (const revision of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1, undefined, "7"]) {
+      expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, revision: revision as never }, "Reviewed")).toEqual({
+        allowed: false, reason: "invalid_proposal_revision"
+      });
+    }
+    for (const contentDigest of ["", "abc", `sha256:${"A".repeat(64)}`, `sha256:${"a".repeat(63)}`, undefined]) {
+      expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, contentDigest: contentDigest as never }, "Reviewed")).toEqual({
+        allowed: false, reason: "invalid_proposal_revision"
+      });
+    }
+  });
 
   it("requires Master-approved knowledge permission and independent human approval", () => {
     expect(decideKnowledgeApproval(staff, "staff-a", proposal, "Reviewed and verified")).toEqual({
       allowed: true,
       nextStatus: "approved_for_publication",
       eventType: "compliance.knowledge_approved",
+      approvedRevision: 7,
+      approvedContentDigest: approvedDigest,
       auditRequired: true
     });
     expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, proposedBy: "staff-a" }, "ok").allowed).toBe(false);
@@ -146,8 +171,8 @@ describe("Separate publication gate: synthetic approved revisions only", () => {
     status: "approved_for_publication" as const,
     revision: 7,
     approvedRevision: 7,
-    contentDigest: "synthetic-digest-v7",
-    approvedContentDigest: "synthetic-digest-v7"
+    contentDigest: approvedDigest,
+    approvedContentDigest: approvedDigest
   };
 
   it("permits publication only after independent review of the exact revision", () => {
@@ -164,6 +189,8 @@ describe("Separate publication gate: synthetic approved revisions only", () => {
       expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, status }, "ok").allowed).toBe(false);
     expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, revision: 8 }, "ok").allowed).toBe(false);
     expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: "changed" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: "changed", approvedContentDigest: "changed" }, "ok").allowed).toBe(false);
+    expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: `sha256:${"A".repeat(64)}`, approvedContentDigest: `sha256:${"A".repeat(64)}` }, "ok").allowed).toBe(false);
     expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, revision: 0, approvedRevision: 0 }, "ok").allowed).toBe(false);
     expect(decideKnowledgePublication(publisher, "staff-a", { ...approved, contentDigest: "", approvedContentDigest: "" }, "ok").allowed).toBe(false);
   });
@@ -211,7 +238,10 @@ describe("Runtime trust boundary hardening (synthetic malformed inputs)", () => 
   });
 
   it("rejects malformed knowledge proposals and non-string review reasons", () => {
-    const proposal = { id: "synthetic-proposal", organizationId: "org-a", proposedBy: "staff-b", status: "pending_review" as const };
+    const proposal = {
+      id: "synthetic-proposal", organizationId: "org-a", proposedBy: "staff-b",
+      status: "pending_review" as const, revision: 1, contentDigest: approvedDigest
+    };
     expect(decideKnowledgeApproval(staff, "staff-a", { ...proposal, proposedBy: 4 as never }, "reviewed")).toEqual({
       allowed: false, reason: "invalid_proposal"
     });

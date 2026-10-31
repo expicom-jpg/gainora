@@ -139,10 +139,24 @@ export interface KnowledgeProposal {
   organizationId: string;
   proposedBy: string;
   status: "pending_review" | "approved_for_publication" | "rejected";
+  /** Server-computed digest of the exact canonical content being reviewed. */
+  revision: number;
+  contentDigest: string;
 }
 export type KnowledgeDecision =
   | { allowed: false; reason: string }
-  | { allowed: true; nextStatus: "approved_for_publication"; eventType: "compliance.knowledge_approved"; auditRequired: true };
+  | {
+      allowed: true;
+      nextStatus: "approved_for_publication";
+      eventType: "compliance.knowledge_approved";
+      approvedRevision: number;
+      approvedContentDigest: string;
+      auditRequired: true;
+    };
+
+/** Require one canonical representation for a SHA-256 digest; never trust its origin. */
+const canonicalSha256Digest = (value: unknown): value is string =>
+  typeof value === "string" && /^sha256:[0-9a-f]{64}$/.test(value);
 
 /** Approval is separate from proposal; approval alone does NOT publish to the bot. */
 export function decideKnowledgeApproval(
@@ -156,6 +170,9 @@ export function decideKnowledgeApproval(
     typeof proposal.organizationId !== "string" || !proposal.organizationId.trim() ||
     typeof proposal.proposedBy !== "string" || !proposal.proposedBy.trim()
   ) return { allowed: false, reason: "invalid_proposal" };
+  if (!Number.isSafeInteger(proposal.revision) || proposal.revision < 1 ||
+    !canonicalSha256Digest(proposal.contentDigest))
+    return { allowed: false, reason: "invalid_proposal_revision" };
   if (!hasCurrentComplianceGrant(grant, authenticatedActorId, proposal.organizationId, ["compliance.knowledge.approve"]))
     return { allowed: false, reason: "knowledge_approval_denied" };
   if (proposal.status !== "pending_review")
@@ -168,6 +185,8 @@ export function decideKnowledgeApproval(
     allowed: true,
     nextStatus: "approved_for_publication",
     eventType: "compliance.knowledge_approved",
+    approvedRevision: proposal.revision,
+    approvedContentDigest: proposal.contentDigest,
     auditRequired: true
   };
 }
@@ -221,7 +240,8 @@ export function decideKnowledgePublication(
   if (
     !Number.isSafeInteger(candidate.revision) || candidate.revision <= 0 ||
     candidate.approvedRevision !== candidate.revision ||
-    typeof candidate.contentDigest !== "string" || !candidate.contentDigest.trim() ||
+    !canonicalSha256Digest(candidate.contentDigest) ||
+    !canonicalSha256Digest(candidate.approvedContentDigest) ||
     candidate.approvedContentDigest !== candidate.contentDigest
   ) return { allowed: false, reason: "knowledge_revision_changed" };
 
