@@ -70,7 +70,8 @@ export function prepareCaseAuditEnvelope(
   actorId: string,
   requestId: string,
   occurredAt: string,
-  currentVersion: number
+  currentVersion: number,
+  trustedActorType: CaseAuditEnvelope["actorType"]
 ): CaseAuditEnvelopeResult {
   const deny = (reason: string): CaseAuditEnvelopeResult => ({ allowed: false, reason });
   if (!item || !safeIdentifier(item.id) || !safeIdentifier(item.organizationId) ||
@@ -90,6 +91,9 @@ export function prepareCaseAuditEnvelope(
 
   const eventType = decision.eventType as CaseAuditEventType;
   const spec = eventSpecs[eventType];
+  // Never label a staff action as a bot action (or vice versa) in audit records.
+  // The caller must derive this identity class from trusted server credentials.
+  if (trustedActorType !== spec.actorType) return deny("audit_actor_type_mismatch");
   if (spec.from && item.status !== spec.from) return deny("invalid_audit_transition");
   const expectedStatus = spec.to ?? item.status;
   if (decision.nextStatus !== expectedStatus) return deny("invalid_audit_transition");
