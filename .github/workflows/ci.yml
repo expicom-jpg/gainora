@@ -49,6 +49,7 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f supabase/tests/audit_workflow_integrity.sql
           psql -v ON_ERROR_STOP=1 -f supabase/tests/fixed_synthetic_demo.sql
           psql -v ON_ERROR_STOP=1 -f supabase/tests/two_principal_tenant_isolation.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/tests/compliance_master_grants.sql
   # Keep vulnerability scanning independent: a failed audit must never hide
   # typecheck, unit-test or production-build failures from reviewers.
   # Both jobs remain required release gates; neither suppresses failures.
