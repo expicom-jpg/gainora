@@ -51,3 +51,15 @@ The earlier pure approval decision did not carry an immutable revision/digest: a
 - [ ] Security/privacy review, DPIA where appropriate, retention policy, incident process and explicit REAL_CUSTOMER_DATA_READY decision.
 
 This branch is intentionally separate from ongoing Partner Hub/Master and import PRs. Merge only after CI review; do not enable production routes or run migrations as part of this domain-only change.
+
+## Protected Master grant storage proposal (1 Nov 2026; review-only)
+
+The proposed `supabase/migrations/20261101104200_compliance_staff_grants.sql` is **not approved for hosted or production execution**. The disposable CI database alone runs it. It adds a single protected Master identity and tenant-specific compliance staff grants under `private`, with no direct authenticated/anonymous table privileges, no public write API, and default-deny RLS.
+
+- The single Master is provisioned, rotated or suspended only through a privileged administrative operation **outside the browser/API**. No bootstrap user or employee becomes Master by signing up, owning a tenant, or being a partner/admin.
+- `private.has_current_compliance_permission(org, permission)` checks the authenticated database identity, active Master, current Master approval, exact tenant and explicit permission **on every call**. It returns false for revoked/suspended/unapproved or changed grants, unknown permissions and other tenants. It is not a standalone authentication endpoint.
+- The grant trigger increments its version and clears approval whenever status or permissions change. A later privileged reapproval must bind to the new version; the table prevents changing a grant's actor/tenant in place. The current Master must still be active at authorization time.
+- `supabase/tests/compliance_master_grants.sql` uses only generated synthetic identities and rolled-back fixtures to test unauthorized table reads/writes, tenant isolation, Master suspension, staff suspension, stale approvals, version rewinds, and independent reapproval.
+- **Remaining mandatory gates:** review Master provisioning and operational break-glass/recovery, ensure hosted Supabase roles and schema exposure match expectations, create audited server-side grant lookup and atomic approval/revocation workflow, and apply tenant-scoped RLS to case/message/audit/knowledge tables. The predicate must be used *inside* the same transaction as any case or knowledge change; a previous positive check is not sufficient.
+
+Do not run the proposed migration in production or expose new compliance routes without separate authorization and full security review.
