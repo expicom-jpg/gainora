@@ -6,6 +6,8 @@ begin;
 select set_config('test.master', gen_random_uuid()::text, true);
 select set_config('test.staff', gen_random_uuid()::text, true);
 select set_config('test.outsider', gen_random_uuid()::text, true);
+select set_config('test.owner', gen_random_uuid()::text, true);
+select set_config('request.jwt.claim.sub', current_setting('test.owner'), true);
 select set_config('test.org_a', gen_random_uuid()::text, true);
 select set_config('test.org_b', gen_random_uuid()::text, true);
 insert into public.organizations(id, name) values
