@@ -29,6 +29,7 @@ function deps(
 ): TrustedCasePreflightDependencies {
   return {
     authenticatedActorId: async () => actor,
+    currentMasterActive: async () => true,
     currentMasterGrant: async () => grant,
     caseSnapshot: async () => ({
       caseRecord: { id: caseId, organizationId: org, status: "assigned", assignedTo: actor },
@@ -87,6 +88,8 @@ describe("Compliance case preflight (synthetic-only; not a database write)", () 
   it("fails closed for absent actor, missing grant, stale approval and wrong actor", async () => {
     for (const overrides of ([
       { authenticatedActorId: async () => null },
+      { currentMasterActive: async () => false },
+      { currentMasterActive: async () => "true" as unknown as boolean },
       { currentMasterGrant: async () => null },
       { currentMasterGrant: async () => ({ ...grant, masterApproved: false }) },
       { currentMasterGrant: async () => ({ ...grant, status: "suspended" as const }) },
@@ -145,6 +148,7 @@ describe("Compliance case preflight (synthetic-only; not a database write)", () 
     const fail = async (): Promise<never> => { throw new Error("synthetic secret"); };
     for (const overrides of [
       { authenticatedActorId: fail },
+      { currentMasterActive: fail },
       { currentMasterGrant: fail },
       { caseSnapshot: fail },
       { auditContext: fail }
