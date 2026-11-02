@@ -85,7 +85,7 @@ describe("Compliance case preflight (synthetic-only; not a database write)", () 
   });
 
   it("fails closed for absent actor, missing grant, stale approval and wrong actor", async () => {
-    for (const overrides of [
+    for (const overrides of ([
       { authenticatedActorId: async () => null },
       { currentMasterGrant: async () => null },
       { currentMasterGrant: async () => ({ ...grant, masterApproved: false }) },
@@ -94,7 +94,7 @@ describe("Compliance case preflight (synthetic-only; not a database write)", () 
       { currentMasterGrant: async () => ({ ...grant, actorId: otherCase }) },
       { currentMasterGrant: async () => ({ ...grant, organizationIds: [otherOrg] }) },
       { currentMasterGrant: async () => ({ ...grant, permissions: ["compliance.case.read"] as StaffGrant["permissions"] }) }
-    ]) {
+    ] as Partial<TrustedCasePreflightDependencies>[])) {
       const command = overrides.currentMasterGrant ? interim : read;
       const result = await prepareComplianceCasePreflight(command, deps(overrides));
       expect(result).toEqual({ prepared: false, reason: "not_authorized_or_unavailable" });
