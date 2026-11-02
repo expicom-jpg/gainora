@@ -8,10 +8,10 @@ authorization mechanism, not an audit writer, and not safe for real customer dat
 `src/lib/compliance/case-preflight.ts` composes the strict request parser from
 PR #89, the current-grant domain policy from PR #80, and the audit envelope.
 It uses server-provided async adapters to resolve (1) authenticated actor,
-(2) current protected Master-approved grant, (3) case record and version,
-and (4) request correlation ID and UTC timestamp.
+(2) current active status of the sole Master, (3) current protected Master-approved grant,
+(4) case record and version, and (5) request correlation ID and UTC timestamp.
 
-The preflight rejects unrecognized client fields, invalid IDs, stale grants,
+The preflight requires the literal boolean `true` from a trusted current-Master-active lookup (not a client flag). It rejects unrecognized client fields, invalid IDs, stale grants,
 suspended/unapproved staff, missing reply permission, cross-tenant case
 snapshots, unassigned replies, bad audit metadata and failed lookups. All
 denials after parsing have the same generic result to avoid revealing
