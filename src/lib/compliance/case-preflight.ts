@@ -26,6 +26,7 @@ export interface TrustedCaseSnapshot {
 
 export interface TrustedCasePreflightDependencies {
   authenticatedActorId(): Promise<string | null>;
+  currentMasterActive(): Promise<boolean>;
   currentMasterGrant(actorId: string, organizationId: string): Promise<StaffGrant | null>;
   caseSnapshot(organizationId: string, caseId: string): Promise<TrustedCaseSnapshot | null>;
   auditContext(): Promise<{ requestId: string; occurredAt: string } | null>;
@@ -58,6 +59,8 @@ export async function prepareComplianceCasePreflight(
 
     const actorId = await trusted.authenticatedActorId();
     if (typeof actorId !== "string" || !actorId.trim()) return denied();
+    // A still-approved staff row is not enough after the sole Master is suspended.
+    if (await trusted.currentMasterActive() !== true) return denied();
 
     // The current grant is read from protected server storage, never the body.
     const grant = await trusted.currentMasterGrant(actorId, command.organizationId);
