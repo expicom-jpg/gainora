@@ -70,6 +70,28 @@ do $$ begin
     or exists (select 1 from public.audit_events where organization_id = current_setting('test.org_b')::uuid) then
     raise exception 'TEST FAILED: principal A read tenant B';
   end if;
+  -- Cross-tenant mutations must affect zero rows or be rejected by RLS.
+  declare
+    affected bigint;
+  begin
+    update public.results set notes = 'Unauthorized cross-tenant update'
+      where id = current_setting('test.result_b')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal A updated another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+  declare
+    affected bigint;
+  begin
+    delete from public.results where id = current_setting('test.result_b')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal A deleted another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
   begin
     perform public.create_demo_import(current_setting('test.org_b')::uuid);
     raise exception 'TEST FAILED: principal A created tenant B import';
@@ -103,6 +125,28 @@ do $$ begin
     or exists (select 1 from public.audit_events where organization_id = current_setting('test.org_a')::uuid) then
     raise exception 'TEST FAILED: principal B read tenant A';
   end if;
+  -- Cross-tenant mutations must affect zero rows or be rejected by RLS.
+  declare
+    affected bigint;
+  begin
+    update public.results set notes = 'Unauthorized cross-tenant update'
+      where id = current_setting('test.result_a')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal B updated another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+  declare
+    affected bigint;
+  begin
+    delete from public.results where id = current_setting('test.result_a')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal B deleted another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
   begin
     perform public.create_demo_import(current_setting('test.org_a')::uuid);
     raise exception 'TEST FAILED: principal B created tenant A import';
