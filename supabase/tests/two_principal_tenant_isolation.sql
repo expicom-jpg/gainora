@@ -19,6 +19,15 @@ select set_config('test.finding_a', (
     '[{"findingType":"financial_summary","title":"Synthetic A","description":"RLS test"}]', 8
   ) limit 1
 ), true);
+-- A recorded result must remain tenant-scoped, not just its finding.
+update public.audit_findings set status='approved'
+where id=current_setting('test.finding_a')::uuid;
+insert into public.results(organization_id,finding_id,title,baseline_value,result_value,attributed_value,notes)
+values(current_setting('test.org_a')::uuid,current_setting('test.finding_a')::uuid,
+  'Synthetic A result',1000,900,100,'Synthetic CI fixture');
+select set_config('test.result_a', (
+  select id::text from public.results where finding_id=current_setting('test.finding_a')::uuid
+), true);
 reset role;
 
 select set_config('request.jwt.claim.sub', current_setting('test.principal_b'), true);
@@ -32,6 +41,14 @@ select set_config('test.finding_b', (
     '[{"findingType":"financial_summary","title":"Synthetic B","description":"RLS test"}]', 8
   ) limit 1
 ), true);
+update public.audit_findings set status='approved'
+where id=current_setting('test.finding_b')::uuid;
+insert into public.results(organization_id,finding_id,title,baseline_value,result_value,attributed_value,notes)
+values(current_setting('test.org_b')::uuid,current_setting('test.finding_b')::uuid,
+  'Synthetic B result',2000,1800,200,'Synthetic CI fixture');
+select set_config('test.result_b', (
+  select id::text from public.results where finding_id=current_setting('test.finding_b')::uuid
+), true);
 reset role;
 
 -- A is a valid tenant member, not merely an unaffiliated outsider.
@@ -42,15 +59,39 @@ do $$ begin
   if not exists (select 1 from public.imports where id = current_setting('test.import_a')::uuid)
     or not exists (select 1 from public.financial_rows where import_id = current_setting('test.import_a')::uuid)
     or not exists (select 1 from public.audit_findings where id = current_setting('test.finding_a')::uuid)
+    or not exists (select 1 from public.results where id = current_setting('test.result_a')::uuid)
     or not exists (select 1 from public.audit_events where organization_id = current_setting('test.org_a')::uuid) then
     raise exception 'TEST FAILED: principal A cannot read its own tenant';
   end if;
   if exists (select 1 from public.imports where id = current_setting('test.import_b')::uuid)
     or exists (select 1 from public.financial_rows where import_id = current_setting('test.import_b')::uuid)
     or exists (select 1 from public.audit_findings where id = current_setting('test.finding_b')::uuid)
+    or exists (select 1 from public.results where id = current_setting('test.result_b')::uuid)
     or exists (select 1 from public.audit_events where organization_id = current_setting('test.org_b')::uuid) then
     raise exception 'TEST FAILED: principal A read tenant B';
   end if;
+  -- Cross-tenant mutations must affect zero rows or be rejected by RLS.
+  declare
+    affected bigint;
+  begin
+    update public.results set notes = 'Unauthorized cross-tenant update'
+      where id = current_setting('test.result_b')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal A updated another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+  declare
+    affected bigint;
+  begin
+    delete from public.results where id = current_setting('test.result_b')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal A deleted another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
   begin
     perform public.create_demo_import(current_setting('test.org_b')::uuid);
     raise exception 'TEST FAILED: principal A created tenant B import';
@@ -73,15 +114,39 @@ do $$ begin
   if not exists (select 1 from public.imports where id = current_setting('test.import_b')::uuid)
     or not exists (select 1 from public.financial_rows where import_id = current_setting('test.import_b')::uuid)
     or not exists (select 1 from public.audit_findings where id = current_setting('test.finding_b')::uuid)
+    or not exists (select 1 from public.results where id = current_setting('test.result_b')::uuid)
     or not exists (select 1 from public.audit_events where organization_id = current_setting('test.org_b')::uuid) then
     raise exception 'TEST FAILED: principal B cannot read its own tenant';
   end if;
   if exists (select 1 from public.imports where id = current_setting('test.import_a')::uuid)
     or exists (select 1 from public.financial_rows where import_id = current_setting('test.import_a')::uuid)
     or exists (select 1 from public.audit_findings where id = current_setting('test.finding_a')::uuid)
+    or exists (select 1 from public.results where id = current_setting('test.result_a')::uuid)
     or exists (select 1 from public.audit_events where organization_id = current_setting('test.org_a')::uuid) then
     raise exception 'TEST FAILED: principal B read tenant A';
   end if;
+  -- Cross-tenant mutations must affect zero rows or be rejected by RLS.
+  declare
+    affected bigint;
+  begin
+    update public.results set notes = 'Unauthorized cross-tenant update'
+      where id = current_setting('test.result_a')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal B updated another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+  declare
+    affected bigint;
+  begin
+    delete from public.results where id = current_setting('test.result_a')::uuid;
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: principal B deleted another tenant result';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
   begin
     perform public.create_demo_import(current_setting('test.org_a')::uuid);
     raise exception 'TEST FAILED: principal B created tenant A import';
