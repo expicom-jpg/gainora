@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { evaluateRealCustomerDataGate } from "@/lib/customer-data-gate";
 
 const envSchema = z.object({
   NEXT_PUBLIC_APP_ENV: z.enum(["development", "staging", "production"]).default("development"),
@@ -14,4 +15,9 @@ export const env = envSchema.parse({
   REAL_CUSTOMER_DATA_READY: process.env.REAL_CUSTOMER_DATA_READY
 });
 
-export const isRealCustomerDataReady = env.REAL_CUSTOMER_DATA_READY === "true";
+export const isRealCustomerDataReady = evaluateRealCustomerDataGate({
+  appEnvironment: env.NEXT_PUBLIC_APP_ENV,
+  approvalFlag: env.REAL_CUSTOMER_DATA_READY,
+  vercelEnvironment: process.env.VERCEL_ENV,
+  vercelMarker: process.env.VERCEL
+});
