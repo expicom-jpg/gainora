@@ -35,3 +35,15 @@
 5. Obtain explicit owner/security approval before merging any production-deploying branch, migration, or pilot/customer activation.
 
 **Change-control rule:** Every new commit invalidates prior exact-head test evidence until CI is rerun and the evidence register is updated. Vercel READY, passing CI or a draft PR alone never authorizes production changes.
+
+## Independent follow-up verification — 2026-11-14
+
+- Documentation PR: [#97](https://github.com/expicom-jpg/gainora/pull/97); pre-update exact head `67da826dc6a82ac7d4429dabf9e1a7fb00cec53b`.
+- [CI run #296](https://github.com/expicom-jpg/gainora/actions/runs/43389103811): completed **success** for that exact pre-update head. Independently inspected job conclusions: `database` **success**, `quality` **success**, `security_audit` **success**. Job-level conclusions are verified; detailed command logs/advisory dispositions were **not** independently reviewed.
+- [Vercel preview](https://vercel.com/expicom-7941/gainora/5fcdSTU469M24eWjHZKeedXGfDTY): **READY**, target `null`, exact pre-update head `67da826dc6a82ac7d4429dabf9e1a7fb00cec53b`. This is a preview only.
+- Integration PR [#96](https://github.com/expicom-jpg/gainora/pull/96) remains separately evidenced by [CI #295](https://github.com/expicom-jpg/gainora/actions/runs/43181972196): `database`, `quality`, `security_audit` all **success** on `f99f093941fc0edac945f6501b95ceeebc91f681`.
+- **Evidence validity:** this documentation update itself creates a *new* head SHA, so CI and preview for the new SHA are **pending** until independently verified. Never carry forward pre-update success as new-head proof.
+
+### Immediate P0 decision
+
+Do **not** merge, migrate or enable real data. Prioritize authenticated two-tenant RLS isolation evidence in a disposable environment, including both tenants' SELECT/INSERT/UPDATE/DELETE denial, anonymous role, absent/malformed tenant context, and service-role bypass checks. Preserve reproducible commands, redacted output, exact SHA and reviewer sign-off. Then review Master Control and Partner Hub approval boundaries and append-only audit persistence. Synthetic CI and preview alone cannot discharge these gates.
