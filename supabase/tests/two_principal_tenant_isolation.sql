@@ -168,7 +168,7 @@ reset role;
 -- Missing identity is distinct from a valid principal belonging to another tenant.
 select set_config('request.jwt.claim.sub', '', true);
 set local role authenticated;
-do $
+do $$
 declare
   visible_count bigint;
 begin
@@ -182,7 +182,7 @@ begin
   if visible_count <> 0 then
     raise exception 'TEST FAILED: missing JWT identity could read tenant imports';
   end if;
-end $;
+end $$;
 reset role;
 
 rollback;
