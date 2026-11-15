@@ -162,4 +162,27 @@ do $$ begin
 end $$;
 reset role;
 
+
+-- An authenticated database role without a verified user identity must not
+-- inherit tenant membership from a previous request on the same connection.
+-- Missing identity is distinct from a valid principal belonging to another tenant.
+select set_config('request.jwt.claim.sub', '', true);
+set local role authenticated;
+do $
+declare
+  visible_count bigint;
+begin
+  select count(*) into visible_count from public.results
+    where id in (current_setting('test.result_a')::uuid, current_setting('test.result_b')::uuid);
+  if visible_count <> 0 then
+    raise exception 'TEST FAILED: missing JWT identity could read tenant results';
+  end if;
+  select count(*) into visible_count from public.imports
+    where id in (current_setting('test.import_a')::uuid, current_setting('test.import_b')::uuid);
+  if visible_count <> 0 then
+    raise exception 'TEST FAILED: missing JWT identity could read tenant imports';
+  end if;
+end $;
+reset role;
+
 rollback;
