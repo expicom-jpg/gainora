@@ -182,6 +182,46 @@ begin
   if visible_count <> 0 then
     raise exception 'TEST FAILED: missing JWT identity could read tenant imports';
   end if;
+  -- A missing identity must also be denied on dependent tenant tables.
+  select count(*) into visible_count from public.financial_rows
+    where import_id in (current_setting('test.import_a')::uuid, current_setting('test.import_b')::uuid);
+  if visible_count <> 0 then
+    raise exception 'TEST FAILED: missing JWT identity could read financial rows';
+  end if;
+  select count(*) into visible_count from public.audit_findings
+    where id in (current_setting('test.finding_a')::uuid, current_setting('test.finding_b')::uuid);
+  if visible_count <> 0 then
+    raise exception 'TEST FAILED: missing JWT identity could read audit findings';
+  end if;
+  select count(*) into visible_count from public.audit_events
+    where organization_id in (current_setting('test.org_a')::uuid, current_setting('test.org_b')::uuid);
+  if visible_count <> 0 then
+    raise exception 'TEST FAILED: missing JWT identity could read audit events';
+  end if;
+  -- Check writes separately: a zero-row UPDATE/DELETE is allowed, an actual
+  -- cross-tenant mutation is not. Permission denial is also an acceptable result.
+  declare
+    affected bigint;
+  begin
+    update public.results set notes = 'Missing identity must not mutate'
+      where id in (current_setting('test.result_a')::uuid, current_setting('test.result_b')::uuid);
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: missing JWT identity updated tenant results';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+  declare
+    affected bigint;
+  begin
+    delete from public.results
+      where id in (current_setting('test.result_a')::uuid, current_setting('test.result_b')::uuid);
+    get diagnostics affected = row_count;
+    if affected <> 0 then
+      raise exception 'TEST FAILED: missing JWT identity deleted tenant results';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 reset role;
 
