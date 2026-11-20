@@ -61,3 +61,11 @@ This execution order supersedes earlier informal sequencing, without removing th
 - Prepare draft incorporation documents, ownership register, funding and bookkeeping checklist, budget, expense evidence and invoice workflows. Obtain appropriate legal/accounting review.
 - Create/configure Dinero for the legal entity when registration details are available; do not claim an account or automated integration exists.
 - Keep P0 security and pilot data gates unchanged. No production changes, purchases, filings, transfers or paid subscriptions authorized.
+
+
+### Profit retention policy — approved principle (2026-11-20)
+- Gainora should retain its **actual net profit** after contractual seller/partner commissions, all operating costs, applicable taxes and other obligations. Commissions alone do not determine net profit.
+- Default: retain distributable earnings in Gainora ApS to build reserves, fund product development and growth. No automatic owner distributions based on the 51/49 ownership split.
+- Any dividend or owner compensation requires a separate documented decision, adequate liquidity and compliance with applicable Danish corporate, accounting and tax law.
+- Dinero management reporting should separately show revenue excluding VAT, commissions, operating expenses, profit before/after tax, liquidity and retained earnings. Avoid conflating accounting profit with cash.
+- Define and approve the commission calculation basis and payment timing separately; do not hardcode unapproved percentages.
