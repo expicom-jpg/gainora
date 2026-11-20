@@ -46,3 +46,10 @@ This execution order supersedes earlier informal sequencing, without removing th
 - Reconcile existing open PRs and main before creating duplicate implementations. Record verified commit SHA, CI checks and evidence in each PR.
 - Pilot count (originally 5; proposed 7), duration (30 vs 90 days), pricing and commissions remain decisions to finalize, not public commitments.
 - This list is a priority decision, not a claim that any task is complete.
+
+
+### Gainora internal accounting — Dinero (decision 2026-11-20)
+- **Chosen accounting software for Gainora itself:** Dinero, for bookkeeping, invoicing, VAT and accounting.
+- **Before paid operations:** verify legal entity, invoicing details, VAT treatment, access/roles, subscription and data handling; set up only with explicit authorization.
+- **Later, optional:** assess a secure API integration to reduce administrative work. This is distinct from integrating customer-owned Dinero accounts into Gainora's product.
+- **Priority:** business setup needed for first paid invoices; do not displace P0 security/pilot gates. No account creation, purchases, integrations or production changes authorized by this decision.
