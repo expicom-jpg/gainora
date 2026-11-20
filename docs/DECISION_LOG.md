@@ -19,3 +19,14 @@
 **Constraints:** Documentation-only change on a development branch/draft PR. No production change, migration, purchase, live customer onboarding, or permission to use real financial data.
 
 **Next action:** Compare main against existing P0 security PRs, identify missing independent evidence, run synthetic tenant/CRM/import tests and document results before proposing any merge.
+
+
+## 2026-11-20 — Dinero selected for Gainora's own accounting
+
+**Decision:** Use Dinero as Gainora's accounting software for bookkeeping, invoices, VAT and accounts.
+
+**Scope:** Gainora's own business administration only. This does not select Dinero as a mandatory accounting platform for Gainora customers and does not authorize an API connection.
+
+**Follow-up:** Confirm company registration, VAT and invoicing requirements, roles/access, plan and setup before the first paid invoice. Evaluate API integration separately after security and business review.
+
+**Guardrails:** No Dinero account creation, subscription purchase, real financial-data transfer, production integration or database change from this documentation decision. P0 security gates retain priority.
