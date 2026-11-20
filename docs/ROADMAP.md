@@ -69,3 +69,25 @@ This execution order supersedes earlier informal sequencing, without removing th
 - Any dividend or owner compensation requires a separate documented decision, adequate liquidity and compliance with applicable Danish corporate, accounting and tax law.
 - Dinero management reporting should separately show revenue excluding VAT, commissions, operating expenses, profit before/after tax, liquidity and retained earnings. Avoid conflating accounting profit with cash.
 - Define and approve the commission calculation basis and payment timing separately; do not hardcode unapproved percentages.
+
+
+### Sales AI and Pancake.ai evaluation — approved planning addition (2026-11-20)
+
+**Scope:** A non-blocking exploration of AI-assisted outbound sales for Morten and future partners. Pancake.ai is a vendor candidate, not an approved purchase, integrated dependency, or verified source of customers. No production changes or customer data export are authorized.
+
+| Priority | Deliverable | Definition of done |
+| --- | --- | --- |
+| P0 (unchanged) | Existing security, RLS, Master Control, inbound CRM ownership/duplicate checks | Pass existing release gates; prevent cross-seller visibility and unauthorized changes |
+| P1 (design after P0 foundations) | Internal lead-scoring design | Explainable, adjustable criteria for target-sector fit, business size, potential value and documented signals; no fabricated financial estimates |
+| P1 (design after P0 foundations) | Seller assistance | Draft outreach and suggested next action; human approval before sending; consent/contact-law controls, opt-out, throttling, logging |
+| P2 (pilot evaluation) | Pancake.ai limited trial | Vendor security, privacy/DPA, geographic data coverage, price and integration review; synthetic/demo data first; explicit purchase approval before subscription |
+| P2 (partner capability) | Sales AI in Partner Hub | Role-scoped pipeline, deduplication, lead-owner lock/expiry, collision notice without exposing confidential contact data, hand-off and reassignment audit |
+| P3 (optimization) | Conversion learning | Aggregate lead-to-meeting, meeting-to-pilot, pilot-to-paid, marginal acquisition cost and net contribution after commissions; no unapproved automated messages |
+
+**Pilot evaluation:** Start with the original target of five pilot customers as a planning assumption, subject to the existing unresolved five-versus-seven pilot count. Measure actionable leads, qualified meetings, pilot activations, conversion, seller time saved and net contribution per paying customer. Retain all source attribution and a dated decision to continue, replace or stop.
+
+**Financial discipline:** Proposed entry price of DKK 2,495/month is not confirmed revenue; evaluate software fees (including a vendor quote), partner commissions, payment fees, tax, sales effort and churn, rather than treating one subscription as pure profit. Do not accept vendor pricing as verified without current contract review.
+
+**Vendor due diligence:** Confirm that the correct Pancake.ai product/vendor is being evaluated (distinct from similarly named customer-messaging software). Validate functionality and publicly described claims directly with the vendor; assess GDPR legal basis for outreach, DPA, transfers, deletion, prospect rights, marketing restrictions and secure key handling before any personal data is shared.
+
+**Dependencies:** Lead-ownership rules and existing CRM remain the system of record. AI and vendors may suggest leads, messages or follow-ups, but may not autonomously assign a protected lead, contact a person, amend commissions, enroll customers, or change production state. This extension must not delay P0/pilot gates.
