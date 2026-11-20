@@ -30,3 +30,12 @@
 **Follow-up:** Confirm company registration, VAT and invoicing requirements, roles/access, plan and setup before the first paid invoice. Evaluate API integration separately after security and business review.
 
 **Guardrails:** No Dinero account creation, subscription purchase, real financial-data transfer, production integration or database change from this documentation decision. P0 security gates retain priority.
+
+
+## 2026-11-20 — Confirmed Danish ApS formation plan
+
+**Decision:** Retain planned Gainora ApS with 51% founder ownership and 49% Morten ownership. CVR not yet available; no assertion that the entity has been incorporated.
+
+**Accounting:** Dinero remains the intended accounting system. Stripe is planned for payments, subject to separate setup and approval.
+
+**Priority:** P1 company formation/accounting preparation before paid operations, subordinate to P0 security gates. Prepare incorporation/ownership and budget documents, but do not file, purchase, open accounts, process live transactions or use real financial data without authorization and review.
