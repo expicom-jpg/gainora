@@ -39,3 +39,12 @@
 **Accounting:** Dinero remains the intended accounting system. Stripe is planned for payments, subject to separate setup and approval.
 
 **Priority:** P1 company formation/accounting preparation before paid operations, subordinate to P0 security gates. Prepare incorporation/ownership and budget documents, but do not file, purchase, open accounts, process live transactions or use real financial data without authorization and review.
+
+
+## 2026-11-20 — Profit retention after commissions and costs
+
+**Decision:** Gainora's actual net profit, after seller/partner commissions, other operating expenses, taxes and obligations, should normally remain in Gainora ApS for liquidity, reserves, development and growth.
+
+**Clarification:** Revenue less sales commission is not net profit. Profit and available cash must be tracked separately. Ownership at 51/49 does not trigger automatic payouts.
+
+**Controls:** Any dividends or owner remuneration require separate documented approval and compliance with Danish corporate/tax rules. Dinero reporting should distinguish revenue, commissions, expenses, tax, net profit, cash and retained earnings. Commission rates, bases and payout dates remain subject to approved agreements.
