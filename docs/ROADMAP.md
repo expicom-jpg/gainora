@@ -53,3 +53,11 @@ This execution order supersedes earlier informal sequencing, without removing th
 - **Before paid operations:** verify legal entity, invoicing details, VAT treatment, access/roles, subscription and data handling; set up only with explicit authorization.
 - **Later, optional:** assess a secure API integration to reduce administrative work. This is distinct from integrating customer-owned Dinero accounts into Gainora's product.
 - **Priority:** business setup needed for first paid invoices; do not displace P0 security/pilot gates. No account creation, purchases, integrations or production changes authorized by this decision.
+
+
+### Company formation and accounting preparation — P1 before paid operations (2026-11-20)
+- Planned entity: Danish ApS; ownership: founder 51%, Morten 49%. CVR not yet available; company formation not completed.
+- Selected internal bookkeeping software: Dinero; Stripe planned as payment provider, subject to commercial/security review.
+- Prepare draft incorporation documents, ownership register, funding and bookkeeping checklist, budget, expense evidence and invoice workflows. Obtain appropriate legal/accounting review.
+- Create/configure Dinero for the legal entity when registration details are available; do not claim an account or automated integration exists.
+- Keep P0 security and pilot data gates unchanged. No production changes, purchases, filings, transfers or paid subscriptions authorized.
