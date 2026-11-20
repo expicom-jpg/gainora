@@ -26,7 +26,11 @@ export default function ContactRequestForm() {
     setStatus("sending");
     try {
       const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
-      const {error}=await db.from("gainora_contact_requests").insert({company,contact_name,email,phone,message,source:"homepage"});
+      const sellerToken=new URLSearchParams(window.location.search).get("saelger");
+      const isSellerLink=!!sellerToken;
+      if(isSellerLink&&!/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i.test(sellerToken)){throw new Error("invalid_seller_link");}
+      const payload={company,contact_name,email,phone,message,source:isSellerLink?"seller_link":"homepage",...(isSellerLink?{seller_token:sellerToken}:{})};
+      const {error}=await db.from("gainora_contact_requests").insert(payload);
       if(error) throw error;
       form.reset();setStatus("success");
     } catch {
