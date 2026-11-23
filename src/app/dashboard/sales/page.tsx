@@ -1,3 +1,4 @@
+import { analyzePublicProfile, type PublicCompanyProfile } from "@/lib/sales/public-company-profile";
 import { prioritizeLead, summarizePipeline, type LeadSignal } from "@/lib/sales/workbench";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,16 @@ const demoLeads: LeadSignal[] = [
   { id: "demo-2", company: "Eksempel Service ApS", stage: "new", sectorFit: 2, valuePotential: 1, buyingSignal: 1, nextActionAt: null, blocked: false, ownership: "mine" },
   { id: "demo-3", company: "Fiktiv Handel ApS", stage: "audit", sectorFit: 1, valuePotential: 2, buyingSignal: 2, nextActionAt: "2026-11-30", blocked: false, ownership: "mine" }
 ];
+const demoProfile: PublicCompanyProfile = {
+  cvr: "12345678", name: "Demo Produktion ApS", industry: "Fremstilling (demo)",
+  status: "Aktiv (demo)", foundedAt: "2017-04-03", municipality: "Eksempelkommune", employees: 32,
+  metrics: {
+    grossProfit: { value: 12400000, year: 2025, source: "Fiktiv årsrapport", publishedAt: null },
+    netProfit: { value: 680000, year: 2025, source: "Fiktiv årsrapport", publishedAt: null },
+    equity: { value: 2500000, year: 2025, source: "Fiktiv årsrapport", publishedAt: null },
+    assets: { value: 9000000, year: 2025, source: "Fiktiv årsrapport", publishedAt: null }
+  }
+};
 const labels: Record<LeadSignal["stage"], string> = {
   new: "Ny", qualified: "Kvalificeret", audit: "Profit Audit",
   offered: "Tilbud", won: "Kunde", lost: "Afsluttet"
@@ -39,6 +50,16 @@ export default function SalesWorkbenchPage() {
           <td>{suggestion.nextStep}</td><td>{suggestion.explanation}</td>
         </tr>)}
       </tbody></table></div>
+    </section>
+    <section className="card" style={{marginTop:18}}>
+      <h2>Virksomhedsprofil og salgsindsigt (demo)</h2>
+      <p className="muted">CVR: {demoProfile.cvr} · {demoProfile.name} · {demoProfile.industry} · {demoProfile.employees} ansatte (fiktivt).</p>
+      <p className="muted">Årsrapport 2025 (fiktiv): Bruttofortjeneste {demoProfile.metrics.grossProfit?.value?.toLocaleString("da-DK")} kr. · Resultat {demoProfile.metrics.netProfit?.value?.toLocaleString("da-DK")} kr.</p>
+      <p className="muted">Omsætning: ikke oplyst. Overskudsgrad kan derfor ikke beregnes.</p>
+      {analyzePublicProfile(demoProfile).map(insight => <div key={insight.title} style={{marginTop:12}}>
+        <strong>{insight.title}</strong><p>{insight.description}</p><p className="muted">Kilde: {insight.evidence}</p>
+      </div>)}
+      <p className="muted">Live CVR-opslag, regnskabsimport og CRM-registrering afventer godkendt datakilde og sikker serverintegration.</p>
     </section>
     <section className="card" style={{marginTop:18}}>
       <h2>Før adgang til rigtige data</h2>
