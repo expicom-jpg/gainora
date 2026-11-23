@@ -17,8 +17,8 @@ export function prioritizeLead(lead: LeadSignal, today: string): SalesSuggestion
   // ISO YYYY-MM-DD only; avoid time zone dependent date parsing.
   const due = lead.nextActionAt !== null && /^\d{4}-\d{2}-\d{2}$/.test(lead.nextActionAt) && lead.nextActionAt <= today;
   const score = lead.sectorFit * 15 + lead.valuePotential * 15 + lead.buyingSignal * 20 + (due ? 10 : 0);
-  if (lead.blocked || lead.ownership === "other" || lead.stage === "lost" || lead.stage === "won") {
-    return { score: 0, priority: "low", nextStep: "Ingen automatisk kontakt", explanation: "Blokeret, allerede fordelt eller afsluttet lead." };
+  if (lead.blocked || lead.ownership !== "mine" || lead.stage === "lost" || lead.stage === "won") {
+    return { score: 0, priority: "low", nextStep: "Ingen automatisk kontakt", explanation: "Blokeret, ikke tildelt denne sælger eller afsluttet lead." };
   }
   const nextStep = due ? "Gennemgå opfølgning manuelt" : lead.stage === "new" ? "Kvalificér virksomhedens behov" : lead.stage === "qualified" ? "Foreslå indledende samtale" : lead.stage === "audit" ? "Følg op på Profit Audit" : "Gennemgå tilbud og næste skridt";
   return {
