@@ -21,6 +21,11 @@ describe("synthetic sales workbench safety", () => {
   it("does not expose another seller's lead as actionable", () => {
     expect(prioritizeLead({ ...lead, ownership: "other" }, "2026-11-20").priority).toBe("low");
   });
+  it("does not suggest outreach for unassigned leads", () => {
+    expect(prioritizeLead({ ...lead, ownership: "unassigned" }, "2026-11-20")).toMatchObject({
+      score: 0, priority: "low", nextStep: "Ingen automatisk kontakt"
+    });
+  });
   it("does not trigger actions for won or lost leads", () => {
     for (const stage of ["won", "lost"] as const) {
       expect(prioritizeLead({ ...lead, stage }, "2026-11-20").nextStep).toBe("Ingen automatisk kontakt");
